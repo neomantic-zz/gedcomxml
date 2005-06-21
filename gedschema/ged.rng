@@ -374,9 +374,6 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <zeroOrMore>
           <ref name="source_citation"/>
         </zeroOrMore>
-        <zeroOrMore>
-          <ref name="source_citation_simple_media"/>
-        </zeroOrMore>
         <!--OBJE-->
         <zeroOrMore>
           <ref name="multimedia_link"/>
@@ -2162,7 +2159,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </optional>
         <!--OBJE-->
         <zeroOrMore>
-          <ref name="mulimedia_link"/>
+          <ref name="multimedia_link"/>
         </zeroOrMore>
         <!--NOTE-->
         <zeroOrMore>
