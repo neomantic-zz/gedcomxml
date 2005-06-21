@@ -1,0 +1,2276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+xmlns="http://relaxng.org/ns/structure/1.0"
+xmlns:sch="http://www.ascc.net/xml/schematron">
+  <start>
+    <element name="GED">
+      <ref name="header"/>
+      <interleave>
+        <!--SUBM-->
+        <zeroOrMore>
+          <ref name="submission_record"/>
+        </zeroOrMore>
+        <!--Records-->
+        <oneOrMore>
+          <ref name="record"/>
+        </oneOrMore>
+      </interleave>
+      <element name="TRLR">
+        <empty/>
+      </element>
+    </element>
+  </start>
+  <!--Record Structures of the Lineage-Linked Form-->
+  <!--HEADER-->
+  <define name="header">
+    <element name="HEAD">
+      <interleave>
+        <element name="SOUR">
+          <interleave>
+            <text/>
+            <!--VERS-->
+            <optional>
+              <element name="VERS">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">15</param>
+                </data>
+              </element>
+            </optional>
+            <!--NAME-->
+            <optional>
+              <element name="NAME">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">90</param>
+                </data>
+              </element>
+            </optional>
+            <!--CORP-->
+            <optional>
+              <element name="CORP">
+                <mixed>
+                  <!--ADDR-->
+                  <optional>
+                    <ref name="address_structure"/>
+                  </optional>
+                </mixed>
+              </element>
+            </optional>
+            <!--DATA-->
+            <optional>
+              <element name="DATA">
+                <interleave>
+                  <text/>
+                  <!--DATE-->
+                  <optional>
+                    <element name="DATE">
+                      <data type="string">
+                        <param name="minLength">10</param>
+                        <param name="maxLength">11</param>
+                      </data>
+                    </element>
+                  </optional>
+                  <!--COPR-->
+                  <optional>
+                    <element name="COPR">
+                      <data type="string">
+                        <param name="minLength">1</param>
+                        <param name="maxLength">90</param>
+                      </data>
+                    </element>
+                  </optional>
+                </interleave>
+              </element>
+            </optional>
+          </interleave>
+        </element>
+        <!--DEST-->
+        <optional>
+          <element name="DEST">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">20</param>
+            </data>
+          </element>
+        </optional>
+        <!--DATE-->
+        <optional>
+          <element name="DATE">
+            <mixed>
+              <optional>
+                <element name="TIME">
+                  <data type="string">
+                    <param name="pattern">
+                    [0-2]\d:\d\d:?\d?\d?:?\d?\d?</param>
+                    <param name="minLength">1</param>
+                    <param name="maxLength">12</param>
+                  </data>
+                </element>
+              </optional>
+            </mixed>
+          </element>
+        </optional>
+        <element name="SUBM">
+          <attribute name="REF">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">22</param>
+            </data>
+          </attribute>
+          <empty/>
+        </element>
+        <!--SUBN-->
+        <optional>
+          <element name="SUBN">
+            <attribute name="REF">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">22</param>
+              </data>
+            </attribute>
+            <empty/>
+          </element>
+        </optional>
+        <!--FILE-->
+        <optional>
+          <element name="FILE">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">90</param>
+            </data>
+          </element>
+        </optional>
+        <!--COPR-->
+        <optional>
+          <element name="COPR">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">90</param>
+            </data>
+          </element>
+        </optional>
+        <element name="GEDC">
+          <element name="VERS">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">15</param>
+            </data>
+          </element>
+          <!--TODO - Add default value of LINEAGE-LINKED-->
+          <element name="FORM">
+            <data type="string">
+              <param name="minLength">14</param>
+              <param name="maxLength">20</param>
+            </data>
+          </element>
+        </element>
+        <element name="CHAR">
+          <!--TODO Schematron should check for the following values ANSEL|UNICODE|ASCII-->
+          <mixed>
+            <optional>
+              <element name="VERS">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">15</param>
+                </data>
+              </element>
+            </optional>
+          </mixed>
+        </element>
+        <!--LANG-->
+        <optional>
+          <element name="LANG">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">15</param>
+              <param name="pattern">
+              Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
+            </data>
+          </element>
+        </optional>
+        <!--PLAC-->
+        <optional>
+          <element name="PLAC">
+            <element name="FORM">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">120</param>
+              </data>
+            </element>
+          </element>
+        </optional>
+        <!--NOTE-->
+        <optional>
+          <element name="NOTE">
+            <interleave>
+              <text/>
+              <zeroOrMore>
+                <element name="CONC">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">248</param>
+                  </data>
+                </element>
+              </zeroOrMore>
+              <zeroOrMore>
+                <element name="CONT">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">248</param>
+                  </data>
+                </element>
+              </zeroOrMore>
+            </interleave>
+          </element>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <!--RECORD-->
+  <define name="record">
+    <choice>
+      <ref name="family_record"/>
+      <ref name="individual_record"/>
+      <ref name="multimedia_record"/>
+      <ref name="note_record"/>
+      <ref name="repository_record"/>
+      <ref name="source_record"/>
+      <ref name="submitter_record"/>
+    </choice>
+  </define>
+  <!--FAM_RECORD-->
+  <define name="family_record">
+    <element name="FAM">
+      <attribute name="ID"/>
+      <interleave>
+        <!--Family Events-->
+        <zeroOrMore>
+          <ref name="family_event"/>
+          <optional>
+            <element name="HUSB">
+              <ref name="age"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="WIFE">
+              <ref name="age"/>
+            </element>
+          </optional>
+        </zeroOrMore>
+        <!--HUSB XREF:INDI-->
+        <optional>
+          <element name="WIFE">
+            <attribute name="REF">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">22</param>
+              </data>
+            </attribute>
+            <empty/>
+          </element>
+        </optional>
+        <!--WIFE XREF:INDI-->
+        <optional>
+          <element name="HUSB">
+            <attribute name="REF">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">22</param>
+              </data>
+            </attribute>
+            <empty/>
+          </element>
+        </optional>
+        <!--CHIL XREF:INDI-->
+        <zeroOrMore>
+          <element name="CHIL">
+            <attribute name="REF">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">22</param>
+              </data>
+            </attribute>
+            <empty/>
+          </element>
+        </zeroOrMore>
+        <!--COUNT_OF_CHILDREN-->
+        <optional>
+          <element name="NCHI">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">3</param>
+            </data>
+          </element>
+        </optional>
+        <!--SUMB XREF:INDI-->
+        <zeroOrMore>
+          <element name="SUBM">
+            <attribute name="REF">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">22</param>
+              </data>
+            </attribute>
+            <empty/>
+          </element>
+        </zeroOrMore>
+        <!--SLGS-->
+        <zeroOrMore>
+          <element name="SLGS">
+            <interleave>
+              <!--STAT-->
+              <optional>
+                <element name="STAT">
+                  <data type="string">
+                    <param name="pattern">
+                    CANCELED|CLEARED|COMPLETED|DNS|DNS/CAN|PRE-1970|QUALIFIED|SUBMITTED|UNCLEARED</param>
+                    <param name="minLength">3</param>
+                    <param name="maxLength">10</param>
+                  </data>
+                </element>
+              </optional>
+              <!--DATE-->
+              <optional>
+                <element name="DATE">
+                  <!--TODO Implement DATE_VALUE-->
+                  <data type="string">
+                    <param name="minLength">4</param>
+                    <param name="maxLength">35</param>
+                  </data>
+                </element>
+              </optional>
+              <!--TEMP-->
+              <optional>
+                <element name="TEMP">
+                  <data type="string">
+                    <param name="minLength">4</param>
+                    <param name="maxLength">5</param>
+                  </data>
+                </element>
+              </optional>
+              <!--PLAC-->
+              <optional>
+                <element name="PLAC">
+                  <!--TODO Implement PLACE_VALUE-->
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">120</param>
+                  </data>
+                </element>
+              </optional>
+              <!--SOUR-->
+              <zeroOrMore>
+                <ref name="source_citation"/>
+              </zeroOrMore>
+              <!--NOTE-->
+              <zeroOrMore>
+                <ref name="note_structure"/>
+              </zeroOrMore>
+            </interleave>
+          </element>
+        </zeroOrMore>
+        <!--SOUR-->
+        <zeroOrMore>
+          <ref name="source_citation"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="source_citation_simple_media"/>
+        </zeroOrMore>
+        <!--OBJE-->
+        <zeroOrMore>
+          <ref name="multimedia_link"/>
+        </zeroOrMore>
+        <!--NOTE-->
+        <zeroOrMore>
+          <ref name="note_structure"/>
+        </zeroOrMore>
+        <ref name="record_end"/>
+      </interleave>
+    </element>
+  </define>
+  <!--INDIVIDUAL_RECORD-->
+  <define name="individual_record">
+    <element name="INDI">
+      <attribute name="ID">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">22</param>
+        </data>
+      </attribute>
+      <interleave>
+        <!--RESN-->
+        <optional>
+          <element name="RESN">
+            <data type="string">
+              <param name="pattern">locked|privacy</param>
+              <param name="minLength">6</param>
+              <param name="maxLength">7</param>
+            </data>
+          </element>
+        </optional>
+        <!--PERSONAL_NAME_STRUCTURE-->
+        <zeroOrMore>
+          <element name="NAME">
+            <interleave>
+              <text/>
+              <!--NPFX-->
+              <optional>
+                <element name="NPFX">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">30</param>
+                  </data>
+                </element>
+              </optional>
+              <!--GIVN-->
+              <optional>
+                <element name="GIVN">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">120</param>
+                  </data>
+                </element>
+              </optional>
+              <!--NICK-->
+              <optional>
+                <element name="NICK">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">30</param>
+                  </data>
+                </element>
+              </optional>
+              <!--SPFX-->
+              <optional>
+                <element name="SPFX">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">30</param>
+                  </data>
+                </element>
+              </optional>
+              <!--SURN-->
+              <optional>
+                <element name="SURN">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">120</param>
+                  </data>
+                </element>
+              </optional>
+              <!--NSFX-->
+              <optional>
+                <element name="NSFX">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">30</param>
+                  </data>
+                </element>
+              </optional>
+              <!--SOUR-->
+              <zeroOrMore>
+                <ref name="source_citation"/>
+              </zeroOrMore>
+              <!--NOTE-->
+              <zeroOrMore>
+                <ref name="note_structure"/>
+              </zeroOrMore>
+            </interleave>
+          </element>
+        </zeroOrMore>
+        <!--SEX-->
+        <optional>
+          <element name="SEX">
+            <data type="string">
+              <param name="pattern">M|F|Male|Female</param>
+              <param name="minLength">1</param>
+              <param name="maxLength">7</param>
+            </data>
+          </element>
+        </optional>
+        <!--Events-->
+        <zeroOrMore>
+          <ref name="individual_event"/>
+        </zeroOrMore>
+        <!--Attributes-->
+        <zeroOrMore>
+          <ref name="individual_attribute"/>
+        </zeroOrMore>
+        <!--LDS Individual Ordinances-->
+        <zeroOrMore>
+          <ref name="lds_individual_ordinance"/>
+        </zeroOrMore>
+        <!--FAMC-->
+        <zeroOrMore>
+          <element name="FAMC">
+            <attribute name="ID">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">22</param>
+              </data>
+            </attribute>
+            <interleave>
+              <!--PEDI-->
+              <optional>
+                <element name="PEDI">
+                  <data type="string">
+                    <param name="pattern">
+                    adopted|birth|foster|sealing</param>
+                    <param name="minLength">5</param>
+                    <param name="maxLength">7</param>
+                  </data>
+                </element>
+              </optional>
+              <!--NOTE-->
+              <zeroOrMore>
+                <ref name="note_structure"/>
+              </zeroOrMore>
+            </interleave>
+          </element>
+        </zeroOrMore>
+        <!--FAMS-->
+        <zeroOrMore>
+          <element name="FAMS">
+            <attribute name="ID">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">22</param>
+              </data>
+            </attribute>
+            <zeroOrMore>
+              <ref name="note_structure"/>
+            </zeroOrMore>
+          </element>
+        </zeroOrMore>
+        <!--SUBM-->
+        <zeroOrMore>
+          <element name="SUBM">
+            <attribute name="REF">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">22</param>
+              </data>
+            </attribute>
+            <empty/>
+          </element>
+        </zeroOrMore>
+        <!--ASSOCIATION_STRUCTURE-->
+        <zeroOrMore>
+          <element name="ASSO">
+            <attribute name="REF">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">22</param>
+              </data>
+            </attribute>
+            <!--RELA-->
+            <interleave>
+              <element name="RELA">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">25</param>
+                </data>
+              </element>
+              <!--NOTE-->
+              <zeroOrMore>
+                <ref name="note_structure"/>
+              </zeroOrMore>
+              <!--SOUR-->
+              <zeroOrMore>
+                <ref name="source_citation"/>
+              </zeroOrMore>
+            </interleave>
+          </element>
+        </zeroOrMore>
+        <!--ALIA-->
+        <zeroOrMore>
+          <element name="ALIA">
+            <attribute name="REF">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">22</param>
+              </data>
+            </attribute>
+            <empty/>
+          </element>
+        </zeroOrMore>
+        <!--ANCI-->
+        <zeroOrMore>
+          <element name="ANCI">
+            <attribute name="REF">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">22</param>
+              </data>
+            </attribute>
+            <empty/>
+          </element>
+        </zeroOrMore>
+        <!--DESI-->
+        <zeroOrMore>
+          <element name="DESI">
+            <attribute name="REF">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">22</param>
+              </data>
+            </attribute>
+            <empty/>
+          </element>
+        </zeroOrMore>
+        <!--SOUR-->
+        <zeroOrMore>
+          <ref name="source_citation"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="source_citation_simple_media"/>
+        </zeroOrMore>
+        <!--OBJE-->
+        <zeroOrMore>
+          <ref name="multimedia_link"/>
+        </zeroOrMore>
+        <!--NOTE-->
+        <zeroOrMore>
+          <ref name="note_structure"/>
+        </zeroOrMore>
+        <ref name="record_end"/>
+      </interleave>
+    </element>
+  </define>
+  <!--MULTIMEDIA_RECORD-->
+  <define name="multimedia_record">
+    <element name="OBJE">
+      <attribute name="ID">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">22</param>
+        </data>
+      </attribute>
+      <interleave>
+        <!--FORM-->
+        <element name="FORM">
+          <data type="string">
+            <param name="pattern">
+            bmp|gif|jpeg|ole|pcx|tiff|wav</param>
+            <param name="minLength">3</param>
+            <param name="maxLength">4</param>
+          </data>
+        </element>
+        <!--TITL-->
+        <optional>
+          <element name="TITL">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">248</param>
+            </data>
+          </element>
+        </optional>
+        <!--NOTE-->
+        <zeroOrMore>
+          <ref name="note_structure"/>
+        </zeroOrMore>
+        <!--SOUR-->
+        <zeroOrMore>
+          <ref name="source_citation"/>
+        </zeroOrMore>
+        <!--BLOB-->
+        <element name="BLOB">
+          <!--CONT-->
+          <oneOrMore>
+            <element name="CONT">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">87</param>
+              </data>
+            </element>
+          </oneOrMore>
+        </element>
+        <!--OBJE-->
+        <element name="OBJE">
+          <attribute name="REF">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">22</param>
+            </data>
+          </attribute>
+          <empty/>
+        </element>
+        <ref name="record_end"/>
+      </interleave>
+    </element>
+  </define>
+  <!--NOTE_RECORD-->
+  <define name="note_record">
+    <element name="NOTE">
+      <attribute name="ID">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">22</param>
+        </data>
+      </attribute>
+      <interleave>
+        <text/>
+        <!--CONC-->
+        <zeroOrMore>
+          <element name="CONC">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">248</param>
+            </data>
+          </element>
+        </zeroOrMore>
+        <!--CONT-->
+        <zeroOrMore>
+          <element name="CONT">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">248</param>
+            </data>
+          </element>
+        </zeroOrMore>
+        <!--SOUR-->
+        <zeroOrMore>
+          <ref name="source_citation"/>
+        </zeroOrMore>
+        <ref name="record_end"/>
+      </interleave>
+    </element>
+  </define>
+  <!--REPOSITORY_RECORD-->
+  <define name="repository_record">
+    <element name="REPO">
+      <attribute name="ID">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">22</param>
+        </data>
+      </attribute>
+      <interleave>
+        <!--NAME-->
+        <optional>
+          <element name="NAME">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">90</param>
+            </data>
+          </element>
+        </optional>
+        <!--ADDR-->
+        <optional>
+          <ref name="address_structure"/>
+        </optional>
+        <!--NOTE-->
+        <zeroOrMore>
+          <ref name="note_structure"/>
+        </zeroOrMore>
+        <ref name="record_end"/>
+      </interleave>
+    </element>
+  </define>
+  <!--SOURCE_RECORD-->
+  <define name="source_record">
+    <element name="SOUR">
+      <attribute name="ID">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">22</param>
+        </data>
+      </attribute>
+      <interleave>
+        <!--DATA-->
+        <optional>
+          <element name="DATA">
+            <interleave>
+              <!--EVEN-->
+              <zeroOrMore>
+                <element name="EVEN">
+                  <interleave>
+                    <text/>
+                    <!--DATE-->
+                    <optional>
+                      <element name="DATE">
+                        <data type="string">
+                          <param name="minLength">7</param>
+                          <param name="maxLength">35</param>
+                        </data>
+                      </element>
+                    </optional>
+                    <!--PLAC-->
+                    <optional>
+                      <element name="PLAC">
+                        <data type="string">
+                          <param name="minLength">1</param>
+                          <param name="maxLength">120</param>
+                        </data>
+                      </element>
+                    </optional>
+                  </interleave>
+                </element>
+              </zeroOrMore>
+              <!--AGNC-->
+              <optional>
+                <element name="AGNC">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">120</param>
+                  </data>
+                </element>
+              </optional>
+              <!--NOTE-->
+              <zeroOrMore>
+                <ref name="note_structure"/>
+              </zeroOrMore>
+            </interleave>
+          </element>
+        </optional>
+        <!--AUTH-->
+        <optional>
+          <element name="AUTH">
+            <interleave>
+              <text/>
+              <!--CONC-->
+              <zeroOrMore>
+                <element name="CONC">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">248</param>
+                  </data>
+                </element>
+              </zeroOrMore>
+              <!--CONT-->
+              <zeroOrMore>
+                <element name="CONT">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">248</param>
+                  </data>
+                </element>
+              </zeroOrMore>
+            </interleave>
+          </element>
+        </optional>
+        <!--TITL-->
+        <optional>
+          <element name="TITL">
+            <interleave>
+              <text/>
+              <!--CONC-->
+              <zeroOrMore>
+                <element name="CONC">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">248</param>
+                  </data>
+                </element>
+              </zeroOrMore>
+              <!--CONT-->
+              <zeroOrMore>
+                <element name="CONT">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">248</param>
+                  </data>
+                </element>
+              </zeroOrMore>
+            </interleave>
+          </element>
+        </optional>
+        <!--ABBR-->
+        <optional>
+          <element name="ABBR">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">60</param>
+            </data>
+          </element>
+        </optional>
+        <!--PUBL-->
+        <optional>
+          <element name="PUBL">
+            <interleave>
+              <text/>
+              <!--CONC-->
+              <zeroOrMore>
+                <element name="CONC">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">248</param>
+                  </data>
+                </element>
+              </zeroOrMore>
+              <!--CONT-->
+              <zeroOrMore>
+                <element name="CONT">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">248</param>
+                  </data>
+                </element>
+              </zeroOrMore>
+            </interleave>
+          </element>
+        </optional>
+        <!--TEXT-->
+        <optional>
+          <element name="TEXT">
+            <interleave>
+              <text/>
+              <!--CONC-->
+              <zeroOrMore>
+                <element name="CONC">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">248</param>
+                  </data>
+                </element>
+              </zeroOrMore>
+              <!--CONT-->
+              <zeroOrMore>
+                <element name="CONT">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">248</param>
+                  </data>
+                </element>
+              </zeroOrMore>
+            </interleave>
+          </element>
+        </optional>
+        <!--REPO-->
+        <optional>
+          <element name="REPO">
+            <attribute name="REF">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">22</param>
+              </data>
+            </attribute>
+            <interleave>
+              <text/>
+              <!--NOTE-->
+              <zeroOrMore>
+                <ref name="note_structure"/>
+              </zeroOrMore>
+              <!--CALN-->
+              <zeroOrMore>
+                <element name="CALN">
+                  <mixed>
+                    <optional>
+                      <element name="MEDI">
+                        <data type="string">
+                          <param name="pattern">
+                          audio|book|card|electronic|fiche|film|magazine|manuscript|map|newspaper|photo|tombstone|video</param>
+                          <param name="minLength">1</param>
+                          <param name="maxLength">15</param>
+                        </data>
+                      </element>
+                    </optional>
+                  </mixed>
+                </element>
+              </zeroOrMore>
+            </interleave>
+          </element>
+        </optional>
+        <!--SOUR-->
+        <zeroOrMore>
+          <ref name="source_citation"/>
+        </zeroOrMore>
+        <!--OBJE-->
+        <zeroOrMore>
+          <ref name="multimedia_link"/>
+        </zeroOrMore>
+        <!--NOTE-->
+        <zeroOrMore>
+          <ref name="note_structure"/>
+        </zeroOrMore>
+        <ref name="record_end"/>
+      </interleave>
+    </element>
+  </define>
+  <!--SUBMITTER_RECORD-->
+  <define name="submitter_record">
+    <element name="SUBM">
+      <attribute name="ID">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">22</param>
+        </data>
+      </attribute>
+      <interleave>
+        <element name="NAME">
+          <data type="string">
+            <param name="minLength">1</param>
+            <param name="maxLength">60</param>
+          </data>
+        </element>
+        <!--ADDR-->
+        <optional>
+          <ref name="address_structure"/>
+        </optional>
+        <!--OBJE-->
+        <zeroOrMore>
+          <ref name="multimedia_link"/>
+        </zeroOrMore>
+        <!--LANG-->
+        <optional>
+          <element name="LANG">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">15</param>
+              <param name="pattern">
+              Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
+            </data>
+          </element>
+        </optional>
+        <!--LANG-->
+        <optional>
+          <element name="LANG">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">15</param>
+              <param name="pattern">
+              Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
+            </data>
+          </element>
+        </optional>
+        <!--LANG-->
+        <optional>
+          <element name="LANG">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">15</param>
+              <param name="pattern">
+              Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
+            </data>
+          </element>
+        </optional>
+        <!--RFN-->
+        <optional>
+          <element name="RFN">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">30</param>
+            </data>
+          </element>
+        </optional>
+        <!--RIN-->
+        <optional>
+          <element name="RIN">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">12</param>
+            </data>
+          </element>
+        </optional>
+        <!--CHAN-->
+        <optional>
+          <ref name="change_date"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <!--SUBMISSION_RECORD-->
+  <define name="submission_record">
+    <element name="SUBN">
+      <attribute name="ID">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">22</param>
+        </data>
+      </attribute>
+      <interleave>
+        <!--SUBM-->
+        <optional>
+          <element name="SUBM">
+            <attribute name="REF">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">22</param>
+              </data>
+            </attribute>
+            <empty/>
+          </element>
+        </optional>
+        <!--FAMF-->
+        <optional>
+          <element name="FAMF">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">120</param>
+            </data>
+          </element>
+        </optional>
+        <!--TEMP-->
+        <optional>
+          <element name="TEMP">
+            <data type="string">
+              <param name="minLength">4</param>
+              <param name="maxLength">5</param>
+            </data>
+          </element>
+        </optional>
+        <!--ANCE-->
+        <optional>
+          <element name="ANCE">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">4</param>
+            </data>
+          </element>
+        </optional>
+        <!--DESC-->
+        <optional>
+          <element name="DESC">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">4</param>
+            </data>
+          </element>
+        </optional>
+        <!--ORDI-->
+        <optional>
+          <element name="ORDI">
+            <data type="string">
+              <param name="pattern">yes|no</param>
+              <param name="minLength">2</param>
+              <param name="maxLength">3</param>
+            </data>
+          </element>
+        </optional>
+        <!--RIN-->
+        <optional>
+          <element name="RIN">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">12</param>
+            </data>
+          </element>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <!--Substructures of the Lineage-Linked Form-->
+  <!--ADDRESS_STRUCTURE-->
+  <define name="address_structure">
+    <interleave>
+      <!--ADDR-->
+      <optional>
+        <element name="ADDR">
+          <interleave>
+            <text/>
+            <zeroOrMore>
+              <element name="CONT">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">60</param>
+                </data>
+              </element>
+            </zeroOrMore>
+            <optional>
+              <element name="ADR1">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">60</param>
+                </data>
+              </element>
+            </optional>
+            <optional>
+              <element name="ADR2">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">60</param>
+                </data>
+              </element>
+            </optional>
+            <optional>
+              <element name="CITY">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">60</param>
+                </data>
+              </element>
+            </optional>
+            <optional>
+              <element name="STAE">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">60</param>
+                </data>
+              </element>
+            </optional>
+            <optional>
+              <element name="POST">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">10</param>
+                </data>
+              </element>
+            </optional>
+            <optional>
+              <element name="CTRY">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">60</param>
+                </data>
+              </element>
+            </optional>
+          </interleave>
+        </element>
+      </optional>
+      <!--PHON-->
+      <optional>
+        <element name="PHON">
+          <data type="string">
+            <param name="minLength">1</param>
+            <param name="maxLength">25</param>
+          </data>
+        </element>
+      </optional>
+      <!--PHON-->
+      <optional>
+        <element name="PHON">
+          <data type="string">
+            <param name="minLength">1</param>
+            <param name="maxLength">25</param>
+          </data>
+        </element>
+      </optional>
+      <!--PHON-->
+      <optional>
+        <element name="PHON">
+          <data type="string">
+            <param name="minLength">1</param>
+            <param name="maxLength">25</param>
+          </data>
+        </element>
+      </optional>
+    </interleave>
+  </define>
+  <!--CHANGE_DATE-->
+  <define name="change_date">
+    <element name="CHAN">
+      <interleave>
+        <element name="DATE">
+          <mixed>
+            <optional>
+              <element name="TIME">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">12</param>
+                  <param name="pattern">
+                  [0-2]?\d:\d\d:?\d?\d?:?\d?\d?</param>
+                </data>
+              </element>
+            </optional>
+          </mixed>
+        </element>
+        <!--NOTE-->
+        <zeroOrMore>
+          <ref name="note_structure"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <!--EVENT_DETAIL-->
+  <define name="event_detail">
+    <interleave>
+      <!--TYPE-->
+      <optional>
+        <element name="TYPE">
+          <data type="string">
+            <param name="minLength">1</param>
+            <param name="maxLength">90</param>
+          </data>
+        </element>
+      </optional>
+      <!--DATE-->
+      <optional>
+        <element name="DATE">
+          <data type="string">
+            <param name="minLength">1</param>
+            <param name="maxLength">35</param>
+          </data>
+        </element>
+      </optional>
+      <!--PLAC-->
+      <optional>
+        <element name="PLAC">
+          <interleave>
+            <text/>
+            <!--FORM-->
+            <element name="FORM">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">120</param>
+              </data>
+            </element>
+            <!--SOUR-->
+            <zeroOrMore>
+              <ref name="source_citation"/>
+            </zeroOrMore>
+            <!--NOTE-->
+            <zeroOrMore>
+              <ref name="note_structure"/>
+            </zeroOrMore>
+          </interleave>
+        </element>
+      </optional>
+      <!--ADDR & PHON-->
+      <optional>
+        <ref name="address_structure"/>
+      </optional>
+      <!--AGE-->
+      <optional>
+        <ref name="age"/>
+      </optional>
+      <!--AGNC-->
+      <optional>
+        <element name="AGNC">
+          <data type="string">
+            <param name="minLength">1</param>
+            <param name="maxLength">120</param>
+          </data>
+        </element>
+      </optional>
+      <!--CAUS-->
+      <optional>
+        <element name="CAUS">
+          <data type="string">
+            <param name="minLength">1</param>
+            <param name="maxLength">90</param>
+          </data>
+        </element>
+      </optional>
+      <!--SOUR-->
+      <zeroOrMore>
+        <ref name="source_citation"/>
+      </zeroOrMore>
+      <!--SOUR-->
+      <zeroOrMore>
+        <ref name="source_citation_simple_media"/>
+      </zeroOrMore>
+      <!--OBJE-->
+      <zeroOrMore>
+        <ref name="multimedia_link"/>
+      </zeroOrMore>
+      <!--NOTE-->
+      <zeroOrMore>
+        <ref name="note_structure"/>
+      </zeroOrMore>
+    </interleave>
+  </define>
+  <!--FAMILY_EVENT_STRUCTURE-->
+  <define name="family_event">
+    <choice>
+      <element name="ANUL">
+        <mixed>
+          <ref name="event_detail"/>
+        </mixed>
+      </element>
+      <element name="CENS">
+        <mixed>
+          <ref name="event_detail"/>
+        </mixed>
+      </element>
+      <element name="DIV">
+        <mixed>
+          <ref name="event_detail"/>
+        </mixed>
+      </element>
+      <element name="DIVF">
+        <mixed>
+          <ref name="event_detail"/>
+        </mixed>
+      </element>
+      <element name="ENGA">
+        <mixed>
+          <ref name="event_detail"/>
+        </mixed>
+      </element>
+      <element name="MARR">
+        <mixed>
+          <ref name="event_detail"/>
+        </mixed>
+      </element>
+      <element name="MARB">
+        <mixed>
+          <ref name="event_detail"/>
+        </mixed>
+      </element>
+      <element name="MARC">
+        <mixed>
+          <ref name="event_detail"/>
+        </mixed>
+      </element>
+      <element name="MARL">
+        <mixed>
+          <ref name="event_detail"/>
+        </mixed>
+      </element>
+      <element name="MARS">
+        <mixed>
+          <ref name="event_detail"/>
+        </mixed>
+      </element>
+      <element name="EVEN">
+        <mixed>
+          <ref name="event_detail"/>
+        </mixed>
+      </element>
+    </choice>
+  </define>
+  <!--INDIVIDUAL_ATTRIBUTE_STRUCTURE-->
+  <define name="individual_attribute">
+    <choice>
+      <element name="CAST">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="DSCR">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="EDUC">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="IDNO">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="NATI">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="NCHI">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="NMR">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="OCCU">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="PROP">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="RELI">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="RESI">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="SSN">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="TITL">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+    </choice>
+  </define>
+  <!--INDIVIDUAL_EVENT_STRUCTURE-->
+  <define name="individual_event">
+    <choice>
+      <element name="BIRT">
+        <interleave>
+          <text/>
+          <!--Event Detail-->
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+          <!--FAMC-->
+          <optional>
+            <element name="FAMC">
+              <attribute name="REF">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">22</param>
+                </data>
+              </attribute>
+            </element>
+            <empty/>
+          </optional>
+        </interleave>
+      </element>
+      <element name="CHR">
+        <interleave>
+          <text/>
+          <!--Event Detail-->
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+          <!--FAMC-->
+          <optional>
+            <element name="FAMC">
+              <attribute name="REF">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">22</param>
+                </data>
+              </attribute>
+              <empty/>
+            </element>
+          </optional>
+        </interleave>
+      </element>
+      <element name="DEAT">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="BURI">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="CREM">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="ADOP">
+        <interleave>
+          <text/>
+          <!--Event Detail-->
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+          <!--FAMC-->
+          <optional>
+            <element name="FAMC">
+              <attribute name="REF">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">22</param>
+                </data>
+              </attribute>
+              <element name="ADOP">
+                <data type="string">
+                  <param name="pattern">HUSB|WIFE|BOTH</param>
+                  <param name="minLength">1</param>
+                  <param name="maxLength">4</param>
+                </data>
+              </element>
+            </element>
+          </optional>
+        </interleave>
+      </element>
+      <element name="BAPM">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="BARM">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="BASM">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="BLES">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="CHRA">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="CONF">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="FCOM">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="ORDN">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="NATU">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="EMIG">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="IMMI">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="CENS">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="PROB">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="WILL">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="GRAD">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="RETI">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+      <element name="EVEN">
+        <mixed>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+        </mixed>
+      </element>
+    </choice>
+  </define>
+  <!--LDS_INDIVIDUAL_ORDINANCE-->
+  <define name="lds_individual_ordinance">
+    <choice>
+      <element name="BAPL">
+        <interleave>
+          <!--STAT-->
+          <optional>
+            <element name="STAT">
+              <data type="string">
+                <param name="pattern">
+                CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
+                <param name="minLength">5</param>
+                <param name="maxLength">10</param>
+              </data>
+            </element>
+          </optional>
+          <!--DATE-->
+          <optional>
+            <element name="DATE">
+              <data type="string">
+                <param name="minLength">4</param>
+                <param name="maxLength">35</param>
+              </data>
+            </element>
+          </optional>
+          <!--TEMP-->
+          <optional>
+            <element name="TEMP">
+              <data type="string">
+                <param name="minLength">4</param>
+                <param name="maxLength">5</param>
+              </data>
+            </element>
+          </optional>
+          <!--PLAC-->
+          <optional>
+            <element name="PLAC">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">120</param>
+              </data>
+            </element>
+          </optional>
+          <!--SOUR-->
+          <zeroOrMore>
+            <ref name="source_citation"/>
+          </zeroOrMore>
+          <!--NOTE-->
+          <zeroOrMore>
+            <ref name="note_structure"/>
+          </zeroOrMore>
+        </interleave>
+      </element>
+      <element name="CONL">
+        <interleave>
+          <!--STAT-->
+          <optional>
+            <element name="STAT">
+              <data type="string">
+                <param name="pattern">
+                CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
+                <param name="minLength">5</param>
+                <param name="maxLength">10</param>
+              </data>
+            </element>
+          </optional>
+          <!--DATE-->
+          <optional>
+            <element name="DATE">
+              <data type="string">
+                <param name="minLength">4</param>
+                <param name="maxLength">35</param>
+              </data>
+            </element>
+          </optional>
+          <!--TEMP-->
+          <optional>
+            <element name="TEMP">
+              <data type="string">
+                <param name="minLength">4</param>
+                <param name="maxLength">5</param>
+              </data>
+            </element>
+          </optional>
+          <!--PLAC-->
+          <optional>
+            <element name="PLAC">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">120</param>
+              </data>
+            </element>
+          </optional>
+          <!--SOUR-->
+          <zeroOrMore>
+            <ref name="source_citation"/>
+          </zeroOrMore>
+          <!--NOTE-->
+          <zeroOrMore>
+            <ref name="note_structure"/>
+          </zeroOrMore>
+        </interleave>
+      </element>
+      <element name="ENDL">
+        <interleave>
+          <!--STAT-->
+          <optional>
+            <element name="STAT">
+              <data type="string">
+                <param name="pattern">
+                CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
+                <param name="minLength">5</param>
+                <param name="maxLength">10</param>
+              </data>
+            </element>
+          </optional>
+          <!--DATE-->
+          <optional>
+            <element name="DATE">
+              <data type="string">
+                <param name="minLength">4</param>
+                <param name="maxLength">35</param>
+              </data>
+            </element>
+          </optional>
+          <!--TEMP-->
+          <optional>
+            <element name="TEMP">
+              <data type="string">
+                <param name="minLength">4</param>
+                <param name="maxLength">5</param>
+              </data>
+            </element>
+          </optional>
+          <!--PLAC-->
+          <optional>
+            <element name="PLAC">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">120</param>
+              </data>
+            </element>
+          </optional>
+          <!--SOUR-->
+          <zeroOrMore>
+            <ref name="source_citation"/>
+          </zeroOrMore>
+          <!--NOTE-->
+          <zeroOrMore>
+            <ref name="note_structure"/>
+          </zeroOrMore>
+        </interleave>
+      </element>
+      <element name="SLGC">
+        <interleave>
+          <!--STAT-->
+          <optional>
+            <element name="STAT">
+              <data type="string">
+                <param name="pattern">
+                BIC|CLEARED|COMPLETED|DNS|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
+                <param name="minLength">5</param>
+                <param name="maxLength">10</param>
+              </data>
+            </element>
+          </optional>
+          <!--DATE-->
+          <optional>
+            <element name="DATE">
+              <data type="string">
+                <param name="minLength">4</param>
+                <param name="maxLength">35</param>
+              </data>
+            </element>
+          </optional>
+          <!--TEMP-->
+          <optional>
+            <element name="TEMP">
+              <data type="string">
+                <param name="minLength">4</param>
+                <param name="maxLength">5</param>
+              </data>
+            </element>
+          </optional>
+          <!--PLAC-->
+          <optional>
+            <element name="PLAC">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">120</param>
+              </data>
+            </element>
+          </optional>
+          <!--FAMC-->
+          <element name="FAMC">
+            <attribute name="REF">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">22</param>
+              </data>
+            </attribute>
+            <empty/>
+          </element>
+          <!--SOUR-->
+          <zeroOrMore>
+            <ref name="source_citation"/>
+          </zeroOrMore>
+          <!--NOTE-->
+          <zeroOrMore>
+            <ref name="note_structure"/>
+          </zeroOrMore>
+        </interleave>
+      </element>
+    </choice>
+  </define>
+  <!--MULTIMEDIA_LINK-->
+  <define name="multimedia_link">
+    <choice>
+      <ref name="multimedia_link_ref"/>
+      <ref name="multimedia_link_simple"/>
+    </choice>
+  </define>
+  <define name="multimedia_link_ref">
+    <element name="OBJE">
+      <attribute name="REF">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">22</param>
+        </data>
+      </attribute>
+      <empty/>
+    </element>
+  </define>
+  <define name="multimedia_link_simple">
+    <element name="OBJE">
+      <interleave>
+        <element name="FORM">
+          <data type="string">
+            <param name="pattern">
+            bmp|gif|jpeg|ole|pcx|tiff|wav</param>
+            <param name="minLength">3</param>
+            <param name="maxLength">4</param>
+          </data>
+        </element>
+        <!--TITL-->
+        <optional>
+          <element name="TITL">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">248</param>
+            </data>
+          </element>
+        </optional>
+        <!--FILE-->
+        <optional>
+          <element name="FILE">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">30</param>
+            </data>
+          </element>
+        </optional>
+        <!--NOTE-->
+        <zeroOrMore>
+          <ref name="note_structure"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <!--NOTE_STRUCTURE-->
+  <define name="note_structure">
+    <choice>
+      <ref name="note_structure_ref"/>
+      <ref name="note_structure_simple"/>
+    </choice>
+  </define>
+  <define name="note_structure_ref">
+    <element name="NOTE">
+      <attribute name="REF">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">22</param>
+        </data>
+      </attribute>
+      <!--SOUR-->
+      <zeroOrMore>
+        <element name="SOUR">
+          <attribute name="REF">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">22</param>
+            </data>
+          </attribute>
+          <empty/>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="note_structure_simple">
+    <element name="NOTE">
+      <attribute name="REF">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">22</param>
+        </data>
+      </attribute>
+      <interleave>
+        <text/>
+        <!--CONC-->
+        <zeroOrMore>
+          <element name="CONC">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">248</param>
+            </data>
+          </element>
+        </zeroOrMore>
+        <!--CONT-->
+        <zeroOrMore>
+          <element name="CONT">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">248</param>
+            </data>
+          </element>
+        </zeroOrMore>
+        <!--SOUR-->
+        <zeroOrMore>
+          <element name="SOUR">
+            <attribute name="REF">
+              <data type="string">
+                <param name="minLength">1</param>
+                <param name="maxLength">22</param>
+              </data>
+            </attribute>
+            <empty/>
+          </element>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <!--SOURCE_CITATION-->
+  <define name="source_citation">
+    <choice>
+      <ref name="source_citation_ref"/>
+      <ref name="source_citation_simple"/>
+    </choice>
+  </define>
+  <define name="source_citation_ref">
+    <element name="SOUR">
+      <attribute name="REF">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">22</param>
+        </data>
+      </attribute>
+      <interleave>
+        <!--PAGE-->
+        <optional>
+          <element name="PAGE">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">248</param>
+            </data>
+          </element>
+        </optional>
+        <!--EVEN-->
+        <optional>
+          <element name="EVEN">
+            <mixed>
+              <optional>
+                <element name="ROLE">
+                  <!--TODO Implement Pattern-->
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">15</param>
+                  </data>
+                </element>
+              </optional>
+            </mixed>
+          </element>
+        </optional>
+        <!--DATA-->
+        <optional>
+          <element name="DATA">
+            <interleave>
+              <optional>
+                <element name="DATE">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">90</param>
+                  </data>
+                </element>
+              </optional>
+              <zeroOrMore>
+                <element name="TEXT">
+                  <interleave>
+                    <text/>
+                    <zeroOrMore>
+                      <element name="CONC">
+                        <data type="string">
+                          <param name="minLength">1</param>
+                          <param name="maxLength">248</param>
+                        </data>
+                      </element>
+                    </zeroOrMore>
+                    <zeroOrMore>
+                      <element name="CONT">
+                        <data type="string">
+                          <param name="minLength">1</param>
+                          <param name="maxLength">248</param>
+                        </data>
+                      </element>
+                    </zeroOrMore>
+                  </interleave>
+                </element>
+              </zeroOrMore>
+            </interleave>
+          </element>
+        </optional>
+        <!--QUAY-->
+        <optional>
+          <element name="QUAY">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">1</param>
+              <param name="pattern">0|1|2|3</param>
+            </data>
+          </element>
+        </optional>
+        <!--OBJE-->
+        <zeroOrMore>
+          <ref name="mulimedia_link"/>
+        </zeroOrMore>
+        <!--NOTE-->
+        <zeroOrMore>
+          <ref name="note_structure"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="source_citation_simple">
+    <element name="SOUR">
+      <interleave>
+        <text/>
+        <!--CONC-->
+        <zeroOrMore>
+          <element name="CONC">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">248</param>
+            </data>
+          </element>
+        </zeroOrMore>
+        <!--CONT-->
+        <zeroOrMore>
+          <element name="CONT">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">248</param>
+            </data>
+          </element>
+        </zeroOrMore>
+        <!--TEXT-->
+        <zeroOrMore>
+          <element name="TEXT">
+            <interleave>
+              <text/>
+              <zeroOrMore>
+                <element name="CONC">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">248</param>
+                  </data>
+                </element>
+              </zeroOrMore>
+              <zeroOrMore>
+                <element name="CONC">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">248</param>
+                  </data>
+                </element>
+              </zeroOrMore>
+            </interleave>
+          </element>
+        </zeroOrMore>
+        <!--NOTE-->
+        <zeroOrMore>
+          <ref name="note_structure"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <!--Miscellaneous-->
+  <!--AGE_AT_EVENT-->
+  <define name="age">
+    <element name="AGE">
+      <data type="string">
+        <param name="pattern">[&lt;&gt; ]?\d?\dy \d?\dm
+        [1-3]?\d?\dd|\d?\dy|[1]?\dm|[1-3]?\d?\dd|\d?\dy
+        [1]?\dm|\d?\dy [1-3]?\d?\dd|[1]?\dm
+        [1-3]?\d?\dd|CHILD|INFANT|STILLBORN</param>
+        <param name="minLength">1</param>
+        <param name="maxLength">12</param>
+      </data>
+    </element>
+  </define>
+  <!--USER_REFERENCE_NUMBER-->
+  <define name="user_reference_number">
+    <element name="REFN">
+      <mixed>
+        <optional>
+          <element name="TYPE">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">40</param>
+            </data>
+          </element>
+        </optional>
+      </mixed>
+    </element>
+  </define>
+  <!--record end-->
+  <define name="record_end">
+    <!--REFN-->
+    <zeroOrMore>
+      <ref name="user_reference_number"/>
+    </zeroOrMore>
+    <!--RIN-->
+    <optional>
+      <element name="RIN">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">12</param>
+        </data>
+      </element>
+    </optional>
+    <!--CHAN-->
+    <optional>
+      <ref name="change_date"/>
+    </optional>
+  </define>
+</grammar>
