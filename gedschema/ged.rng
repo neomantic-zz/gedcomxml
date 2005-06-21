@@ -4,8 +4,8 @@ xmlns="http://relaxng.org/ns/structure/1.0"
 xmlns:sch="http://www.ascc.net/xml/schematron">
   <start>
     <element name="GED">
-      <ref name="header"/>
       <interleave>
+	     <ref name="header"/>
         <!--SUBM-->
         <zeroOrMore>
           <ref name="submission_record"/>
@@ -49,12 +49,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <!--CORP-->
             <optional>
               <element name="CORP">
-                <mixed>
+                <interleave>
+                <text/>
                   <!--ADDR-->
                   <optional>
                     <ref name="address_structure"/>
                   </optional>
-                </mixed>
+                </interleave>
               </element>
             </optional>
             <!--DATA-->
@@ -83,7 +84,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                 </interleave>
               </element>
             </optional>
-          </interleave>
+           </interleave>
         </element>
         <!--DEST-->
         <optional>
@@ -101,8 +102,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               <optional>
                 <element name="TIME">
                   <data type="string">
-                    <param name="pattern">
-                    [0-2]\d:\d\d:?\d?\d?:?\d?\d?</param>
+                    <param name="pattern">[0-2]?\d:\d\d:?\d?\d?:?\d?\d?</param>
                     <param name="minLength">1</param>
                     <param name="maxLength">12</param>
                   </data>
@@ -112,7 +112,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           </element>
         </optional>
         <element name="SUBM">
-          <attribute name="REF">
+          <attribute name="REFN">
             <data type="string">
               <param name="minLength">1</param>
               <param name="maxLength">22</param>
@@ -123,7 +123,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--SUBN-->
         <optional>
           <element name="SUBN">
-            <attribute name="REF">
+            <attribute name="REFN">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -184,20 +184,21 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <data type="string">
               <param name="minLength">1</param>
               <param name="maxLength">15</param>
-              <param name="pattern">
-              Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
+              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
             </data>
           </element>
         </optional>
         <!--PLAC-->
         <optional>
           <element name="PLAC">
+          	<optional>
             <element name="FORM">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">120</param>
               </data>
             </element>
+            </optional>
           </element>
         </optional>
         <!--NOTE-->
@@ -230,13 +231,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   <!--RECORD-->
   <define name="record">
     <choice>
-      <ref name="family_record"/>
       <ref name="individual_record"/>
       <ref name="multimedia_record"/>
       <ref name="note_record"/>
       <ref name="repository_record"/>
       <ref name="source_record"/>
-      <ref name="submitter_record"/>
     </choice>
   </define>
   <!--FAM_RECORD-->
@@ -258,10 +257,10 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </element>
           </optional>
         </zeroOrMore>
-        <!--HUSB XREF:INDI-->
+        <!--HUSB XREFN:INDI-->
         <optional>
           <element name="WIFE">
-            <attribute name="REF">
+            <attribute name="REFN">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -270,10 +269,10 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <empty/>
           </element>
         </optional>
-        <!--WIFE XREF:INDI-->
+        <!--WIFE XREFN:INDI-->
         <optional>
           <element name="HUSB">
-            <attribute name="REF">
+            <attribute name="REFN">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -282,10 +281,10 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <empty/>
           </element>
         </optional>
-        <!--CHIL XREF:INDI-->
+        <!--CHIL XREFN:INDI-->
         <zeroOrMore>
           <element name="CHIL">
-            <attribute name="REF">
+            <attribute name="REFN">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -303,10 +302,10 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--SUMB XREF:INDI-->
+        <!--SUMB XREFN:INDI-->
         <zeroOrMore>
           <element name="SUBM">
-            <attribute name="REF">
+            <attribute name="REFN">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -323,8 +322,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               <optional>
                 <element name="STAT">
                   <data type="string">
-                    <param name="pattern">
-                    CANCELED|CLEARED|COMPLETED|DNS|DNS/CAN|PRE-1970|QUALIFIED|SUBMITTED|UNCLEARED</param>
+                    <param name="pattern">CANCELED|CLEARED|COMPLETED|DNS|DNS/CAN|PRE-1970|QUALIFIED|SUBMITTED|UNCLEARED</param>
                     <param name="minLength">3</param>
                     <param name="maxLength">10</param>
                   </data>
@@ -501,7 +499,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--FAMC-->
         <zeroOrMore>
           <element name="FAMC">
-            <attribute name="ID">
+            <attribute name="REFN">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -512,8 +510,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               <optional>
                 <element name="PEDI">
                   <data type="string">
-                    <param name="pattern">
-                    adopted|birth|foster|sealing</param>
+                    <param name="pattern">adopted|birth|foster|sealing</param>
                     <param name="minLength">5</param>
                     <param name="maxLength">7</param>
                   </data>
@@ -529,7 +526,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--FAMS-->
         <zeroOrMore>
           <element name="FAMS">
-            <attribute name="ID">
+            <attribute name="REFN">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -543,7 +540,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--SUBM-->
         <zeroOrMore>
           <element name="SUBM">
-            <attribute name="REF">
+            <attribute name="REFN">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -555,7 +552,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--ASSOCIATION_STRUCTURE-->
         <zeroOrMore>
           <element name="ASSO">
-            <attribute name="REF">
+            <attribute name="REFN">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -583,7 +580,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--ALIA-->
         <zeroOrMore>
           <element name="ALIA">
-            <attribute name="REF">
+            <attribute name="REFN">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -595,7 +592,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--ANCI-->
         <zeroOrMore>
           <element name="ANCI">
-            <attribute name="REF">
+            <attribute name="REFN">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -607,7 +604,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--DESI-->
         <zeroOrMore>
           <element name="DESI">
-            <attribute name="REF">
+            <attribute name="REFN">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -619,9 +616,6 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--SOUR-->
         <zeroOrMore>
           <ref name="source_citation"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <ref name="source_citation_simple_media"/>
         </zeroOrMore>
         <!--OBJE-->
         <zeroOrMore>
@@ -648,8 +642,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--FORM-->
         <element name="FORM">
           <data type="string">
-            <param name="pattern">
-            bmp|gif|jpeg|ole|pcx|tiff|wav</param>
+            <param name="pattern">bmp|gif|jpeg|ole|pcx|tiff|wav</param>
             <param name="minLength">3</param>
             <param name="maxLength">4</param>
           </data>
@@ -685,7 +678,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </element>
         <!--OBJE-->
         <element name="OBJE">
-          <attribute name="REF">
+          <attribute name="REFN">
             <data type="string">
               <param name="minLength">1</param>
               <param name="maxLength">22</param>
@@ -937,7 +930,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--REPO-->
         <optional>
           <element name="REPO">
-            <attribute name="REF">
+            <attribute name="REFN">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -956,8 +949,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                     <optional>
                       <element name="MEDI">
                         <data type="string">
-                          <param name="pattern">
-                          audio|book|card|electronic|fiche|film|magazine|manuscript|map|newspaper|photo|tombstone|video</param>
+                          <param name="pattern">audio|book|card|electronic|fiche|film|magazine|manuscript|map|newspaper|photo|tombstone|video</param>
                           <param name="minLength">1</param>
                           <param name="maxLength">15</param>
                         </data>
@@ -1015,8 +1007,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <data type="string">
               <param name="minLength">1</param>
               <param name="maxLength">15</param>
-              <param name="pattern">
-              Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
+              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
             </data>
           </element>
         </optional>
@@ -1026,8 +1017,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <data type="string">
               <param name="minLength">1</param>
               <param name="maxLength">15</param>
-              <param name="pattern">
-              Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
+              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
             </data>
           </element>
         </optional>
@@ -1037,8 +1027,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <data type="string">
               <param name="minLength">1</param>
               <param name="maxLength">15</param>
-              <param name="pattern">
-              Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
+              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
             </data>
           </element>
         </optional>
@@ -1080,7 +1069,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--SUBM-->
         <optional>
           <element name="SUBM">
-            <attribute name="REF">
+            <attribute name="REFN">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -1150,9 +1139,6 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   <!--Substructures of the Lineage-Linked Form-->
   <!--ADDRESS_STRUCTURE-->
   <define name="address_structure">
-    <interleave>
-      <!--ADDR-->
-      <optional>
         <element name="ADDR">
           <interleave>
             <text/>
@@ -1213,8 +1199,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </element>
             </optional>
           </interleave>
-        </element>
-      </optional>
+        </element><!-- end ADDR -->
       <!--PHON-->
       <optional>
         <element name="PHON">
@@ -1241,9 +1226,8 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <param name="maxLength">25</param>
           </data>
         </element>
-      </optional>
-    </interleave>
-  </define>
+		</optional>		
+	 </define>
   <!--CHANGE_DATE-->
   <define name="change_date">
     <element name="CHAN">
@@ -1255,8 +1239,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                 <data type="string">
                   <param name="minLength">1</param>
                   <param name="maxLength">12</param>
-                  <param name="pattern">
-                  [0-2]?\d:\d\d:?\d?\d?:?\d?\d?</param>
+                  <param name="pattern">[0-2]?\d:\d\d:?\d?\d?:?\d?\d?</param>
                 </data>
               </element>
             </optional>
@@ -1343,11 +1326,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       <zeroOrMore>
         <ref name="source_citation"/>
       </zeroOrMore>
-      <!--SOUR-->
-      <zeroOrMore>
-        <ref name="source_citation_simple_media"/>
-      </zeroOrMore>
-      <!--OBJE-->
+       <!--OBJE-->
       <zeroOrMore>
         <ref name="multimedia_link"/>
       </zeroOrMore>
@@ -1526,7 +1505,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <!--FAMC-->
           <optional>
             <element name="FAMC">
-              <attribute name="REF">
+              <attribute name="REFN">
                 <data type="string">
                   <param name="minLength">1</param>
                   <param name="maxLength">22</param>
@@ -1547,7 +1526,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <!--FAMC-->
           <optional>
             <element name="FAMC">
-              <attribute name="REF">
+              <attribute name="REFN">
                 <data type="string">
                   <param name="minLength">1</param>
                   <param name="maxLength">22</param>
@@ -1589,7 +1568,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <!--FAMC-->
           <optional>
             <element name="FAMC">
-              <attribute name="REF">
+              <attribute name="REFN">
                 <data type="string">
                   <param name="minLength">1</param>
                   <param name="maxLength">22</param>
@@ -1736,8 +1715,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <optional>
             <element name="STAT">
               <data type="string">
-                <param name="pattern">
-                CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
+                <param name="pattern">CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
                 <param name="minLength">5</param>
                 <param name="maxLength">10</param>
               </data>
@@ -1786,8 +1764,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <optional>
             <element name="STAT">
               <data type="string">
-                <param name="pattern">
-                CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
+                <param name="pattern">CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
                 <param name="minLength">5</param>
                 <param name="maxLength">10</param>
               </data>
@@ -1836,8 +1813,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <optional>
             <element name="STAT">
               <data type="string">
-                <param name="pattern">
-                CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
+                <param name="pattern">CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
                 <param name="minLength">5</param>
                 <param name="maxLength">10</param>
               </data>
@@ -1886,8 +1862,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <optional>
             <element name="STAT">
               <data type="string">
-                <param name="pattern">
-                BIC|CLEARED|COMPLETED|DNS|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
+                <param name="pattern">BIC|CLEARED|COMPLETED|DNS|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
                 <param name="minLength">5</param>
                 <param name="maxLength">10</param>
               </data>
@@ -1922,7 +1897,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           </optional>
           <!--FAMC-->
           <element name="FAMC">
-            <attribute name="REF">
+            <attribute name="REFN">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -1951,7 +1926,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   </define>
   <define name="multimedia_link_ref">
     <element name="OBJE">
-      <attribute name="REF">
+      <attribute name="REFN">
         <data type="string">
           <param name="minLength">1</param>
           <param name="maxLength">22</param>
@@ -1965,8 +1940,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       <interleave>
         <element name="FORM">
           <data type="string">
-            <param name="pattern">
-            bmp|gif|jpeg|ole|pcx|tiff|wav</param>
+            <param name="pattern">bmp|gif|jpeg|ole|pcx|tiff|wav</param>
             <param name="minLength">3</param>
             <param name="maxLength">4</param>
           </data>
@@ -2005,7 +1979,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   </define>
   <define name="note_structure_ref">
     <element name="NOTE">
-      <attribute name="REF">
+      <attribute name="REFN">
         <data type="string">
           <param name="minLength">1</param>
           <param name="maxLength">22</param>
@@ -2014,7 +1988,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       <!--SOUR-->
       <zeroOrMore>
         <element name="SOUR">
-          <attribute name="REF">
+          <attribute name="REFN">
             <data type="string">
               <param name="minLength">1</param>
               <param name="maxLength">22</param>
@@ -2027,7 +2001,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   </define>
   <define name="note_structure_simple">
     <element name="NOTE">
-      <attribute name="REF">
+      <attribute name="REFN">
         <data type="string">
           <param name="minLength">1</param>
           <param name="maxLength">22</param>
@@ -2056,7 +2030,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--SOUR-->
         <zeroOrMore>
           <element name="SOUR">
-            <attribute name="REF">
+            <attribute name="REFN">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -2077,7 +2051,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   </define>
   <define name="source_citation_ref">
     <element name="SOUR">
-      <attribute name="REF">
+      <attribute name="REFN">
         <data type="string">
           <param name="minLength">1</param>
           <param name="maxLength">22</param>
@@ -2190,7 +2164,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </zeroOrMore>
-        <!--TEXT-->
+        <!--TEXT FIX -->
         <zeroOrMore>
           <element name="TEXT">
             <interleave>
@@ -2204,7 +2178,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                 </element>
               </zeroOrMore>
               <zeroOrMore>
-                <element name="CONC">
+                <element name="CONT">
                   <data type="string">
                     <param name="minLength">1</param>
                     <param name="maxLength">248</param>
@@ -2226,16 +2200,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   <define name="age">
     <element name="AGE">
       <data type="string">
-        <param name="pattern">[&lt;&gt; ]?\d?\dy \d?\dm
-        [1-3]?\d?\dd|\d?\dy|[1]?\dm|[1-3]?\d?\dd|\d?\dy
-        [1]?\dm|\d?\dy [1-3]?\d?\dd|[1]?\dm
-        [1-3]?\d?\dd|CHILD|INFANT|STILLBORN</param>
+        <param name="pattern">[&lt;&gt; ]?\d?\dy \d?\dm[1-3]?\d?\dd|\d?\dy|[1]?\dm|[1-3]?\d?\dd|\d?\dy[1]?\dm|\d?\dy [1-3]?\d?\dd|[1]?\dm[1-3]?\d?\dd|CHILD|INFANT|STILLBORN</param>
         <param name="minLength">1</param>
         <param name="maxLength">12</param>
       </data>
     </element>
   </define>
-  <!--USER_REFERENCE_NUMBER-->
+  <!--USER_REFNERENCE_NUMBER-->
   <define name="user_reference_number">
     <element name="REFN">
       <mixed>
@@ -2252,7 +2223,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   </define>
   <!--record end-->
   <define name="record_end">
-    <!--REFN-->
+    <!--REFNN-->
     <zeroOrMore>
       <ref name="user_reference_number"/>
     </zeroOrMore>
