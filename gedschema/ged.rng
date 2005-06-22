@@ -232,10 +232,12 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   <define name="record">
     <choice>
       <ref name="individual_record"/>
+      <ref name="family_record"/>
       <ref name="multimedia_record"/>
       <ref name="note_record"/>
       <ref name="repository_record"/>
       <ref name="source_record"/>
+      <ref name="submitter_record"/>
     </choice>
   </define>
   <!--FAM_RECORD-->
@@ -245,18 +247,8 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       <interleave>
         <!--Family Events-->
         <zeroOrMore>
-          <ref name="family_event"/>
-          <optional>
-            <element name="HUSB">
-              <ref name="age"/>
-            </element>
-          </optional>
-          <optional>
-            <element name="WIFE">
-              <ref name="age"/>
-            </element>
-          </optional>
-        </zeroOrMore>
+			<ref name="family_event"/>
+		  </zeroOrMore>
         <!--HUSB XREFN:INDI-->
         <optional>
           <element name="WIFE">
@@ -986,7 +978,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <param name="maxLength">22</param>
         </data>
       </attribute>
-      <interleave>
+       <interleave>
         <element name="NAME">
           <data type="string">
             <param name="minLength">1</param>
@@ -1002,7 +994,8 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <ref name="multimedia_link"/>
         </zeroOrMore>
         <!--LANG-->
-        <optional>
+        <!--FIX - This should be constrained to 3 occurences -->        
+        <zeroOrMore>
           <element name="LANG">
             <data type="string">
               <param name="minLength">1</param>
@@ -1010,27 +1003,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
             </data>
           </element>
-        </optional>
-        <!--LANG-->
-        <optional>
-          <element name="LANG">
-            <data type="string">
-              <param name="minLength">1</param>
-              <param name="maxLength">15</param>
-              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
-            </data>
-          </element>
-        </optional>
-        <!--LANG-->
-        <optional>
-          <element name="LANG">
-            <data type="string">
-              <param name="minLength">1</param>
-              <param name="maxLength">15</param>
-              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
-            </data>
-          </element>
-        </optional>
+        </zeroOrMore>
         <!--RFN-->
         <optional>
           <element name="RFN">
@@ -1053,7 +1026,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <optional>
           <ref name="change_date"/>
         </optional>
-      </interleave>
+		 </interleave>
     </element>
   </define>
   <!--SUBMISSION_RECORD-->
@@ -1075,7 +1048,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                 <param name="maxLength">22</param>
               </data>
             </attribute>
-            <empty/>
+            <empty/>            
           </element>
         </optional>
         <!--FAMF-->
@@ -1279,12 +1252,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <interleave>
             <text/>
             <!--FORM-->
+            <optional>
             <element name="FORM">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">120</param>
               </data>
             </element>
+            </optional>
             <!--SOUR-->
             <zeroOrMore>
               <ref name="source_citation"/>
@@ -1340,60 +1315,203 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   <define name="family_event">
     <choice>
       <element name="ANUL">
-        <mixed>
+        <interleave>
+        	<text/>
+        	<optional>
           <ref name="event_detail"/>
-        </mixed>
+			</optional>
+           <optional>
+            <element name="HUSB">
+              <ref name="age"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="WIFE">
+              <ref name="age"/>
+            </element>
+          </optional>
+        </interleave>
       </element>
       <element name="CENS">
-        <mixed>
+        <interleave>
+        	<text/>
+        	<optional>
           <ref name="event_detail"/>
-        </mixed>
-      </element>
+			</optional>
+           <optional>
+            <element name="HUSB">
+              <ref name="age"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="WIFE">
+              <ref name="age"/>
+            </element>
+          </optional>
+        </interleave>
+              </element>
       <element name="DIV">
-        <mixed>
+        <interleave>
+        	<text/>
+        	<optional>
           <ref name="event_detail"/>
-        </mixed>
-      </element>
+			</optional>
+           <optional>
+            <element name="HUSB">
+              <ref name="age"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="WIFE">
+              <ref name="age"/>
+            </element>
+          </optional>
+        </interleave>
+              </element>
       <element name="DIVF">
-        <mixed>
+        <interleave>
+        	<text/>
+        	<optional>
           <ref name="event_detail"/>
-        </mixed>
-      </element>
+			</optional>
+           <optional>
+            <element name="HUSB">
+              <ref name="age"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="WIFE">
+              <ref name="age"/>
+            </element>
+          </optional>
+        </interleave>
+              </element>
       <element name="ENGA">
-        <mixed>
+        <interleave>
+        	<text/>
+        	<optional>
           <ref name="event_detail"/>
-        </mixed>
-      </element>
+			</optional>
+           <optional>
+            <element name="HUSB">
+              <ref name="age"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="WIFE">
+              <ref name="age"/>
+            </element>
+          </optional>
+        </interleave>
+              </element>
       <element name="MARR">
-        <mixed>
+        <interleave>
+        	<text/>
+        	<optional>
           <ref name="event_detail"/>
-        </mixed>
-      </element>
+			</optional>
+           <optional>
+            <element name="HUSB">
+              <ref name="age"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="WIFE">
+              <ref name="age"/>
+            </element>
+          </optional>
+        </interleave>
+              </element>
       <element name="MARB">
-        <mixed>
+        <interleave>
+        	<text/>
+        	<optional>
           <ref name="event_detail"/>
-        </mixed>
-      </element>
+			</optional>
+           <optional>
+            <element name="HUSB">
+              <ref name="age"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="WIFE">
+              <ref name="age"/>
+            </element>
+          </optional>
+        </interleave>
+              </element>
       <element name="MARC">
-        <mixed>
+        <interleave>
+        	<text/>
+        	<optional>
           <ref name="event_detail"/>
-        </mixed>
-      </element>
+			</optional>
+           <optional>
+            <element name="HUSB">
+              <ref name="age"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="WIFE">
+              <ref name="age"/>
+            </element>
+          </optional>
+        </interleave>
+              </element>
       <element name="MARL">
-        <mixed>
+        <interleave>
+        	<text/>
+        	<optional>
           <ref name="event_detail"/>
-        </mixed>
-      </element>
+			</optional>
+           <optional>
+            <element name="HUSB">
+              <ref name="age"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="WIFE">
+              <ref name="age"/>
+            </element>
+          </optional>
+        </interleave>
+              </element>
       <element name="MARS">
-        <mixed>
+        <interleave>
+        	<text/>
+        	<optional>
           <ref name="event_detail"/>
-        </mixed>
-      </element>
+			</optional>
+           <optional>
+            <element name="HUSB">
+              <ref name="age"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="WIFE">
+              <ref name="age"/>
+            </element>
+          </optional>
+        </interleave>
+              </element>
       <element name="EVEN">
-        <mixed>
+        <interleave>
+        	<text/>
+        	<optional>
           <ref name="event_detail"/>
-        </mixed>
-      </element>
+			</optional>
+           <optional>
+            <element name="HUSB">
+              <ref name="age"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="WIFE">
+              <ref name="age"/>
+            </element>
+          </optional>
+        </interleave>
+              </element>
     </choice>
   </define>
   <!--INDIVIDUAL_ATTRIBUTE_STRUCTURE-->
@@ -1973,7 +2091,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   <!--NOTE_STRUCTURE-->
   <define name="note_structure">
     <choice>
-      <ref name="note_structure_ref"/>
+		<ref name="note_structure_ref"/>
       <ref name="note_structure_simple"/>
     </choice>
   </define>
@@ -2001,12 +2119,6 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   </define>
   <define name="note_structure_simple">
     <element name="NOTE">
-      <attribute name="REFN">
-        <data type="string">
-          <param name="minLength">1</param>
-          <param name="maxLength">22</param>
-        </data>
-      </attribute>
       <interleave>
         <text/>
         <!--CONC-->
