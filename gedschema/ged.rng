@@ -2,10 +2,12 @@
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
 xmlns="http://relaxng.org/ns/structure/1.0"
 xmlns:sch="http://www.ascc.net/xml/schematron">
+  <!-- TODO - Implement the double SOUR or MULTI Link -->
+  <!-- TODO - Implement further schematron date parsing -->
   <start>
     <element name="GED">
       <interleave>
-	     <ref name="header"/>
+        <ref name="header"/>
         <!--SUBM-->
         <zeroOrMore>
           <ref name="submission_record"/>
@@ -26,6 +28,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
     <element name="HEAD">
       <interleave>
         <element name="SOUR">
+          <!-- SOUR Schematron rule -->
+          <sch:pattern name="Checking length of Header Record SOUR">
+            <sch:rule context="HEAD/SOUR/node()[self::text()]">
+              <sch:assert test="string-length( normalize-space(.) ) &lt; 21">
+              Exceeds maximum SOUR length of 20</sch:assert>
+            </sch:rule>
+          </sch:pattern>
           <interleave>
             <text/>
             <!--VERS-->
@@ -49,8 +58,15 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <!--CORP-->
             <optional>
               <element name="CORP">
+                <!-- CORP Schematron rule -->
+                <sch:pattern name="Checking length of Header Record CORP">
+                  <sch:rule context="CORP/node()[self::text()]">
+                    <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
+                    Exceeds maximum CORP length of 90</sch:assert>
+                  </sch:rule>
+                </sch:pattern>
                 <interleave>
-                <text/>
+                  <text/>
                   <!--ADDR-->
                   <optional>
                     <ref name="address_structure"/>
@@ -61,6 +77,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <!--DATA-->
             <optional>
               <element name="DATA">
+                <!-- DATA Schematron rule -->
+                <sch:pattern name="Checking length of Header Record DATA">
+                  <sch:rule context="DATA/node()[self::text()]">
+                    <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
+                    Exceeds maximum DATA length of 90</sch:assert>
+                  </sch:rule>
+                </sch:pattern>
                 <interleave>
                   <text/>
                   <!--DATE-->
@@ -84,7 +107,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                 </interleave>
               </element>
             </optional>
-           </interleave>
+          </interleave>
         </element>
         <!--DEST-->
         <optional>
@@ -98,11 +121,21 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--DATE-->
         <optional>
           <element name="DATE">
+            <!-- DATE Schematron rule -->
+            <sch:pattern name="Checking length of Header Record DATE">
+              <sch:rule context="GED/HEAD/DATE/node()[self::text()]">
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 12">
+                DATE range exceeds maximum of 11</sch:assert>
+                <sch:assert test="string-length( normalize-space(.) ) &gt; 9">
+                DATE range fails to meet the minimum of 10</sch:assert>
+              </sch:rule>
+            </sch:pattern>
             <mixed>
               <optional>
                 <element name="TIME">
                   <data type="string">
-                    <param name="pattern">[0-2]?\d:\d\d:?\d?\d?:?\d?\d?</param>
+                    <param name="pattern">
+                    [0-2]?\d:\d\d:?\d?\d?:?\d?\d?</param>
                     <param name="minLength">1</param>
                     <param name="maxLength">12</param>
                   </data>
@@ -166,7 +199,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           </element>
         </element>
         <element name="CHAR">
-          <!--TODO Schematron should check for the following values ANSEL|UNICODE|ASCII-->
+          <!-- CHAR Schematron rule -->
+          <sch:pattern name="Checking length of Header Record CHAR">
+            <sch:rule context="CHAR/node()[self::text()]">
+              <sch:assert test="contains(., 'ANSEL') or contains(., 'UNICODE') or contains (., 'ASCII')">
+              CHAR of Gedcom file fails to be ANSEL, UNICODE, or
+              ASCII</sch:assert>
+            </sch:rule>
+          </sch:pattern>
           <mixed>
             <optional>
               <element name="VERS">
@@ -184,26 +224,34 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <data type="string">
               <param name="minLength">1</param>
               <param name="maxLength">15</param>
-              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
+              <param name="pattern">
+              Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
             </data>
           </element>
         </optional>
         <!--PLAC-->
         <optional>
           <element name="PLAC">
-          	<optional>
-            <element name="FORM">
-              <data type="string">
-                <param name="minLength">1</param>
-                <param name="maxLength">120</param>
-              </data>
-            </element>
+            <optional>
+              <element name="FORM">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">120</param>
+                </data>
+              </element>
             </optional>
           </element>
         </optional>
         <!--NOTE-->
         <optional>
           <element name="NOTE">
+            <!-- NOTE Schematron rule -->
+            <sch:pattern name="Checking length of Header Record NOTE">
+              <sch:rule context="NOTE/node()[self::text()]">
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 248">
+                Exceeds maximum NOTE length of 248</sch:assert>
+              </sch:rule>
+            </sch:pattern>
             <interleave>
               <text/>
               <zeroOrMore>
@@ -247,8 +295,8 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       <interleave>
         <!--Family Events-->
         <zeroOrMore>
-			<ref name="family_event"/>
-		  </zeroOrMore>
+          <ref name="family_event"/>
+        </zeroOrMore>
         <!--HUSB XREFN:INDI-->
         <optional>
           <element name="WIFE">
@@ -314,7 +362,8 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               <optional>
                 <element name="STAT">
                   <data type="string">
-                    <param name="pattern">CANCELED|CLEARED|COMPLETED|DNS|DNS/CAN|PRE-1970|QUALIFIED|SUBMITTED|UNCLEARED</param>
+                    <param name="pattern">
+                    CANCELED|CLEARED|COMPLETED|DNS|DNS/CAN|PRE-1970|QUALIFIED|SUBMITTED|UNCLEARED</param>
                     <param name="minLength">3</param>
                     <param name="maxLength">10</param>
                   </data>
@@ -399,6 +448,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--PERSONAL_NAME_STRUCTURE-->
         <zeroOrMore>
           <element name="NAME">
+            <!-- NAME Schematron rule -->
+            <!-- TODO? - check if names separated by / -->
+            <sch:pattern name="Checking length of Individual Record NAME">
+              <sch:rule context="NAME/node()[self::text()]">
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
+                Exceeds maximum NAME length of 120</sch:assert>
+              </sch:rule>
+            </sch:pattern>
             <interleave>
               <text/>
               <!--NPFX-->
@@ -502,7 +559,8 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               <optional>
                 <element name="PEDI">
                   <data type="string">
-                    <param name="pattern">adopted|birth|foster|sealing</param>
+                    <param name="pattern">
+                    adopted|birth|foster|sealing</param>
                     <param name="minLength">5</param>
                     <param name="maxLength">7</param>
                   </data>
@@ -691,6 +749,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <param name="maxLength">22</param>
         </data>
       </attribute>
+      <!-- NOTE Schematron rule -->
+      <sch:pattern name="Checking length of Note Record NOTE">
+        <sch:rule context="NOTE/node()[self::text()]">
+          <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
+          Exceeds maximum NOTE length of 248</sch:assert>
+        </sch:rule>
+      </sch:pattern>
       <interleave>
         <text/>
         <!--CONC-->
@@ -767,6 +832,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               <!--EVEN-->
               <zeroOrMore>
                 <element name="EVEN">
+                  <!-- EVEN Schematron rule -->
+                  <sch:pattern name="Checking length of Source Record EVEN">
+                    <sch:rule context="EVEN/node()[self::text()]">
+                      <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
+                      EVEN exceeds maximum of 90</sch:assert>
+                    </sch:rule>
+                  </sch:pattern>
                   <interleave>
                     <text/>
                     <!--DATE-->
@@ -809,6 +881,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--AUTH-->
         <optional>
           <element name="AUTH">
+            <!-- AUTH Schematron rule -->
+            <sch:pattern name="Checking length of Header Record AUTH">
+              <sch:rule context="AUTH/node()[self::text()]">
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
+                Exceeds maximum AUTH length of 248</sch:assert>
+              </sch:rule>
+            </sch:pattern>
             <interleave>
               <text/>
               <!--CONC-->
@@ -835,6 +914,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--TITL-->
         <optional>
           <element name="TITL">
+            <!-- TITL Schematron rule -->
+            <sch:pattern name="Checking length of Source Record TITL">
+              <sch:rule context="TITL/node()[self::text()]">
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
+                Exceeds maximum TITL length of 248</sch:assert>
+              </sch:rule>
+            </sch:pattern>
             <interleave>
               <text/>
               <!--CONC-->
@@ -870,6 +956,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--PUBL-->
         <optional>
           <element name="PUBL">
+            <!-- PUBL Schematron rule -->
+            <sch:pattern name="Checking length of Source Record PUBL">
+              <sch:rule context="PUBL/node()[self::text()]">
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
+                Exceeds maximum PUBL length of 248</sch:assert>
+              </sch:rule>
+            </sch:pattern>
             <interleave>
               <text/>
               <!--CONC-->
@@ -896,6 +989,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--TEXT-->
         <optional>
           <element name="TEXT">
+            <!-- TEXT Schematron rule -->
+            <sch:pattern name="Checking length of Source Record TEXT">
+              <sch:rule context="TEXT/node()[self::text()]">
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
+                Exceeds maximum TEXT length of 248</sch:assert>
+              </sch:rule>
+            </sch:pattern>
             <interleave>
               <text/>
               <!--CONC-->
@@ -929,7 +1029,6 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </attribute>
             <interleave>
-              <text/>
               <!--NOTE-->
               <zeroOrMore>
                 <ref name="note_structure"/>
@@ -937,11 +1036,19 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               <!--CALN-->
               <zeroOrMore>
                 <element name="CALN">
+                  <!-- DATE Schematron rule -->
+                  <sch:pattern name="Checking length of Source Repository Citation CALN">
+                    <sch:rule context="CALN/node()[self::text()]">
+                      <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
+                      CALN range exceeds maximum of 120</sch:assert>
+                    </sch:rule>
+                  </sch:pattern>
                   <mixed>
                     <optional>
                       <element name="MEDI">
                         <data type="string">
-                          <param name="pattern">audio|book|card|electronic|fiche|film|magazine|manuscript|map|newspaper|photo|tombstone|video</param>
+                          <param name="pattern">
+                          audio|book|card|electronic|fiche|film|magazine|manuscript|map|newspaper|photo|tombstone|video</param>
                           <param name="minLength">1</param>
                           <param name="maxLength">15</param>
                         </data>
@@ -978,7 +1085,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <param name="maxLength">22</param>
         </data>
       </attribute>
-       <interleave>
+      <interleave>
         <element name="NAME">
           <data type="string">
             <param name="minLength">1</param>
@@ -994,13 +1101,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <ref name="multimedia_link"/>
         </zeroOrMore>
         <!--LANG-->
-        <!--FIX - This should be constrained to 3 occurences -->        
+        <!--FIX - This should be constrained to 3 occurences -->
         <zeroOrMore>
           <element name="LANG">
             <data type="string">
               <param name="minLength">1</param>
               <param name="maxLength">15</param>
-              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
+              <param name="pattern">
+              Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
             </data>
           </element>
         </zeroOrMore>
@@ -1026,7 +1134,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <optional>
           <ref name="change_date"/>
         </optional>
-		 </interleave>
+      </interleave>
     </element>
   </define>
   <!--SUBMISSION_RECORD-->
@@ -1048,7 +1156,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                 <param name="maxLength">22</param>
               </data>
             </attribute>
-            <empty/>            
+            <empty/>
           </element>
         </optional>
         <!--FAMF-->
@@ -1112,107 +1220,125 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   <!--Substructures of the Lineage-Linked Form-->
   <!--ADDRESS_STRUCTURE-->
   <define name="address_structure">
-        <element name="ADDR">
-          <interleave>
-            <text/>
-            <zeroOrMore>
-              <element name="CONT">
-                <data type="string">
-                  <param name="minLength">1</param>
-                  <param name="maxLength">60</param>
-                </data>
-              </element>
-            </zeroOrMore>
-            <optional>
-              <element name="ADR1">
-                <data type="string">
-                  <param name="minLength">1</param>
-                  <param name="maxLength">60</param>
-                </data>
-              </element>
-            </optional>
-            <optional>
-              <element name="ADR2">
-                <data type="string">
-                  <param name="minLength">1</param>
-                  <param name="maxLength">60</param>
-                </data>
-              </element>
-            </optional>
-            <optional>
-              <element name="CITY">
-                <data type="string">
-                  <param name="minLength">1</param>
-                  <param name="maxLength">60</param>
-                </data>
-              </element>
-            </optional>
-            <optional>
-              <element name="STAE">
-                <data type="string">
-                  <param name="minLength">1</param>
-                  <param name="maxLength">60</param>
-                </data>
-              </element>
-            </optional>
-            <optional>
-              <element name="POST">
-                <data type="string">
-                  <param name="minLength">1</param>
-                  <param name="maxLength">10</param>
-                </data>
-              </element>
-            </optional>
-            <optional>
-              <element name="CTRY">
-                <data type="string">
-                  <param name="minLength">1</param>
-                  <param name="maxLength">60</param>
-                </data>
-              </element>
-            </optional>
-          </interleave>
-        </element><!-- end ADDR -->
-      <!--PHON-->
-      <optional>
-        <element name="PHON">
-          <data type="string">
-            <param name="minLength">1</param>
-            <param name="maxLength">25</param>
-          </data>
-        </element>
-      </optional>
-      <!--PHON-->
-      <optional>
-        <element name="PHON">
-          <data type="string">
-            <param name="minLength">1</param>
-            <param name="maxLength">25</param>
-          </data>
-        </element>
-      </optional>
-      <!--PHON-->
-      <optional>
-        <element name="PHON">
-          <data type="string">
-            <param name="minLength">1</param>
-            <param name="maxLength">25</param>
-          </data>
-        </element>
-		</optional>		
-	 </define>
+    <element name="ADDR">
+      <!-- ADDR Schematron rule -->
+      <sch:pattern name="Checking length of Address Structure ADDR">
+        <sch:rule context="ADDR/node()[self::text()]">
+          <sch:assert test="string-length( normalize-space(.) ) &lt; 61">
+          Exceeds maximum NOTE length of 60</sch:assert>
+        </sch:rule>
+      </sch:pattern>
+      <interleave>
+        <text/>
+        <zeroOrMore>
+          <element name="CONT">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">60</param>
+            </data>
+          </element>
+        </zeroOrMore>
+        <optional>
+          <element name="ADR1">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">60</param>
+            </data>
+          </element>
+        </optional>
+        <optional>
+          <element name="ADR2">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">60</param>
+            </data>
+          </element>
+        </optional>
+        <optional>
+          <element name="CITY">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">60</param>
+            </data>
+          </element>
+        </optional>
+        <optional>
+          <element name="STAE">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">60</param>
+            </data>
+          </element>
+        </optional>
+        <optional>
+          <element name="POST">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">10</param>
+            </data>
+          </element>
+        </optional>
+        <optional>
+          <element name="CTRY">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">60</param>
+            </data>
+          </element>
+        </optional>
+      </interleave>
+    </element>
+    <!-- end ADDR -->
+    <!--PHON-->
+    <optional>
+      <element name="PHON">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">25</param>
+        </data>
+      </element>
+    </optional>
+    <!--PHON-->
+    <optional>
+      <element name="PHON">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">25</param>
+        </data>
+      </element>
+    </optional>
+    <!--PHON-->
+    <optional>
+      <element name="PHON">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">25</param>
+        </data>
+      </element>
+    </optional>
+  </define>
   <!--CHANGE_DATE-->
   <define name="change_date">
     <element name="CHAN">
       <interleave>
         <element name="DATE">
+          <!-- DATE Schematron rule -->
+          <sch:pattern name="Checking length of Change Date DATE">
+            <sch:rule context="CHAN/DATE/node()[self::text()]">
+              <sch:assert test="string-length( normalize-space(.) ) &lt; 12">
+              DATE range exceeds maximum of 11</sch:assert>
+              <sch:assert test="string-length( normalize-space(.) ) &gt; 9">
+              DATE range fails to meet the minimum of 10</sch:assert>
+            </sch:rule>
+          </sch:pattern>
           <mixed>
             <optional>
               <element name="TIME">
                 <data type="string">
                   <param name="minLength">1</param>
                   <param name="maxLength">12</param>
-                  <param name="pattern">[0-2]?\d:\d\d:?\d?\d?:?\d?\d?</param>
+                  <param name="pattern">
+                  [0-2]?\d:\d\d:?\d?\d?:?\d?\d?</param>
                 </data>
               </element>
             </optional>
@@ -1249,16 +1375,23 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       <!--PLAC-->
       <optional>
         <element name="PLAC">
+          <!-- PLAC Schematron rule -->
+          <sch:pattern name="Checking length of Event Detail Structure PLAC">
+            <sch:rule context="PLAC/node()[self::text()]">
+              <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
+              PLAC range exceeds maximum of 121</sch:assert>
+            </sch:rule>
+          </sch:pattern>
           <interleave>
             <text/>
             <!--FORM-->
             <optional>
-            <element name="FORM">
-              <data type="string">
-                <param name="minLength">1</param>
-                <param name="maxLength">120</param>
-              </data>
-            </element>
+              <element name="FORM">
+                <data type="string">
+                  <param name="minLength">1</param>
+                  <param name="maxLength">120</param>
+                </data>
+              </element>
             </optional>
             <!--SOUR-->
             <zeroOrMore>
@@ -1301,7 +1434,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       <zeroOrMore>
         <ref name="source_citation"/>
       </zeroOrMore>
-       <!--OBJE-->
+      <!--OBJE-->
       <zeroOrMore>
         <ref name="multimedia_link"/>
       </zeroOrMore>
@@ -1315,12 +1448,15 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   <define name="family_event">
     <choice>
       <element name="ANUL">
+        <!-- Used interleave instead of mixed for family events because of the HUSB
+                                and WIFE elements; mixed seems to require them to be in a certain order (against
+                                spec) and interleave "leaves" them be in any order -->
         <interleave>
-        	<text/>
-        	<optional>
-          <ref name="event_detail"/>
-			</optional>
-           <optional>
+          <text/>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+          <optional>
             <element name="HUSB">
               <ref name="age"/>
             </element>
@@ -1334,11 +1470,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </element>
       <element name="CENS">
         <interleave>
-        	<text/>
-        	<optional>
-          <ref name="event_detail"/>
-			</optional>
-           <optional>
+          <text/>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+          <optional>
             <element name="HUSB">
               <ref name="age"/>
             </element>
@@ -1349,14 +1485,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </element>
           </optional>
         </interleave>
-              </element>
+      </element>
       <element name="DIV">
         <interleave>
-        	<text/>
-        	<optional>
-          <ref name="event_detail"/>
-			</optional>
-           <optional>
+          <text/>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+          <optional>
             <element name="HUSB">
               <ref name="age"/>
             </element>
@@ -1367,14 +1503,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </element>
           </optional>
         </interleave>
-              </element>
+      </element>
       <element name="DIVF">
         <interleave>
-        	<text/>
-        	<optional>
-          <ref name="event_detail"/>
-			</optional>
-           <optional>
+          <text/>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+          <optional>
             <element name="HUSB">
               <ref name="age"/>
             </element>
@@ -1385,14 +1521,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </element>
           </optional>
         </interleave>
-              </element>
+      </element>
       <element name="ENGA">
         <interleave>
-        	<text/>
-        	<optional>
-          <ref name="event_detail"/>
-			</optional>
-           <optional>
+          <text/>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+          <optional>
             <element name="HUSB">
               <ref name="age"/>
             </element>
@@ -1403,14 +1539,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </element>
           </optional>
         </interleave>
-              </element>
+      </element>
       <element name="MARR">
         <interleave>
-        	<text/>
-        	<optional>
-          <ref name="event_detail"/>
-			</optional>
-           <optional>
+          <text/>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+          <optional>
             <element name="HUSB">
               <ref name="age"/>
             </element>
@@ -1421,14 +1557,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </element>
           </optional>
         </interleave>
-              </element>
+      </element>
       <element name="MARB">
         <interleave>
-        	<text/>
-        	<optional>
-          <ref name="event_detail"/>
-			</optional>
-           <optional>
+          <text/>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+          <optional>
             <element name="HUSB">
               <ref name="age"/>
             </element>
@@ -1439,14 +1575,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </element>
           </optional>
         </interleave>
-              </element>
+      </element>
       <element name="MARC">
         <interleave>
-        	<text/>
-        	<optional>
-          <ref name="event_detail"/>
-			</optional>
-           <optional>
+          <text/>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+          <optional>
             <element name="HUSB">
               <ref name="age"/>
             </element>
@@ -1457,14 +1593,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </element>
           </optional>
         </interleave>
-              </element>
+      </element>
       <element name="MARL">
         <interleave>
-        	<text/>
-        	<optional>
-          <ref name="event_detail"/>
-			</optional>
-           <optional>
+          <text/>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+          <optional>
             <element name="HUSB">
               <ref name="age"/>
             </element>
@@ -1475,14 +1611,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </element>
           </optional>
         </interleave>
-              </element>
+      </element>
       <element name="MARS">
         <interleave>
-        	<text/>
-        	<optional>
-          <ref name="event_detail"/>
-			</optional>
-           <optional>
+          <text/>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+          <optional>
             <element name="HUSB">
               <ref name="age"/>
             </element>
@@ -1493,14 +1629,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </element>
           </optional>
         </interleave>
-              </element>
+      </element>
       <element name="EVEN">
         <interleave>
-        	<text/>
-        	<optional>
-          <ref name="event_detail"/>
-			</optional>
-           <optional>
+          <text/>
+          <optional>
+            <ref name="event_detail"/>
+          </optional>
+          <optional>
             <element name="HUSB">
               <ref name="age"/>
             </element>
@@ -1511,13 +1647,20 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </element>
           </optional>
         </interleave>
-              </element>
+      </element>
     </choice>
   </define>
   <!--INDIVIDUAL_ATTRIBUTE_STRUCTURE-->
   <define name="individual_attribute">
     <choice>
       <element name="CAST">
+        <!-- CAST Schematron rule -->
+        <sch:pattern name="Checking length of Individual Attribute Structure CAST">
+          <sch:rule context="CAST/node()[self::text()]">
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
+            Exceeds maximum CAST length of 90</sch:assert>
+          </sch:rule>
+        </sch:pattern>
         <mixed>
           <optional>
             <ref name="event_detail"/>
@@ -1525,6 +1668,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="DSCR">
+        <!-- DSCR Schematron rule -->
+        <sch:pattern name="Checking length of Individual Attribute Structure DSCR">
+          <sch:rule context="DSCR/node()[self::text()]">
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
+            Exceeds maximum DSCR length of 248</sch:assert>
+          </sch:rule>
+        </sch:pattern>
         <mixed>
           <optional>
             <ref name="event_detail"/>
@@ -1532,6 +1682,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="EDUC">
+        <!-- EDUC Schematron rule -->
+        <sch:pattern name="Checking length of Individual Attribute Structure EDUC">
+          <sch:rule context="EDUC/node()[self::text()]">
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
+            Exceeds maximum EDUC length of 248</sch:assert>
+          </sch:rule>
+        </sch:pattern>
         <mixed>
           <optional>
             <ref name="event_detail"/>
@@ -1539,6 +1696,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="IDNO">
+        <!-- INDO Schematron rule -->
+        <sch:pattern name="Checking length of Individual Attribute Structure INDO">
+          <sch:rule context="INDO/node()[self::text()]">
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 31">
+            Exceeds maximum INDO length of 30</sch:assert>
+          </sch:rule>
+        </sch:pattern>
         <mixed>
           <optional>
             <ref name="event_detail"/>
@@ -1546,6 +1710,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="NATI">
+        <!-- NATI Schematron rule -->
+        <sch:pattern name="Checking length of Individual Attribute Structure NATI">
+          <sch:rule context="NATI/node()[self::text()]">
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
+            Exceeds maximum NATI length of 120</sch:assert>
+          </sch:rule>
+        </sch:pattern>
         <mixed>
           <optional>
             <ref name="event_detail"/>
@@ -1553,6 +1724,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="NCHI">
+        <!-- NCHI Schematron rule -->
+        <sch:pattern name="Checking length of Individual Attribute Structure NCHI">
+          <sch:rule context="NCHI/node()[self::text()]">
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 4">
+            Exceeds maximum NCHI length of 3</sch:assert>
+          </sch:rule>
+        </sch:pattern>
         <mixed>
           <optional>
             <ref name="event_detail"/>
@@ -1560,6 +1738,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="NMR">
+        <!-- NMR Schematron rule -->
+        <sch:pattern name="Checking length of Individual Attribute Structure NMR">
+          <sch:rule context="NMR/node()[self::text()]">
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 4">
+            Exceeds maximum NMR length of 3</sch:assert>
+          </sch:rule>
+        </sch:pattern>
         <mixed>
           <optional>
             <ref name="event_detail"/>
@@ -1567,6 +1752,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="OCCU">
+        <!-- OCCU Schematron rule -->
+        <sch:pattern name="Checking length of Individual Attribute Structure OCCU">
+          <sch:rule context="OCCU/node()[self::text()]">
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
+            Exceeds maximum OCCU length of 90</sch:assert>
+          </sch:rule>
+        </sch:pattern>
         <mixed>
           <optional>
             <ref name="event_detail"/>
@@ -1574,6 +1766,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="PROP">
+        <!-- PROP Schematron rule -->
+        <sch:pattern name="Checking length of Individual Attribute Structure PROP">
+          <sch:rule context="PROP/node()[self::text()]">
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
+            Exceeds maximum PROP length of 248</sch:assert>
+          </sch:rule>
+        </sch:pattern>
         <mixed>
           <optional>
             <ref name="event_detail"/>
@@ -1581,6 +1780,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="RELI">
+        <!-- RELI Schematron rule -->
+        <sch:pattern name="Checking length of Individual Attribute Structure RELI">
+          <sch:rule context="RELI/node()[self::text()]">
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
+            Exceeds maximum RELI length of 90</sch:assert>
+          </sch:rule>
+        </sch:pattern>
         <mixed>
           <optional>
             <ref name="event_detail"/>
@@ -1588,13 +1794,22 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="RESI">
-        <mixed>
-          <optional>
-            <ref name="event_detail"/>
-          </optional>
-        </mixed>
+        <optional>
+          <ref name="event_detail"/>
+        </optional>
       </element>
       <element name="SSN">
+        <!-- SSN Schematron rule -->
+        <sch:pattern name="Checking length of Individual Attribute Structure SSN">
+          <sch:rule context="SSN/node()[self::text()]">
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 12">
+            Exceeds maximum SSN length of 11</sch:assert>
+          </sch:rule>
+          <sch:rule context="SSN/node()[self::text()]">
+            <sch:assert test="string-length( normalize-space(.) ) &gt; 8">
+            Fails maximum SSN length of 9</sch:assert>
+          </sch:rule>
+        </sch:pattern>
         <mixed>
           <optional>
             <ref name="event_detail"/>
@@ -1602,6 +1817,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="TITL">
+        <!-- TITL Schematron rule -->
+        <sch:pattern name="Checking length of Individual Attribute Structure TITL">
+          <sch:rule context="TITL/node()[self::text()]">
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
+            Exceeds maximum NOTE length of 120</sch:assert>
+          </sch:rule>
+        </sch:pattern>
         <mixed>
           <optional>
             <ref name="event_detail"/>
@@ -1833,7 +2055,8 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <optional>
             <element name="STAT">
               <data type="string">
-                <param name="pattern">CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
+                <param name="pattern">
+                CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
                 <param name="minLength">5</param>
                 <param name="maxLength">10</param>
               </data>
@@ -1882,7 +2105,8 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <optional>
             <element name="STAT">
               <data type="string">
-                <param name="pattern">CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
+                <param name="pattern">
+                CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
                 <param name="minLength">5</param>
                 <param name="maxLength">10</param>
               </data>
@@ -1931,7 +2155,8 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <optional>
             <element name="STAT">
               <data type="string">
-                <param name="pattern">CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
+                <param name="pattern">
+                CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
                 <param name="minLength">5</param>
                 <param name="maxLength">10</param>
               </data>
@@ -1980,7 +2205,8 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <optional>
             <element name="STAT">
               <data type="string">
-                <param name="pattern">BIC|CLEARED|COMPLETED|DNS|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
+                <param name="pattern">
+                BIC|CLEARED|COMPLETED|DNS|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
                 <param name="minLength">5</param>
                 <param name="maxLength">10</param>
               </data>
@@ -2091,7 +2317,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   <!--NOTE_STRUCTURE-->
   <define name="note_structure">
     <choice>
-		<ref name="note_structure_ref"/>
+      <ref name="note_structure_ref"/>
       <ref name="note_structure_simple"/>
     </choice>
   </define>
@@ -2119,6 +2345,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   </define>
   <define name="note_structure_simple">
     <element name="NOTE">
+      <!-- NOTE Schematron rule -->
+      <sch:pattern name="Checking length of Note Structure NOTE">
+        <sch:rule context="NOTE/node()[self::text()]">
+          <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
+          NOTE range exceeds maximum of 248</sch:assert>
+        </sch:rule>
+      </sch:pattern>
       <interleave>
         <text/>
         <!--CONC-->
@@ -2182,6 +2415,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--EVEN-->
         <optional>
           <element name="EVEN">
+            <!-- EVEN Schematron rule -->
+            <sch:pattern name="Checking length of Source Citation EVEN">
+              <sch:rule context="EVEN/node()[self::text()]">
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 16">
+                EVEN range exceeds maximum of 15</sch:assert>
+              </sch:rule>
+            </sch:pattern>
             <mixed>
               <optional>
                 <element name="ROLE">
@@ -2209,6 +2449,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </optional>
               <zeroOrMore>
                 <element name="TEXT">
+                  <!-- DATE Schematron rule -->
+                  <sch:pattern name="Checking length of Source Citation TEXT">
+                    <sch:rule context="TEXT/node()[self::text()]">
+                      <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
+                      TEXT range exceeds maximum of 248</sch:assert>
+                    </sch:rule>
+                  </sch:pattern>
                   <interleave>
                     <text/>
                     <zeroOrMore>
@@ -2256,6 +2503,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   </define>
   <define name="source_citation_simple">
     <element name="SOUR">
+      <!-- SOUR Schematron rule -->
+      <sch:pattern name="Checking length of Source Citaton (simple) SOUR">
+        <sch:rule context="SOUR/node()[self::text()]">
+          <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
+          SOUR range exceeds maximum of 248</sch:assert>
+        </sch:rule>
+      </sch:pattern>
       <interleave>
         <text/>
         <!--CONC-->
@@ -2279,6 +2533,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <!--TEXT FIX -->
         <zeroOrMore>
           <element name="TEXT">
+            <!-- TEXT Schematron rule -->
+            <sch:pattern name="Checking length of Source Citation (simple) TEXT">
+              <sch:rule context="TEXT/node()[self::text()]">
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
+                TEXT range exceeds maximum of 248</sch:assert>
+              </sch:rule>
+            </sch:pattern>
             <interleave>
               <text/>
               <zeroOrMore>
@@ -2312,15 +2573,24 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   <define name="age">
     <element name="AGE">
       <data type="string">
-        <param name="pattern">[&lt;&gt; ]?\d?\dy \d?\dm[1-3]?\d?\dd|\d?\dy|[1]?\dm|[1-3]?\d?\dd|\d?\dy[1]?\dm|\d?\dy [1-3]?\d?\dd|[1]?\dm[1-3]?\d?\dd|CHILD|INFANT|STILLBORN</param>
+        <param name="pattern">[&lt;&gt; ]?\d?\dy
+        \d?\dm[1-3]?\d?\dd|\d?\dy|[1]?\dm|[1-3]?\d?\dd|\d?\dy[1]?\dm|\d?\dy
+        [1-3]?\d?\dd|[1]?\dm[1-3]?\d?\dd|CHILD|INFANT|STILLBORN</param>
         <param name="minLength">1</param>
         <param name="maxLength">12</param>
       </data>
     </element>
   </define>
-  <!--USER_REFNERENCE_NUMBER-->
+  <!--USER_REFERENCE_NUMBER-->
   <define name="user_reference_number">
     <element name="REFN">
+      <!-- REFN Schematron rule -->
+      <sch:pattern name="Checking length of User_Reference_Number">
+        <sch:rule context="REFN/node()[self::text()]">
+          <sch:assert test="string-length( normalize-space(.) ) &lt; 21">
+          REFN exceeds maximum of 20</sch:assert>
+        </sch:rule>
+      </sch:pattern>
       <mixed>
         <optional>
           <element name="TYPE">
@@ -2335,7 +2605,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   </define>
   <!--record end-->
   <define name="record_end">
-    <!--REFNN-->
+    <!--REFN-->
     <zeroOrMore>
       <ref name="user_reference_number"/>
     </zeroOrMore>
