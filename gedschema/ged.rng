@@ -2,8 +2,9 @@
 <grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
 xmlns="http://relaxng.org/ns/structure/1.0"
 xmlns:sch="http://www.ascc.net/xml/schematron">
-  <!-- TODO - Implement the double SOUR or MULTI Link -->
-  <!-- TODO - Implement further schematron date parsing -->
+<!-- $Id$ -->
+  <!-- TODO - Implement further relaxng/schematron date parsing -->
+  <!-- TODO?  Implement parsing for \n \r for schematron testing -->
   <start>
     <element name="GED">
       <interleave>
@@ -247,7 +248,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <element name="NOTE">
             <!-- NOTE Schematron rule -->
             <sch:pattern name="Checking length of Header Record NOTE">
-              <sch:rule context="NOTE/node()[self::text()]">
+              <sch:rule context="GED/HEAD/NOTE/node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 248">
                 Exceeds maximum NOTE length of 248</sch:assert>
               </sch:rule>
@@ -400,7 +401,10 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </optional>
               <!--SOUR-->
               <zeroOrMore>
-                <ref name="source_citation"/>
+                <ref name="source_citation_ref"/>
+              </zeroOrMore>
+              <zeroOrMore>
+              	 <ref name="source_citation_simple_obje"/>
               </zeroOrMore>
               <!--NOTE-->
               <zeroOrMore>
@@ -451,7 +455,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <!-- NAME Schematron rule -->
             <!-- TODO? - check if names separated by / -->
             <sch:pattern name="Checking length of Individual Record NAME">
-              <sch:rule context="NAME/node()[self::text()]">
+              <sch:rule context="INDI/NAME/node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
                 Exceeds maximum NAME length of 120</sch:assert>
               </sch:rule>
@@ -514,12 +518,19 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </optional>
               <!--SOUR-->
               <zeroOrMore>
-                <ref name="source_citation"/>
+                <ref name="source_citation_ref"/>
+              </zeroOrMore>
+              <zeroOrMore>
+              	 <ref name="source_citation_simple_obje"/>
               </zeroOrMore>
               <!--NOTE-->
               <zeroOrMore>
                 <ref name="note_structure"/>
               </zeroOrMore>
+              <!-- SOUR Citation - with note & obje children -->
+              <zeroOrMore>
+                <ref name="source_citation_sub"/>
+              </zeroOrMore>              
             </interleave>
           </element>
         </zeroOrMore>
@@ -834,7 +845,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                 <element name="EVEN">
                   <!-- EVEN Schematron rule -->
                   <sch:pattern name="Checking length of Source Record EVEN">
-                    <sch:rule context="EVEN/node()[self::text()]">
+                    <sch:rule context="SOUR/DATA/EVEN/node()[self::text()]">
                       <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
                       EVEN exceeds maximum of 90</sch:assert>
                     </sch:rule>
@@ -916,7 +927,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <element name="TITL">
             <!-- TITL Schematron rule -->
             <sch:pattern name="Checking length of Source Record TITL">
-              <sch:rule context="TITL/node()[self::text()]">
+              <sch:rule context="SOUR/TITL/node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
                 Exceeds maximum TITL length of 248</sch:assert>
               </sch:rule>
@@ -991,7 +1002,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <element name="TEXT">
             <!-- TEXT Schematron rule -->
             <sch:pattern name="Checking length of Source Record TEXT">
-              <sch:rule context="TEXT/node()[self::text()]">
+              <sch:rule context="SOUR/TEXT/node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
                 Exceeds maximum TEXT length of 248</sch:assert>
               </sch:rule>
@@ -1395,7 +1406,10 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </optional>
             <!--SOUR-->
             <zeroOrMore>
-              <ref name="source_citation"/>
+              <ref name="source_citation_ref"/>
+            </zeroOrMore>
+            <zeroOrMore>
+            	<ref name="source_citation_simple_obje"/>
             </zeroOrMore>
             <!--NOTE-->
             <zeroOrMore>
@@ -1819,7 +1833,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       <element name="TITL">
         <!-- TITL Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure TITL">
-          <sch:rule context="TITL/node()[self::text()]">
+          <sch:rule context="INDI/TITL/node()[self::text()]">
             <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
             Exceeds maximum NOTE length of 120</sch:assert>
           </sch:rule>
@@ -2565,6 +2579,98 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+<!-- This is a strange necessity caused by the following GEDCOM structures 
+  n  NAME <NAME_PERSONAL>  {1:1}
+    +1 NPFX <NAME_PIECE_PREFIX>  {0:1}
+    +1 GIVN <NAME_PIECE_GIVEN>  {0:1}
+    +1 NICK <NAME_PIECE_NICKNAME>  {0:1}
+    +1 SPFX <NAME_PIECE_SURNAME_PREFIX>  {0:1}
+    +1 SURN <NAME_PIECE_SURNAME>  {0:1}
+    +1 NSFX <NAME_PIECE_SUFFIX>  {0:1}
+    +1 <<SOURCE_CITATION>>  {0:M}
+      +2 <<NOTE_STRUCTURE>>  {0:M}
+      +2 <<MULTIMEDIA_LINK>>  {0:M}
+    +1 <<NOTE_STRUCTURE>>  {0:M}
+    
+    The problem here is the +2 level MULTIMEDIA_LINK under the SOUR.  A simple
+    SOUR citation (one without a ref attribute) normally does not have a multimedia
+    OBJE under it. Unlike a source_citation_ref tag that does.  Hence, the zeroOrMore
+    OBJE tags needed to be added to places where source_citation are called with the
+    +2 level OBJE tags.
+    
+    This occurs in three structures: the Personal Name Structure (above), the Event Detail
+    Structure, and the Family record
+-->
+  <define name="source_citation_simple_obje">
+    <element name="SOUR">
+      <!-- SOUR Schematron rule -->
+      <sch:pattern name="Checking length of Source Citaton (simple) SOUR">
+        <sch:rule context="SOUR/node()[self::text()]">
+          <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
+          SOUR range exceeds maximum of 248</sch:assert>
+        </sch:rule>
+      </sch:pattern>
+      <interleave>
+        <text/>
+        <!--CONC-->
+        <zeroOrMore>
+          <element name="CONC">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">248</param>
+            </data>
+          </element>
+        </zeroOrMore>
+        <!--CONT-->
+        <zeroOrMore>
+          <element name="CONT">
+            <data type="string">
+              <param name="minLength">1</param>
+              <param name="maxLength">248</param>
+            </data>
+          </element>
+        </zeroOrMore>
+        <!--TEXT FIX -->
+        <zeroOrMore>
+          <element name="TEXT">
+            <!-- TEXT Schematron rule -->
+            <sch:pattern name="Checking length of Source Citation (simple) TEXT">
+              <sch:rule context="TEXT/node()[self::text()]">
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
+                TEXT range exceeds maximum of 248</sch:assert>
+              </sch:rule>
+            </sch:pattern>
+            <interleave>
+              <text/>
+              <zeroOrMore>
+                <element name="CONC">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">248</param>
+                  </data>
+                </element>
+              </zeroOrMore>
+              <zeroOrMore>
+                <element name="CONT">
+                  <data type="string">
+                    <param name="minLength">1</param>
+                    <param name="maxLength">248</param>
+                  </data>
+                </element>
+              </zeroOrMore>
+            </interleave>
+          </element>
+        </zeroOrMore>
+        <!--NOTE-->
+        <zeroOrMore>
+          <ref name="note_structure"/>
+        </zeroOrMore>
+        <zeroOrmore>
+        	 <ref name="multi_media_link"/>
+        </zeroOrmore>
       </interleave>
     </element>
   </define>
