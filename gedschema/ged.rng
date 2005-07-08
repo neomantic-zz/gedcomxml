@@ -4,7 +4,8 @@ xmlns="http://relaxng.org/ns/structure/1.0"
 xmlns:sch="http://www.ascc.net/xml/schematron">
 <!-- $Id$ -->
   <!-- TODO - Implement further relaxng/schematron date parsing -->
-  <!-- TODO?  Implement parsing for \n \r for schematron testing -->
+<!-- REMINDER - When cleaning with tidy, be sure to fix pattern param which may
+     have space added to them -->
   <start>
     <element name="GED">
       <interleave>
@@ -18,6 +19,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <ref name="record"/>
         </oneOrMore>
       </interleave>
+      <!--FIX? Current gedml converter eliminates this tag-->
       <element name="TRLR">
         <empty/>
       </element>
@@ -68,9 +70,12 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                 </sch:pattern>
                 <interleave>
                   <text/>
-                  <!--ADDR-->
+                  <!--ADDR -->
                   <optional>
                     <ref name="address_structure"/>
+                  </optional>
+                  <optional>
+                  	<ref name="phone"/>
                   </optional>
                 </interleave>
               </element>
@@ -88,11 +93,17 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                 <interleave>
                   <text/>
                   <!--DATE-->
+                  <!-- I've implement an English Language Exact Date check which means
+                      it includes English words for the Month.  Gedcom specs also includes
+                      French and Hebrew (why not others?) but even these do not fit within
+                      the prescribe 10-11 date data length.  Additionally, this implementation
+                      does not check to determine if the date number is actually one possible
+                      for the indicated month.  Perhaps schematron can help here, but it
+                      would be really messy and time consuming.  -->
                   <optional>
                     <element name="DATE">
-                      <data type="string">
-                        <param name="minLength">10</param>
-                        <param name="maxLength">11</param>
+                      <data type="token">
+                      	<param name="pattern">[1-3]?\d (JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC) \d{4}</param>              
                       </data>
                     </element>
                   </optional>
@@ -123,6 +134,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <optional>
           <element name="DATE">
             <!-- DATE Schematron rule -->
+            <!-- FIX?  Can I make schematron check date format -->
             <sch:pattern name="Checking length of Header Record DATE">
               <sch:rule context="GED/HEAD/DATE/node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 12">
@@ -134,9 +146,8 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <mixed>
               <optional>
                 <element name="TIME">
-                  <data type="string">
-                    <param name="pattern">
-                    [0-2]?\d:\d\d:?\d?\d?:?\d?\d?</param>
+                  <data type="token">
+                    <param name="pattern">([1-2]?\d)?:?([0-5]\d)?:?([0-5]\d)?:?(\d\d)?</param>
                     <param name="minLength">1</param>
                     <param name="maxLength">12</param>
                   </data>
@@ -401,10 +412,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </optional>
               <!--SOUR-->
               <zeroOrMore>
-                <ref name="source_citation_ref"/>
-              </zeroOrMore>
-              <zeroOrMore>
-              	 <ref name="source_citation_simple_obje"/>
+              	 <ref name="source_citation_obje"/>              
               </zeroOrMore>
               <!--NOTE-->
               <zeroOrMore>
@@ -518,19 +526,12 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </optional>
               <!--SOUR-->
               <zeroOrMore>
-                <ref name="source_citation_ref"/>
-              </zeroOrMore>
-              <zeroOrMore>
-              	 <ref name="source_citation_simple_obje"/>
+              	 <ref name="source_citation_obje"/>               
               </zeroOrMore>
               <!--NOTE-->
               <zeroOrMore>
                 <ref name="note_structure"/>
-              </zeroOrMore>
-              <!-- SOUR Citation - with note & obje children -->
-              <zeroOrMore>
-                <ref name="source_citation_sub"/>
-              </zeroOrMore>              
+              </zeroOrMore>         
             </interleave>
           </element>
         </zeroOrMore>
@@ -570,8 +571,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               <optional>
                 <element name="PEDI">
                   <data type="string">
-                    <param name="pattern">
-                    adopted|birth|foster|sealing</param>
+                    <param name="pattern">adopted|birth|foster|sealing</param>
                     <param name="minLength">5</param>
                     <param name="maxLength">7</param>
                   </data>
@@ -814,9 +814,12 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--ADDR-->
+        <!--ADDR -->
         <optional>
           <ref name="address_structure"/>
+        </optional>
+        <optional>
+          	<ref name="phone"/>
         </optional>
         <!--NOTE-->
         <zeroOrMore>
@@ -852,7 +855,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </sch:pattern>
                   <interleave>
                     <text/>
-                    <!--DATE-->
+                    <!--DATE as DATE_PERIOD -->
                     <optional>
                       <element name="DATE">
                         <data type="string">
@@ -1103,9 +1106,12 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <param name="maxLength">60</param>
           </data>
         </element>
-        <!--ADDR-->
+        <!--ADDR  -->
         <optional>
           <ref name="address_structure"/>
+        </optional>
+        <optional>
+           <ref name="phone"/>
         </optional>
         <!--OBJE-->
         <zeroOrMore>
@@ -1300,33 +1306,9 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </interleave>
     </element>
     <!-- end ADDR -->
-    <!--PHON-->
-    <optional>
-      <element name="PHON">
-        <data type="string">
-          <param name="minLength">1</param>
-          <param name="maxLength">25</param>
-        </data>
-      </element>
-    </optional>
-    <!--PHON-->
-    <optional>
-      <element name="PHON">
-        <data type="string">
-          <param name="minLength">1</param>
-          <param name="maxLength">25</param>
-        </data>
-      </element>
-    </optional>
-    <!--PHON-->
-    <optional>
-      <element name="PHON">
-        <data type="string">
-          <param name="minLength">1</param>
-          <param name="maxLength">25</param>
-        </data>
-      </element>
-    </optional>
+ 	<!-- separate the PHON tags from the ADDR structure, because its at the same
+ 	 level as the ADDR (i.e., not as its child)  and can hence occur anywhere at the same
+ 	 level -->
   </define>
   <!--CHANGE_DATE-->
   <define name="change_date">
@@ -1345,12 +1327,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <mixed>
             <optional>
               <element name="TIME">
-                <data type="string">
-                  <param name="minLength">1</param>
-                  <param name="maxLength">12</param>
-                  <param name="pattern">
-                  [0-2]?\d:\d\d:?\d?\d?:?\d?\d?</param>
-                </data>
+                  <data type="token">
+                    <param name="pattern">([1-2]?\d)?:?([0-5]\d)?:?([0-5]\d)?:?(\d\d)?</param>
+                    <param name="minLength">1</param>
+                    <param name="maxLength">12</param>
+ 						</data>
               </element>
             </optional>
           </mixed>
@@ -1406,10 +1387,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </optional>
             <!--SOUR-->
             <zeroOrMore>
-              <ref name="source_citation_ref"/>
-            </zeroOrMore>
-            <zeroOrMore>
-            	<ref name="source_citation_simple_obje"/>
+               <ref name="source_citation_obje"/>
             </zeroOrMore>
             <!--NOTE-->
             <zeroOrMore>
@@ -1418,9 +1396,12 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           </interleave>
         </element>
       </optional>
-      <!--ADDR & PHON-->
+      <!--ADDR -->
       <optional>
         <ref name="address_structure"/>
+      </optional>
+      <optional>
+      	<ref name="phone"/>
       </optional>
       <!--AGE-->
       <optional>
@@ -2408,6 +2389,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       <ref name="source_citation_simple"/>
     </choice>
   </define>
+  <!-- to prevent annoying interleave ovelap -->
+  <define name="source_citation_obje">
+    <choice>
+      <ref name="source_citation_ref"/>
+      <ref name="source_citation_simple_obje"/>
+    </choice>
+  </define>
+
   <define name="source_citation_ref">
     <element name="SOUR">
       <attribute name="REFN">
@@ -2607,7 +2596,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   <define name="source_citation_simple_obje">
     <element name="SOUR">
       <!-- SOUR Schematron rule -->
-      <sch:pattern name="Checking length of Source Citaton (simple) SOUR">
+      <sch:pattern name="Checking length of Source Citation (simple) SOUR">
         <sch:rule context="SOUR/node()[self::text()]">
           <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
           SOUR range exceeds maximum of 248</sch:assert>
@@ -2668,9 +2657,9 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
-        <zeroOrmore>
-        	 <ref name="multi_media_link"/>
-        </zeroOrmore>
+        <zeroOrMore>
+          <ref name="multimedia_link"/>
+        </zeroOrMore>
       </interleave>
     </element>
   </define>
@@ -2687,6 +2676,36 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </data>
     </element>
   </define>
+<!--PHON -->
+<define name="phone">
+    <!--PHON-->
+    <optional>
+      <element name="PHON">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">25</param>
+        </data>
+      </element>
+    </optional>
+    <!--PHON-->
+    <optional>
+      <element name="PHON">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">25</param>
+        </data>
+      </element>
+    </optional>
+    <!--PHON-->
+    <optional>
+      <element name="PHON">
+        <data type="string">
+          <param name="minLength">1</param>
+          <param name="maxLength">25</param>
+        </data>
+      </element>
+    </optional>
+</define>
   <!--USER_REFERENCE_NUMBER-->
   <define name="user_reference_number">
     <element name="REFN">
