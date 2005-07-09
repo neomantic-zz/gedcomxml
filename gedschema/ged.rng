@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
-xmlns="http://relaxng.org/ns/structure/1.0"
-xmlns:sch="http://www.ascc.net/xml/schematron">
+<grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:sch="http://www.ascc.net/xml/schematron" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 <!-- $Id$ -->
-  <!-- TODO - Implement further relaxng/schematron date parsing -->
+<!-- TODO - Implement further relaxng/schematron date parsing -->
 <!-- REMINDER - When cleaning with tidy, be sure to fix pattern param which may
      have space added to them -->
 <!-- 
@@ -32,16 +30,16 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
     <element name="GED">
       <interleave>
         <ref name="header"/>
-        <!--SUBM-->
+<!--SUBM-->
         <zeroOrMore>
           <ref name="submission_record"/>
         </zeroOrMore>
-        <!--Records-->
+<!--Records-->
         <oneOrMore>
           <ref name="record"/>
         </oneOrMore>
       </interleave>
-      <!-- Even though the gedml converter eliminates the TRLR tag, I have 
+<!-- Even though the gedml converter eliminates the TRLR tag, I have 
       		  decided to keep this as a relaxng requirement because I have 
       		  tried to reproduce the standard as accurately as possible in 
       		  relaxng syntax -->
@@ -50,13 +48,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </element>
     </element>
   </start>
-  <!--Record Structures of the Lineage-Linked Form-->
-  <!--HEADER-->
+<!--Record Structures of the Lineage-Linked Form-->
+<!--HEADER-->
   <define name="header">
     <element name="HEAD">
       <interleave>
         <element name="SOUR">
-          <!-- SOUR Schematron rule -->
+<!-- SOUR Schematron rule -->
           <sch:pattern name="Checking length of Header Record SOUR">
             <sch:rule context="HEAD/SOUR/node()[self::text()]">
               <sch:assert test="string-length( normalize-space(.) ) &lt; 21">
@@ -65,7 +63,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           </sch:pattern>
           <interleave>
             <text/>
-            <!--VERS-->
+<!--VERS-->
             <optional>
               <element name="VERS">
                 <data type="string">
@@ -74,7 +72,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                 </data>
               </element>
             </optional>
-            <!--NAME-->
+<!--NAME-->
             <optional>
               <element name="NAME">
                 <data type="string">
@@ -83,10 +81,10 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                 </data>
               </element>
             </optional>
-            <!--CORP-->
+<!--CORP-->
             <optional>
               <element name="CORP">
-                <!-- CORP Schematron rule -->
+<!-- CORP Schematron rule -->
                 <sch:pattern name="Checking length of Header Record CORP">
                   <sch:rule context="CORP/node()[self::text()]">
                     <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
@@ -95,20 +93,20 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                 </sch:pattern>
                 <interleave>
                   <text/>
-                  <!--ADDR -->
+<!--ADDR -->
                   <optional>
                     <ref name="address_structure"/>
                   </optional>
                   <optional>
-                  	<ref name="phone"/>
+                    <ref name="phone"/>
                   </optional>
                 </interleave>
               </element>
             </optional>
-            <!--DATA-->
+<!--DATA-->
             <optional>
               <element name="DATA">
-                <!-- DATA Schematron rule -->
+<!-- DATA Schematron rule -->
                 <sch:pattern name="Checking length of Header Record DATA">
                   <sch:rule context="DATA/node()[self::text()]">
                     <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
@@ -117,8 +115,8 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                 </sch:pattern>
                 <interleave>
                   <text/>
-                  <!--DATE-->
-                  <!-- I've implement an English Language Exact Date check which means
+<!--DATE-->
+<!-- I've implement an English Language Exact Date check which means
                       it includes English words for the Month.  Gedcom specs also includes
                       French and Hebrew (why not others?) but even these do not fit within
                       the prescribe 10-11 date data length.  Additionally, this implementation
@@ -128,11 +126,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   <optional>
                     <element name="DATE">
                       <data type="token">
-                      	<param name="pattern">[1-3]?\d (JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC) \d{4}</param>              
+                        <param name="pattern">[1-3]?\d (JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC) \d{4}</param>
                       </data>
                     </element>
                   </optional>
-                  <!--COPR-->
+<!--COPR-->
                   <optional>
                     <element name="COPR">
                       <data type="string">
@@ -146,7 +144,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </optional>
           </interleave>
         </element>
-        <!--DEST-->
+<!--DEST-->
         <optional>
           <element name="DEST">
             <data type="string">
@@ -155,11 +153,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--DATE-->
+<!--DATE-->
         <optional>
           <element name="DATE">
-            <!-- DATE Schematron rule -->
-            <!-- FIX?  Can I make schematron check date format -->
+<!-- DATE Schematron rule -->
+<!-- FIX?  Can I make schematron check date format -->
             <sch:pattern name="Checking length of Header Record DATE">
               <sch:rule context="GED/HEAD/DATE/node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 12">
@@ -190,7 +188,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           </attribute>
           <empty/>
         </element>
-        <!--SUBN-->
+<!--SUBN-->
         <optional>
           <element name="SUBN">
             <attribute name="REFN">
@@ -202,7 +200,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <empty/>
           </element>
         </optional>
-        <!--FILE-->
+<!--FILE-->
         <optional>
           <element name="FILE">
             <data type="string">
@@ -211,7 +209,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--COPR-->
+<!--COPR-->
         <optional>
           <element name="COPR">
             <data type="string">
@@ -227,7 +225,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               <param name="maxLength">15</param>
             </data>
           </element>
-          <!--TODO - Add default value of LINEAGE-LINKED-->
+<!--TODO - Add default value of LINEAGE-LINKED-->
           <element name="FORM">
             <data type="string">
               <param name="minLength">14</param>
@@ -236,7 +234,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           </element>
         </element>
         <element name="CHAR">
-          <!-- CHAR Schematron rule -->
+<!-- CHAR Schematron rule -->
           <sch:pattern name="Checking length of Header Record CHAR">
             <sch:rule context="CHAR/node()[self::text()]">
               <sch:assert test="contains(., 'ANSEL') or contains(., 'UNICODE') or contains (., 'ASCII')">
@@ -255,7 +253,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </optional>
           </mixed>
         </element>
-        <!--LANG-->
+<!--LANG-->
         <optional>
           <element name="LANG">
             <data type="string">
@@ -265,7 +263,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--PLAC-->
+<!--PLAC-->
         <optional>
           <element name="PLAC">
             <optional>
@@ -278,10 +276,10 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </optional>
           </element>
         </optional>
-        <!--NOTE-->
+<!--NOTE-->
         <optional>
           <element name="NOTE">
-            <!-- NOTE Schematron rule -->
+<!-- NOTE Schematron rule -->
             <sch:pattern name="Checking length of Header Record NOTE">
               <sch:rule context="GED/HEAD/NOTE/node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 248">
@@ -312,7 +310,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </interleave>
     </element>
   </define>
-  <!--RECORD-->
+<!--RECORD-->
   <define name="record">
     <choice>
       <ref name="individual_record"/>
@@ -324,16 +322,16 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       <ref name="submitter_record"/>
     </choice>
   </define>
-  <!--FAM_RECORD-->
+<!--FAM_RECORD-->
   <define name="family_record">
     <element name="FAM">
       <attribute name="ID"/>
       <interleave>
-        <!--Family Events-->
+<!--Family Events-->
         <zeroOrMore>
           <ref name="family_event"/>
         </zeroOrMore>
-        <!--HUSB XREFN:INDI-->
+<!--HUSB XREFN:INDI-->
         <optional>
           <element name="WIFE">
             <attribute name="REFN">
@@ -345,7 +343,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <empty/>
           </element>
         </optional>
-        <!--WIFE XREFN:INDI-->
+<!--WIFE XREFN:INDI-->
         <optional>
           <element name="HUSB">
             <attribute name="REFN">
@@ -357,7 +355,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <empty/>
           </element>
         </optional>
-        <!--CHIL XREFN:INDI-->
+<!--CHIL XREFN:INDI-->
         <zeroOrMore>
           <element name="CHIL">
             <attribute name="REFN">
@@ -369,7 +367,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <empty/>
           </element>
         </zeroOrMore>
-        <!--COUNT_OF_CHILDREN-->
+<!--COUNT_OF_CHILDREN-->
         <optional>
           <element name="NCHI">
             <data type="string">
@@ -378,7 +376,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--SUMB XREFN:INDI-->
+<!--SUMB XREFN:INDI-->
         <zeroOrMore>
           <element name="SUBM">
             <attribute name="REFN">
@@ -390,11 +388,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <empty/>
           </element>
         </zeroOrMore>
-        <!--SLGS-->
+<!--SLGS-->
         <zeroOrMore>
           <element name="SLGS">
             <interleave>
-              <!--STAT-->
+<!--STAT-->
               <optional>
                 <element name="STAT">
                   <data type="string">
@@ -404,17 +402,17 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </data>
                 </element>
               </optional>
-              <!--DATE-->
+<!--DATE-->
               <optional>
                 <element name="DATE">
-                  <!--TODO Implement DATE_VALUE-->
+<!--TODO Implement DATE_VALUE-->
                   <data type="string">
                     <param name="minLength">4</param>
                     <param name="maxLength">35</param>
                   </data>
                 </element>
               </optional>
-              <!--TEMP-->
+<!--TEMP-->
               <optional>
                 <element name="TEMP">
                   <data type="string">
@@ -423,36 +421,36 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </data>
                 </element>
               </optional>
-              <!--PLAC-->
+<!--PLAC-->
               <optional>
                 <element name="PLAC">
-                  <!--TODO Implement PLACE_VALUE-->
+<!--TODO Implement PLACE_VALUE-->
                   <data type="string">
                     <param name="minLength">1</param>
                     <param name="maxLength">120</param>
                   </data>
                 </element>
               </optional>
-              <!--SOUR-->
+<!--SOUR-->
               <zeroOrMore>
-              	 <ref name="source_citation_obje"/>              
+                <ref name="source_citation_obje"/>
               </zeroOrMore>
-              <!--NOTE-->
+<!--NOTE-->
               <zeroOrMore>
                 <ref name="note_structure"/>
               </zeroOrMore>
             </interleave>
           </element>
         </zeroOrMore>
-        <!--SOUR-->
+<!--SOUR-->
         <zeroOrMore>
           <ref name="source_citation"/>
         </zeroOrMore>
-        <!--OBJE-->
+<!--OBJE-->
         <zeroOrMore>
           <ref name="multimedia_link"/>
         </zeroOrMore>
-        <!--NOTE-->
+<!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
@@ -460,7 +458,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </interleave>
     </element>
   </define>
-  <!--INDIVIDUAL_RECORD-->
+<!--INDIVIDUAL_RECORD-->
   <define name="individual_record">
     <element name="INDI">
       <attribute name="ID">
@@ -470,7 +468,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </data>
       </attribute>
       <interleave>
-        <!--RESN-->
+<!--RESN-->
         <optional>
           <element name="RESN">
             <data type="string">
@@ -480,11 +478,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--PERSONAL_NAME_STRUCTURE-->
+<!--PERSONAL_NAME_STRUCTURE-->
         <zeroOrMore>
           <element name="NAME">
-            <!-- NAME Schematron rule -->
-            <!-- TODO? - check if names separated by / -->
+<!-- NAME Schematron rule -->
+<!-- TODO? - check if names separated by / -->
             <sch:pattern name="Checking length of Individual Record NAME">
               <sch:rule context="INDI/NAME/node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
@@ -493,7 +491,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </sch:pattern>
             <interleave>
               <text/>
-              <!--NPFX-->
+<!--NPFX-->
               <optional>
                 <element name="NPFX">
                   <data type="string">
@@ -502,7 +500,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </data>
                 </element>
               </optional>
-              <!--GIVN-->
+<!--GIVN-->
               <optional>
                 <element name="GIVN">
                   <data type="string">
@@ -511,7 +509,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </data>
                 </element>
               </optional>
-              <!--NICK-->
+<!--NICK-->
               <optional>
                 <element name="NICK">
                   <data type="string">
@@ -520,7 +518,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </data>
                 </element>
               </optional>
-              <!--SPFX-->
+<!--SPFX-->
               <optional>
                 <element name="SPFX">
                   <data type="string">
@@ -529,7 +527,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </data>
                 </element>
               </optional>
-              <!--SURN-->
+<!--SURN-->
               <optional>
                 <element name="SURN">
                   <data type="string">
@@ -538,7 +536,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </data>
                 </element>
               </optional>
-              <!--NSFX-->
+<!--NSFX-->
               <optional>
                 <element name="NSFX">
                   <data type="string">
@@ -547,18 +545,18 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </data>
                 </element>
               </optional>
-              <!--SOUR-->
+<!--SOUR-->
               <zeroOrMore>
-              	 <ref name="source_citation_obje"/>               
+                <ref name="source_citation_obje"/>
               </zeroOrMore>
-              <!--NOTE-->
+<!--NOTE-->
               <zeroOrMore>
                 <ref name="note_structure"/>
-              </zeroOrMore>         
+              </zeroOrMore>
             </interleave>
           </element>
         </zeroOrMore>
-        <!--SEX-->
+<!--SEX-->
         <optional>
           <element name="SEX">
             <data type="string">
@@ -568,19 +566,19 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--Events-->
+<!--Events-->
         <zeroOrMore>
           <ref name="individual_event"/>
         </zeroOrMore>
-        <!--Attributes-->
+<!--Attributes-->
         <zeroOrMore>
           <ref name="individual_attribute"/>
         </zeroOrMore>
-        <!--LDS Individual Ordinances-->
+<!--LDS Individual Ordinances-->
         <zeroOrMore>
           <ref name="lds_individual_ordinance"/>
         </zeroOrMore>
-        <!--FAMC-->
+<!--FAMC-->
         <zeroOrMore>
           <element name="FAMC">
             <attribute name="REFN">
@@ -590,7 +588,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </attribute>
             <interleave>
-              <!--PEDI-->
+<!--PEDI-->
               <optional>
                 <element name="PEDI">
                   <data type="string">
@@ -600,14 +598,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </data>
                 </element>
               </optional>
-              <!--NOTE-->
+<!--NOTE-->
               <zeroOrMore>
                 <ref name="note_structure"/>
               </zeroOrMore>
             </interleave>
           </element>
         </zeroOrMore>
-        <!--FAMS-->
+<!--FAMS-->
         <zeroOrMore>
           <element name="FAMS">
             <attribute name="REFN">
@@ -621,7 +619,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </zeroOrMore>
           </element>
         </zeroOrMore>
-        <!--SUBM-->
+<!--SUBM-->
         <zeroOrMore>
           <element name="SUBM">
             <attribute name="REFN">
@@ -633,7 +631,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <empty/>
           </element>
         </zeroOrMore>
-        <!--ASSOCIATION_STRUCTURE-->
+<!--ASSOCIATION_STRUCTURE-->
         <zeroOrMore>
           <element name="ASSO">
             <attribute name="REFN">
@@ -642,7 +640,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                 <param name="maxLength">22</param>
               </data>
             </attribute>
-            <!--RELA-->
+<!--RELA-->
             <interleave>
               <element name="RELA">
                 <data type="string">
@@ -650,18 +648,18 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   <param name="maxLength">25</param>
                 </data>
               </element>
-              <!--NOTE-->
+<!--NOTE-->
               <zeroOrMore>
                 <ref name="note_structure"/>
               </zeroOrMore>
-              <!--SOUR-->
+<!--SOUR-->
               <zeroOrMore>
                 <ref name="source_citation"/>
               </zeroOrMore>
             </interleave>
           </element>
         </zeroOrMore>
-        <!--ALIA-->
+<!--ALIA-->
         <zeroOrMore>
           <element name="ALIA">
             <attribute name="REFN">
@@ -673,7 +671,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <empty/>
           </element>
         </zeroOrMore>
-        <!--ANCI-->
+<!--ANCI-->
         <zeroOrMore>
           <element name="ANCI">
             <attribute name="REFN">
@@ -685,7 +683,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <empty/>
           </element>
         </zeroOrMore>
-        <!--DESI-->
+<!--DESI-->
         <zeroOrMore>
           <element name="DESI">
             <attribute name="REFN">
@@ -697,15 +695,15 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <empty/>
           </element>
         </zeroOrMore>
-        <!--SOUR-->
+<!--SOUR-->
         <zeroOrMore>
           <ref name="source_citation"/>
         </zeroOrMore>
-        <!--OBJE-->
+<!--OBJE-->
         <zeroOrMore>
           <ref name="multimedia_link"/>
         </zeroOrMore>
-        <!--NOTE-->
+<!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
@@ -713,7 +711,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </interleave>
     </element>
   </define>
-  <!--MULTIMEDIA_RECORD-->
+<!--MULTIMEDIA_RECORD-->
   <define name="multimedia_record">
     <element name="OBJE">
       <attribute name="ID">
@@ -723,7 +721,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </data>
       </attribute>
       <interleave>
-        <!--FORM-->
+<!--FORM-->
         <element name="FORM">
           <data type="string">
             <param name="pattern">bmp|gif|jpeg|ole|pcx|tiff|wav</param>
@@ -731,7 +729,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <param name="maxLength">4</param>
           </data>
         </element>
-        <!--TITL-->
+<!--TITL-->
         <optional>
           <element name="TITL">
             <data type="string">
@@ -740,17 +738,17 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--NOTE-->
+<!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
-        <!--SOUR-->
+<!--SOUR-->
         <zeroOrMore>
           <ref name="source_citation"/>
         </zeroOrMore>
-        <!--BLOB-->
+<!--BLOB-->
         <element name="BLOB">
-          <!--CONT-->
+<!--CONT-->
           <oneOrMore>
             <element name="CONT">
               <data type="string">
@@ -760,7 +758,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </element>
           </oneOrMore>
         </element>
-        <!--OBJE-->
+<!--OBJE-->
         <element name="OBJE">
           <attribute name="REFN">
             <data type="string">
@@ -774,7 +772,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </interleave>
     </element>
   </define>
-  <!--NOTE_RECORD-->
+<!--NOTE_RECORD-->
   <define name="note_record">
     <element name="NOTE">
       <attribute name="ID">
@@ -783,7 +781,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <param name="maxLength">22</param>
         </data>
       </attribute>
-      <!-- NOTE Schematron rule -->
+<!-- NOTE Schematron rule -->
       <sch:pattern name="Checking length of Note Record NOTE">
         <sch:rule context="NOTE/node()[self::text()]">
           <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
@@ -792,7 +790,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </sch:pattern>
       <interleave>
         <text/>
-        <!--CONC-->
+<!--CONC-->
         <zeroOrMore>
           <element name="CONC">
             <data type="string">
@@ -801,7 +799,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </zeroOrMore>
-        <!--CONT-->
+<!--CONT-->
         <zeroOrMore>
           <element name="CONT">
             <data type="string">
@@ -810,7 +808,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </zeroOrMore>
-        <!--SOUR-->
+<!--SOUR-->
         <zeroOrMore>
           <ref name="source_citation"/>
         </zeroOrMore>
@@ -818,7 +816,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </interleave>
     </element>
   </define>
-  <!--REPOSITORY_RECORD-->
+<!--REPOSITORY_RECORD-->
   <define name="repository_record">
     <element name="REPO">
       <attribute name="ID">
@@ -828,7 +826,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </data>
       </attribute>
       <interleave>
-        <!--NAME-->
+<!--NAME-->
         <optional>
           <element name="NAME">
             <data type="string">
@@ -837,14 +835,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--ADDR -->
+<!--ADDR -->
         <optional>
           <ref name="address_structure"/>
         </optional>
         <optional>
-          	<ref name="phone"/>
+          <ref name="phone"/>
         </optional>
-        <!--NOTE-->
+<!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
@@ -852,7 +850,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </interleave>
     </element>
   </define>
-  <!--SOURCE_RECORD-->
+<!--SOURCE_RECORD-->
   <define name="source_record">
     <element name="SOUR">
       <attribute name="ID">
@@ -862,14 +860,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </data>
       </attribute>
       <interleave>
-        <!--DATA-->
+<!--DATA-->
         <optional>
           <element name="DATA">
             <interleave>
-              <!--EVEN-->
+<!--EVEN-->
               <zeroOrMore>
                 <element name="EVEN">
-                  <!-- EVEN Schematron rule -->
+<!-- EVEN Schematron rule -->
                   <sch:pattern name="Checking length of Source Record EVEN">
                     <sch:rule context="SOUR/DATA/EVEN/node()[self::text()]">
                       <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
@@ -878,7 +876,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </sch:pattern>
                   <interleave>
                     <text/>
-                    <!--DATE as DATE_PERIOD -->
+<!--DATE as DATE_PERIOD -->
                     <optional>
                       <element name="DATE">
                         <data type="string">
@@ -887,7 +885,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                         </data>
                       </element>
                     </optional>
-                    <!--PLAC-->
+<!--PLAC-->
                     <optional>
                       <element name="PLAC">
                         <data type="string">
@@ -899,7 +897,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </interleave>
                 </element>
               </zeroOrMore>
-              <!--AGNC-->
+<!--AGNC-->
               <optional>
                 <element name="AGNC">
                   <data type="string">
@@ -908,17 +906,17 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </data>
                 </element>
               </optional>
-              <!--NOTE-->
+<!--NOTE-->
               <zeroOrMore>
                 <ref name="note_structure"/>
               </zeroOrMore>
             </interleave>
           </element>
         </optional>
-        <!--AUTH-->
+<!--AUTH-->
         <optional>
           <element name="AUTH">
-            <!-- AUTH Schematron rule -->
+<!-- AUTH Schematron rule -->
             <sch:pattern name="Checking length of Header Record AUTH">
               <sch:rule context="AUTH/node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
@@ -927,7 +925,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </sch:pattern>
             <interleave>
               <text/>
-              <!--CONC-->
+<!--CONC-->
               <zeroOrMore>
                 <element name="CONC">
                   <data type="string">
@@ -936,7 +934,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </data>
                 </element>
               </zeroOrMore>
-              <!--CONT-->
+<!--CONT-->
               <zeroOrMore>
                 <element name="CONT">
                   <data type="string">
@@ -948,10 +946,10 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </interleave>
           </element>
         </optional>
-        <!--TITL-->
+<!--TITL-->
         <optional>
           <element name="TITL">
-            <!-- TITL Schematron rule -->
+<!-- TITL Schematron rule -->
             <sch:pattern name="Checking length of Source Record TITL">
               <sch:rule context="SOUR/TITL/node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
@@ -960,7 +958,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </sch:pattern>
             <interleave>
               <text/>
-              <!--CONC-->
+<!--CONC-->
               <zeroOrMore>
                 <element name="CONC">
                   <data type="string">
@@ -969,7 +967,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </data>
                 </element>
               </zeroOrMore>
-              <!--CONT-->
+<!--CONT-->
               <zeroOrMore>
                 <element name="CONT">
                   <data type="string">
@@ -981,7 +979,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </interleave>
           </element>
         </optional>
-        <!--ABBR-->
+<!--ABBR-->
         <optional>
           <element name="ABBR">
             <data type="string">
@@ -990,10 +988,10 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--PUBL-->
+<!--PUBL-->
         <optional>
           <element name="PUBL">
-            <!-- PUBL Schematron rule -->
+<!-- PUBL Schematron rule -->
             <sch:pattern name="Checking length of Source Record PUBL">
               <sch:rule context="PUBL/node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
@@ -1002,7 +1000,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </sch:pattern>
             <interleave>
               <text/>
-              <!--CONC-->
+<!--CONC-->
               <zeroOrMore>
                 <element name="CONC">
                   <data type="string">
@@ -1011,7 +1009,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </data>
                 </element>
               </zeroOrMore>
-              <!--CONT-->
+<!--CONT-->
               <zeroOrMore>
                 <element name="CONT">
                   <data type="string">
@@ -1023,10 +1021,10 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </interleave>
           </element>
         </optional>
-        <!--TEXT-->
+<!--TEXT-->
         <optional>
           <element name="TEXT">
-            <!-- TEXT Schematron rule -->
+<!-- TEXT Schematron rule -->
             <sch:pattern name="Checking length of Source Record TEXT">
               <sch:rule context="SOUR/TEXT/node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
@@ -1035,7 +1033,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </sch:pattern>
             <interleave>
               <text/>
-              <!--CONC-->
+<!--CONC-->
               <zeroOrMore>
                 <element name="CONC">
                   <data type="string">
@@ -1044,7 +1042,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                   </data>
                 </element>
               </zeroOrMore>
-              <!--CONT-->
+<!--CONT-->
               <zeroOrMore>
                 <element name="CONT">
                   <data type="string">
@@ -1056,7 +1054,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </interleave>
           </element>
         </optional>
-        <!--REPO-->
+<!--REPO-->
         <optional>
           <element name="REPO">
             <attribute name="REFN">
@@ -1066,14 +1064,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </attribute>
             <interleave>
-              <!--NOTE-->
+<!--NOTE-->
               <zeroOrMore>
                 <ref name="note_structure"/>
               </zeroOrMore>
-              <!--CALN-->
+<!--CALN-->
               <zeroOrMore>
                 <element name="CALN">
-                  <!-- DATE Schematron rule -->
+<!-- DATE Schematron rule -->
                   <sch:pattern name="Checking length of Source Repository Citation CALN">
                     <sch:rule context="CALN/node()[self::text()]">
                       <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
@@ -1096,15 +1094,15 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </interleave>
           </element>
         </optional>
-        <!--SOUR-->
+<!--SOUR-->
         <zeroOrMore>
           <ref name="source_citation"/>
         </zeroOrMore>
-        <!--OBJE-->
+<!--OBJE-->
         <zeroOrMore>
           <ref name="multimedia_link"/>
         </zeroOrMore>
-        <!--NOTE-->
+<!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
@@ -1112,7 +1110,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </interleave>
     </element>
   </define>
-  <!--SUBMITTER_RECORD-->
+<!--SUBMITTER_RECORD-->
   <define name="submitter_record">
     <element name="SUBM">
       <attribute name="ID">
@@ -1128,19 +1126,19 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <param name="maxLength">60</param>
           </data>
         </element>
-        <!--ADDR  -->
+<!--ADDR  -->
         <optional>
           <ref name="address_structure"/>
         </optional>
         <optional>
-           <ref name="phone"/>
+          <ref name="phone"/>
         </optional>
-        <!--OBJE-->
+<!--OBJE-->
         <zeroOrMore>
           <ref name="multimedia_link"/>
         </zeroOrMore>
-        <!--LANG-->
-        <!--FIX - This should be constrained to 3 occurences -->
+<!--LANG-->
+<!--FIX - This should be constrained to 3 occurences -->
         <zeroOrMore>
           <element name="LANG">
             <data type="string">
@@ -1150,7 +1148,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </zeroOrMore>
-        <!--RFN-->
+<!--RFN-->
         <optional>
           <element name="RFN">
             <data type="string">
@@ -1159,7 +1157,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--RIN-->
+<!--RIN-->
         <optional>
           <element name="RIN">
             <data type="string">
@@ -1168,14 +1166,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--CHAN-->
+<!--CHAN-->
         <optional>
           <ref name="change_date"/>
         </optional>
       </interleave>
     </element>
   </define>
-  <!--SUBMISSION_RECORD-->
+<!--SUBMISSION_RECORD-->
   <define name="submission_record">
     <element name="SUBN">
       <attribute name="ID">
@@ -1185,7 +1183,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </data>
       </attribute>
       <interleave>
-        <!--SUBM-->
+<!--SUBM-->
         <optional>
           <element name="SUBM">
             <attribute name="REFN">
@@ -1197,7 +1195,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <empty/>
           </element>
         </optional>
-        <!--FAMF-->
+<!--FAMF-->
         <optional>
           <element name="FAMF">
             <data type="string">
@@ -1206,7 +1204,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--TEMP-->
+<!--TEMP-->
         <optional>
           <element name="TEMP">
             <data type="string">
@@ -1215,7 +1213,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--ANCE-->
+<!--ANCE-->
         <optional>
           <element name="ANCE">
             <data type="string">
@@ -1224,7 +1222,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--DESC-->
+<!--DESC-->
         <optional>
           <element name="DESC">
             <data type="string">
@@ -1233,7 +1231,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--ORDI-->
+<!--ORDI-->
         <optional>
           <element name="ORDI">
             <data type="string">
@@ -1243,7 +1241,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--RIN-->
+<!--RIN-->
         <optional>
           <element name="RIN">
             <data type="string">
@@ -1255,11 +1253,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </interleave>
     </element>
   </define>
-  <!--Substructures of the Lineage-Linked Form-->
-  <!--ADDRESS_STRUCTURE-->
+<!--Substructures of the Lineage-Linked Form-->
+<!--ADDRESS_STRUCTURE-->
   <define name="address_structure">
     <element name="ADDR">
-      <!-- ADDR Schematron rule -->
+<!-- ADDR Schematron rule -->
       <sch:pattern name="Checking length of Address Structure ADDR">
         <sch:rule context="ADDR/node()[self::text()]">
           <sch:assert test="string-length( normalize-space(.) ) &lt; 61">
@@ -1326,17 +1324,17 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </optional>
       </interleave>
     </element>
-    <!-- end ADDR -->
- 	<!-- separate the PHON tags from the ADDR structure, because its at the same
+<!-- end ADDR -->
+<!-- separate the PHON tags from the ADDR structure, because its at the same
  	 level as the ADDR (i.e., not as its child)  and can hence occur anywhere at the same
  	 level -->
   </define>
-  <!--CHANGE_DATE-->
+<!--CHANGE_DATE-->
   <define name="change_date">
     <element name="CHAN">
       <interleave>
         <element name="DATE">
-          <!-- DATE Schematron rule -->
+<!-- DATE Schematron rule -->
           <sch:pattern name="Checking length of Change Date DATE">
             <sch:rule context="CHAN/DATE/node()[self::text()]">
               <sch:assert test="string-length( normalize-space(.) ) &lt; 12">
@@ -1348,26 +1346,26 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <mixed>
             <optional>
               <element name="TIME">
-                  <data type="token">
-                    <param name="pattern">([1-2]?\d)?:?([0-5]\d)?:?([0-5]\d)?:?(\d\d)?</param>
-                    <param name="minLength">1</param>
-                    <param name="maxLength">12</param>
- 						</data>
+                <data type="token">
+                  <param name="pattern">([1-2]?\d)?:?([0-5]\d)?:?([0-5]\d)?:?(\d\d)?</param>
+                  <param name="minLength">1</param>
+                  <param name="maxLength">12</param>
+                </data>
               </element>
             </optional>
           </mixed>
         </element>
-        <!--NOTE-->
+<!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
       </interleave>
     </element>
   </define>
-  <!--EVENT_DETAIL-->
+<!--EVENT_DETAIL-->
   <define name="event_detail">
     <interleave>
-      <!--TYPE-->
+<!--TYPE-->
       <optional>
         <element name="TYPE">
           <data type="string">
@@ -1376,7 +1374,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           </data>
         </element>
       </optional>
-      <!--DATE-->
+<!--DATE-->
       <optional>
         <element name="DATE">
           <data type="string">
@@ -1385,10 +1383,10 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           </data>
         </element>
       </optional>
-      <!--PLAC-->
+<!--PLAC-->
       <optional>
         <element name="PLAC">
-          <!-- PLAC Schematron rule -->
+<!-- PLAC Schematron rule -->
           <sch:pattern name="Checking length of Event Detail Structure PLAC">
             <sch:rule context="PLAC/node()[self::text()]">
               <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
@@ -1397,7 +1395,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           </sch:pattern>
           <interleave>
             <text/>
-            <!--FORM-->
+<!--FORM-->
             <optional>
               <element name="FORM">
                 <data type="string">
@@ -1406,29 +1404,29 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                 </data>
               </element>
             </optional>
-            <!--SOUR-->
+<!--SOUR-->
             <zeroOrMore>
-               <ref name="source_citation_obje"/>
+              <ref name="source_citation_obje"/>
             </zeroOrMore>
-            <!--NOTE-->
+<!--NOTE-->
             <zeroOrMore>
               <ref name="note_structure"/>
             </zeroOrMore>
           </interleave>
         </element>
       </optional>
-      <!--ADDR -->
+<!--ADDR -->
       <optional>
         <ref name="address_structure"/>
       </optional>
       <optional>
-      	<ref name="phone"/>
+        <ref name="phone"/>
       </optional>
-      <!--AGE-->
+<!--AGE-->
       <optional>
         <ref name="age"/>
       </optional>
-      <!--AGNC-->
+<!--AGNC-->
       <optional>
         <element name="AGNC">
           <data type="string">
@@ -1437,7 +1435,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           </data>
         </element>
       </optional>
-      <!--CAUS-->
+<!--CAUS-->
       <optional>
         <element name="CAUS">
           <data type="string">
@@ -1446,25 +1444,25 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           </data>
         </element>
       </optional>
-      <!--SOUR-->
+<!--SOUR-->
       <zeroOrMore>
         <ref name="source_citation"/>
       </zeroOrMore>
-      <!--OBJE-->
+<!--OBJE-->
       <zeroOrMore>
         <ref name="multimedia_link"/>
       </zeroOrMore>
-      <!--NOTE-->
+<!--NOTE-->
       <zeroOrMore>
         <ref name="note_structure"/>
       </zeroOrMore>
     </interleave>
   </define>
-  <!--FAMILY_EVENT_STRUCTURE-->
+<!--FAMILY_EVENT_STRUCTURE-->
   <define name="family_event">
     <choice>
       <element name="ANUL">
-        <!-- Used interleave instead of mixed for family events because of the HUSB
+<!-- Used interleave instead of mixed for family events because of the HUSB
                                 and WIFE elements; mixed seems to require them to be in a certain order (against
                                 spec) and interleave "leaves" them be in any order -->
         <interleave>
@@ -1666,11 +1664,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </element>
     </choice>
   </define>
-  <!--INDIVIDUAL_ATTRIBUTE_STRUCTURE-->
+<!--INDIVIDUAL_ATTRIBUTE_STRUCTURE-->
   <define name="individual_attribute">
     <choice>
       <element name="CAST">
-        <!-- CAST Schematron rule -->
+<!-- CAST Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure CAST">
           <sch:rule context="CAST/node()[self::text()]">
             <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
@@ -1684,7 +1682,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="DSCR">
-        <!-- DSCR Schematron rule -->
+<!-- DSCR Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure DSCR">
           <sch:rule context="DSCR/node()[self::text()]">
             <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
@@ -1698,7 +1696,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="EDUC">
-        <!-- EDUC Schematron rule -->
+<!-- EDUC Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure EDUC">
           <sch:rule context="EDUC/node()[self::text()]">
             <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
@@ -1712,7 +1710,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="IDNO">
-        <!-- INDO Schematron rule -->
+<!-- INDO Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure INDO">
           <sch:rule context="INDO/node()[self::text()]">
             <sch:assert test="string-length( normalize-space(.) ) &lt; 31">
@@ -1726,7 +1724,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="NATI">
-        <!-- NATI Schematron rule -->
+<!-- NATI Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure NATI">
           <sch:rule context="NATI/node()[self::text()]">
             <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
@@ -1740,7 +1738,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="NCHI">
-        <!-- NCHI Schematron rule -->
+<!-- NCHI Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure NCHI">
           <sch:rule context="NCHI/node()[self::text()]">
             <sch:assert test="string-length( normalize-space(.) ) &lt; 4">
@@ -1754,7 +1752,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="NMR">
-        <!-- NMR Schematron rule -->
+<!-- NMR Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure NMR">
           <sch:rule context="NMR/node()[self::text()]">
             <sch:assert test="string-length( normalize-space(.) ) &lt; 4">
@@ -1768,7 +1766,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="OCCU">
-        <!-- OCCU Schematron rule -->
+<!-- OCCU Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure OCCU">
           <sch:rule context="OCCU/node()[self::text()]">
             <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
@@ -1782,7 +1780,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="PROP">
-        <!-- PROP Schematron rule -->
+<!-- PROP Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure PROP">
           <sch:rule context="PROP/node()[self::text()]">
             <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
@@ -1796,7 +1794,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="RELI">
-        <!-- RELI Schematron rule -->
+<!-- RELI Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure RELI">
           <sch:rule context="RELI/node()[self::text()]">
             <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
@@ -1815,7 +1813,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </optional>
       </element>
       <element name="SSN">
-        <!-- SSN Schematron rule -->
+<!-- SSN Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure SSN">
           <sch:rule context="SSN/node()[self::text()]">
             <sch:assert test="string-length( normalize-space(.) ) &lt; 12">
@@ -1833,7 +1831,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </mixed>
       </element>
       <element name="TITL">
-        <!-- TITL Schematron rule -->
+<!-- TITL Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure TITL">
           <sch:rule context="INDI/TITL/node()[self::text()]">
             <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
@@ -1848,17 +1846,17 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </element>
     </choice>
   </define>
-  <!--INDIVIDUAL_EVENT_STRUCTURE-->
+<!--INDIVIDUAL_EVENT_STRUCTURE-->
   <define name="individual_event">
     <choice>
       <element name="BIRT">
         <interleave>
           <text/>
-          <!--Event Detail-->
+<!--Event Detail-->
           <optional>
             <ref name="event_detail"/>
           </optional>
-          <!--FAMC-->
+<!--FAMC-->
           <optional>
             <element name="FAMC">
               <attribute name="REFN">
@@ -1875,11 +1873,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       <element name="CHR">
         <interleave>
           <text/>
-          <!--Event Detail-->
+<!--Event Detail-->
           <optional>
             <ref name="event_detail"/>
           </optional>
-          <!--FAMC-->
+<!--FAMC-->
           <optional>
             <element name="FAMC">
               <attribute name="REFN">
@@ -1917,11 +1915,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       <element name="ADOP">
         <interleave>
           <text/>
-          <!--Event Detail-->
+<!--Event Detail-->
           <optional>
             <ref name="event_detail"/>
           </optional>
-          <!--FAMC-->
+<!--FAMC-->
           <optional>
             <element name="FAMC">
               <attribute name="REFN">
@@ -1931,13 +1929,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                 </data>
               </attribute>
               <optional>
-              <element name="ADOP">
-                <data type="string">
-                  <param name="pattern">HUSB|WIFE|BOTH</param>
-                  <param name="minLength">1</param>
-                  <param name="maxLength">4</param>
-                </data>
-              </element>
+                <element name="ADOP">
+                  <data type="string">
+                    <param name="pattern">HUSB|WIFE|BOTH</param>
+                    <param name="minLength">1</param>
+                    <param name="maxLength">4</param>
+                  </data>
+                </element>
               </optional>
             </element>
           </optional>
@@ -2064,12 +2062,12 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </element>
     </choice>
   </define>
-  <!--LDS_INDIVIDUAL_ORDINANCE-->
+<!--LDS_INDIVIDUAL_ORDINANCE-->
   <define name="lds_individual_ordinance">
     <choice>
       <element name="BAPL">
         <interleave>
-          <!--STAT-->
+<!--STAT-->
           <optional>
             <element name="STAT">
               <data type="string">
@@ -2079,7 +2077,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </element>
           </optional>
-          <!--DATE-->
+<!--DATE-->
           <optional>
             <element name="DATE">
               <data type="string">
@@ -2088,7 +2086,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </element>
           </optional>
-          <!--TEMP-->
+<!--TEMP-->
           <optional>
             <element name="TEMP">
               <data type="string">
@@ -2097,7 +2095,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </element>
           </optional>
-          <!--PLAC-->
+<!--PLAC-->
           <optional>
             <element name="PLAC">
               <data type="string">
@@ -2106,11 +2104,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </element>
           </optional>
-          <!--SOUR-->
+<!--SOUR-->
           <zeroOrMore>
             <ref name="source_citation"/>
           </zeroOrMore>
-          <!--NOTE-->
+<!--NOTE-->
           <zeroOrMore>
             <ref name="note_structure"/>
           </zeroOrMore>
@@ -2118,7 +2116,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </element>
       <element name="CONL">
         <interleave>
-          <!--STAT-->
+<!--STAT-->
           <optional>
             <element name="STAT">
               <data type="string">
@@ -2129,7 +2127,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </element>
           </optional>
-          <!--DATE-->
+<!--DATE-->
           <optional>
             <element name="DATE">
               <data type="string">
@@ -2138,7 +2136,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </element>
           </optional>
-          <!--TEMP-->
+<!--TEMP-->
           <optional>
             <element name="TEMP">
               <data type="string">
@@ -2147,7 +2145,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </element>
           </optional>
-          <!--PLAC-->
+<!--PLAC-->
           <optional>
             <element name="PLAC">
               <data type="string">
@@ -2156,11 +2154,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </element>
           </optional>
-          <!--SOUR-->
+<!--SOUR-->
           <zeroOrMore>
             <ref name="source_citation"/>
           </zeroOrMore>
-          <!--NOTE-->
+<!--NOTE-->
           <zeroOrMore>
             <ref name="note_structure"/>
           </zeroOrMore>
@@ -2168,7 +2166,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </element>
       <element name="ENDL">
         <interleave>
-          <!--STAT-->
+<!--STAT-->
           <optional>
             <element name="STAT">
               <data type="string">
@@ -2179,7 +2177,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </element>
           </optional>
-          <!--DATE-->
+<!--DATE-->
           <optional>
             <element name="DATE">
               <data type="string">
@@ -2188,7 +2186,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </element>
           </optional>
-          <!--TEMP-->
+<!--TEMP-->
           <optional>
             <element name="TEMP">
               <data type="string">
@@ -2197,7 +2195,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </element>
           </optional>
-          <!--PLAC-->
+<!--PLAC-->
           <optional>
             <element name="PLAC">
               <data type="string">
@@ -2206,11 +2204,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </element>
           </optional>
-          <!--SOUR-->
+<!--SOUR-->
           <zeroOrMore>
             <ref name="source_citation"/>
           </zeroOrMore>
-          <!--NOTE-->
+<!--NOTE-->
           <zeroOrMore>
             <ref name="note_structure"/>
           </zeroOrMore>
@@ -2218,7 +2216,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </element>
       <element name="SLGC">
         <interleave>
-          <!--STAT-->
+<!--STAT-->
           <optional>
             <element name="STAT">
               <data type="string">
@@ -2229,7 +2227,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </element>
           </optional>
-          <!--DATE-->
+<!--DATE-->
           <optional>
             <element name="DATE">
               <data type="string">
@@ -2238,7 +2236,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </element>
           </optional>
-          <!--TEMP-->
+<!--TEMP-->
           <optional>
             <element name="TEMP">
               <data type="string">
@@ -2247,7 +2245,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </element>
           </optional>
-          <!--PLAC-->
+<!--PLAC-->
           <optional>
             <element name="PLAC">
               <data type="string">
@@ -2256,7 +2254,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </data>
             </element>
           </optional>
-          <!--FAMC-->
+<!--FAMC-->
           <element name="FAMC">
             <attribute name="REFN">
               <data type="string">
@@ -2266,11 +2264,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </attribute>
             <empty/>
           </element>
-          <!--SOUR-->
+<!--SOUR-->
           <zeroOrMore>
             <ref name="source_citation"/>
           </zeroOrMore>
-          <!--NOTE-->
+<!--NOTE-->
           <zeroOrMore>
             <ref name="note_structure"/>
           </zeroOrMore>
@@ -2278,7 +2276,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </element>
     </choice>
   </define>
-  <!--MULTIMEDIA_LINK-->
+<!--MULTIMEDIA_LINK-->
   <define name="multimedia_link">
     <choice>
       <ref name="multimedia_link_ref"/>
@@ -2306,7 +2304,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <param name="maxLength">4</param>
           </data>
         </element>
-        <!--TITL-->
+<!--TITL-->
         <optional>
           <element name="TITL">
             <data type="string">
@@ -2315,7 +2313,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--FILE-->
+<!--FILE-->
         <optional>
           <element name="FILE">
             <data type="string">
@@ -2324,14 +2322,14 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--NOTE-->
+<!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
       </interleave>
     </element>
   </define>
-  <!--NOTE_STRUCTURE-->
+<!--NOTE_STRUCTURE-->
   <define name="note_structure">
     <choice>
       <ref name="note_structure_ref"/>
@@ -2346,7 +2344,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <param name="maxLength">22</param>
         </data>
       </attribute>
-      <!--SOUR-->
+<!--SOUR-->
       <zeroOrMore>
         <element name="SOUR">
           <attribute name="REFN">
@@ -2362,7 +2360,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   </define>
   <define name="note_structure_simple">
     <element name="NOTE">
-      <!-- NOTE Schematron rule -->
+<!-- NOTE Schematron rule -->
       <sch:pattern name="Checking length of Note Structure NOTE">
         <sch:rule context="NOTE/node()[self::text()]">
           <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
@@ -2371,7 +2369,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </sch:pattern>
       <interleave>
         <text/>
-        <!--CONC-->
+<!--CONC-->
         <zeroOrMore>
           <element name="CONC">
             <data type="string">
@@ -2380,7 +2378,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </zeroOrMore>
-        <!--CONT-->
+<!--CONT-->
         <zeroOrMore>
           <element name="CONT">
             <data type="string">
@@ -2389,7 +2387,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </zeroOrMore>
-        <!--SOUR-->
+<!--SOUR-->
         <zeroOrMore>
           <element name="SOUR">
             <attribute name="REFN">
@@ -2404,21 +2402,20 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </interleave>
     </element>
   </define>
-  <!--SOURCE_CITATION-->
+<!--SOURCE_CITATION-->
   <define name="source_citation">
     <choice>
       <ref name="source_citation_ref"/>
       <ref name="source_citation_simple"/>
     </choice>
   </define>
-  <!-- to prevent annoying interleave ovelap -->
+<!-- to prevent annoying interleave ovelap -->
   <define name="source_citation_obje">
     <choice>
       <ref name="source_citation_ref"/>
       <ref name="source_citation_simple_obje"/>
     </choice>
   </define>
-
   <define name="source_citation_ref">
     <element name="SOUR">
       <attribute name="REFN">
@@ -2428,7 +2425,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </data>
       </attribute>
       <interleave>
-        <!--PAGE-->
+<!--PAGE-->
         <optional>
           <element name="PAGE">
             <data type="string">
@@ -2437,10 +2434,10 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--EVEN-->
+<!--EVEN-->
         <optional>
           <element name="EVEN">
-            <!-- EVEN Schematron rule -->
+<!-- EVEN Schematron rule -->
             <sch:pattern name="Checking length of Source Citation EVEN">
               <sch:rule context="EVEN/node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 16">
@@ -2450,7 +2447,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             <mixed>
               <optional>
                 <element name="ROLE">
-                  <!--TODO Implement Pattern-->
+<!--TODO Implement Pattern-->
                   <data type="string">
                     <param name="minLength">1</param>
                     <param name="maxLength">15</param>
@@ -2460,7 +2457,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </mixed>
           </element>
         </optional>
-        <!--DATA-->
+<!--DATA-->
         <optional>
           <element name="DATA">
             <interleave>
@@ -2474,7 +2471,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               </optional>
               <zeroOrMore>
                 <element name="TEXT">
-                  <!-- DATE Schematron rule -->
+<!-- DATE Schematron rule -->
                   <sch:pattern name="Checking length of Source Citation TEXT">
                     <sch:rule context="TEXT/node()[self::text()]">
                       <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
@@ -2505,7 +2502,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </interleave>
           </element>
         </optional>
-        <!--QUAY-->
+<!--QUAY-->
         <optional>
           <element name="QUAY">
             <data type="string">
@@ -2515,11 +2512,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </optional>
-        <!--OBJE-->
+<!--OBJE-->
         <zeroOrMore>
           <ref name="multimedia_link"/>
         </zeroOrMore>
-        <!--NOTE-->
+<!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
@@ -2528,7 +2525,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
   </define>
   <define name="source_citation_simple">
     <element name="SOUR">
-      <!-- SOUR Schematron rule -->
+<!-- SOUR Schematron rule -->
       <sch:pattern name="Checking length of Source Citaton (simple) SOUR">
         <sch:rule context="SOUR/node()[self::text()]">
           <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
@@ -2537,7 +2534,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </sch:pattern>
       <interleave>
         <text/>
-        <!--CONC-->
+<!--CONC-->
         <zeroOrMore>
           <element name="CONC">
             <data type="string">
@@ -2546,7 +2543,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </zeroOrMore>
-        <!--CONT-->
+<!--CONT-->
         <zeroOrMore>
           <element name="CONT">
             <data type="string">
@@ -2555,10 +2552,10 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </zeroOrMore>
-        <!--TEXT FIX -->
+<!--TEXT FIX -->
         <zeroOrMore>
           <element name="TEXT">
-            <!-- TEXT Schematron rule -->
+<!-- TEXT Schematron rule -->
             <sch:pattern name="Checking length of Source Citation (simple) TEXT">
               <sch:rule context="TEXT/node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
@@ -2586,7 +2583,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </interleave>
           </element>
         </zeroOrMore>
-        <!--NOTE-->
+<!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
@@ -2617,7 +2614,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
 -->
   <define name="source_citation_simple_obje">
     <element name="SOUR">
-      <!-- SOUR Schematron rule -->
+<!-- SOUR Schematron rule -->
       <sch:pattern name="Checking length of Source Citation (simple) SOUR">
         <sch:rule context="SOUR/node()[self::text()]">
           <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
@@ -2626,7 +2623,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </sch:pattern>
       <interleave>
         <text/>
-        <!--CONC-->
+<!--CONC-->
         <zeroOrMore>
           <element name="CONC">
             <data type="string">
@@ -2635,7 +2632,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </zeroOrMore>
-        <!--CONT-->
+<!--CONT-->
         <zeroOrMore>
           <element name="CONT">
             <data type="string">
@@ -2644,10 +2641,10 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </data>
           </element>
         </zeroOrMore>
-        <!--TEXT FIX -->
+<!--TEXT FIX -->
         <zeroOrMore>
           <element name="TEXT">
-            <!-- TEXT Schematron rule -->
+<!-- TEXT Schematron rule -->
             <sch:pattern name="Checking length of Source Citation (simple) TEXT">
               <sch:rule context="TEXT/node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
@@ -2675,7 +2672,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
             </interleave>
           </element>
         </zeroOrMore>
-        <!--NOTE-->
+<!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
@@ -2685,12 +2682,12 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </interleave>
     </element>
   </define>
-  <!--Miscellaneous-->
-  <!--AGE_AT_EVENT-->
+<!--Miscellaneous-->
+<!--AGE_AT_EVENT-->
   <define name="age">
     <element name="AGE">
       <data type="string">
-      	<!-- FIX this pattern chokes on the greater/less than signs -
+<!-- FIX this pattern chokes on the greater/less than signs -
       			 It chockes of I209 as well-->
         <param name="pattern">&lt;?&gt;?( ?\d?\dy)?( ?\d?\dm)?( ?\d?\dd)?|CHILD|INFANT|STILLBORN</param>
         <param name="minLength">1</param>
@@ -2699,8 +2696,8 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
     </element>
   </define>
 <!--PHON -->
-<define name="phone">
-    <!--PHON-->
+  <define name="phone">
+<!--PHON-->
     <optional>
       <element name="PHON">
         <data type="string">
@@ -2709,7 +2706,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </data>
       </element>
     </optional>
-    <!--PHON-->
+<!--PHON-->
     <optional>
       <element name="PHON">
         <data type="string">
@@ -2718,7 +2715,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </data>
       </element>
     </optional>
-    <!--PHON-->
+<!--PHON-->
     <optional>
       <element name="PHON">
         <data type="string">
@@ -2727,11 +2724,11 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </data>
       </element>
     </optional>
-</define>
-  <!--USER_REFERENCE_NUMBER-->
+  </define>
+<!--USER_REFERENCE_NUMBER-->
   <define name="user_reference_number">
     <element name="REFN">
-      <!-- REFN Schematron rule -->
+<!-- REFN Schematron rule -->
       <sch:pattern name="Checking length of User_Reference_Number">
         <sch:rule context="REFN/node()[self::text()]">
           <sch:assert test="string-length( normalize-space(.) ) &lt; 21">
@@ -2750,13 +2747,13 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
       </mixed>
     </element>
   </define>
-  <!--record end-->
+<!--record end-->
   <define name="record_end">
-    <!--REFN-->
+<!--REFN-->
     <zeroOrMore>
       <ref name="user_reference_number"/>
     </zeroOrMore>
-    <!--RIN-->
+<!--RIN-->
     <optional>
       <element name="RIN">
         <data type="string">
@@ -2765,7 +2762,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         </data>
       </element>
     </optional>
-    <!--CHAN-->
+<!--CHAN-->
     <optional>
       <ref name="change_date"/>
     </optional>
