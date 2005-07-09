@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:sch="http://www.ascc.net/xml/schematron" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
 <!-- $Id$ -->
-<!-- TODO - Implement further relaxng/schematron date parsing -->
 <!-- REMINDER - When cleaning with tidy, be sure to fix pattern param which may
      have space added to them -->
 <!-- 
@@ -98,7 +97,7 @@
                     <ref name="address_structure"/>
                   </optional>
                   <optional>
-                    <ref name="phone"/>
+                    <ref name="phone_number"/>
                   </optional>
                 </interleave>
               </element>
@@ -115,7 +114,7 @@
                 </sch:pattern>
                 <interleave>
                   <text/>
-<!--DATE-->
+<!-- DATE as DATE_EXACT-->
 <!-- I've implement an English Language Exact Date check which means
                       it includes English words for the Month.  Gedcom specs also includes
                       French and Hebrew (why not others?) but even these do not fit within
@@ -125,8 +124,10 @@
                       would be really messy and time consuming.  -->
                   <optional>
                     <element name="DATE">
-                      <data type="token">
-                        <param name="pattern">[1-3]?\d (JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC) \d{4}</param>
+                      <data type="string">
+                        <param name="pattern">[1-3]?\d\s{1}(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1}\d{4}</param>
+                        <param name="minLength">10</param>
+                        <param name="maxLength">11</param>
                       </data>
                     </element>
                   </optional>
@@ -153,17 +154,18 @@
             </data>
           </element>
         </optional>
-<!--DATE-->
+<!-- DATE (Transmission_DATE) as DATE_EXACT -->
         <optional>
           <element name="DATE">
-<!-- DATE Schematron rule -->
-<!-- FIX?  Can I make schematron check date format -->
-            <sch:pattern name="Checking length of Header Record DATE">
-              <sch:rule context="GED/HEAD/DATE/node()[self::text()]">
+<!--  Schematron rule -->
+<!--  Limitation:  I can't make schematron check the date format, xlst 1.0 does not
+      support regex patterns, while xlst 2.0 does -->
+            <sch:pattern name="Checking length of Header Record ">
+              <sch:rule context="GED/HEAD//node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 12">
-                DATE range exceeds maximum of 11</sch:assert>
+                 range exceeds maximum of 11</sch:assert>
                 <sch:assert test="string-length( normalize-space(.) ) &gt; 9">
-                DATE range fails to meet the minimum of 10</sch:assert>
+                 range fails to meet the minimum of 10</sch:assert>
               </sch:rule>
             </sch:pattern>
             <mixed>
@@ -402,10 +404,10 @@
                   </data>
                 </element>
               </optional>
-<!--DATE-->
+<!-- DATE (DATE_LDS_ORD) as DATE_VALUE -->
               <optional>
                 <element name="DATE">
-<!--TODO Implement DATE_VALUE-->
+<!--TODO? Implement DATE_VALUE-->
                   <data type="string">
                     <param name="minLength">4</param>
                     <param name="maxLength">35</param>
@@ -424,7 +426,7 @@
 <!--PLAC-->
               <optional>
                 <element name="PLAC">
-<!--TODO Implement PLACE_VALUE-->
+<!--Limitation: This should test if the PLAC connect separated by commas -->
                   <data type="string">
                     <param name="minLength">1</param>
                     <param name="maxLength">120</param>
@@ -482,7 +484,8 @@
         <zeroOrMore>
           <element name="NAME">
 <!-- NAME Schematron rule -->
-<!-- TODO? - check if names separated by / -->
+<!-- Limitation:  I have not figure out a schematron way to check if the name is formatted correctly, i.e.,
+	 names separated by / -->
             <sch:pattern name="Checking length of Individual Record NAME">
               <sch:rule context="INDI/NAME/node()[self::text()]">
                 <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
@@ -840,7 +843,7 @@
           <ref name="address_structure"/>
         </optional>
         <optional>
-          <ref name="phone"/>
+          <ref name="phone_number"/>
         </optional>
 <!--NOTE-->
         <zeroOrMore>
@@ -876,10 +879,13 @@
                   </sch:pattern>
                   <interleave>
                     <text/>
-<!--DATE as DATE_PERIOD -->
+<!-- DATE as DATE_PERIOD -->
+<!-- The regex pattern below is almost perfect. However, it fails to handle the DATE _CALENDAR_ESCAPE
+	  It also fails to handle to throw an exception on FROM 11 1976 -->
                     <optional>
-                      <element name="DATE">
-                        <data type="string">
+                      <element name="DATE">                      
+  								<data type="string">
+ 								<param name="pattern">(FROM\s{1}([1-3]?\d\s{1})?((JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1})?\d{4})|(TO\s{1}([1-3]?\d\s{1})?((JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1})?\d{4})|(FROM\s{1}([1-3]?\d\s{1})?((JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1})?\d{4}\s{1}TO\s{1}([1-3]?\d\s{1})?((JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1})?\d{4})</param>                                                
                           <param name="minLength">7</param>
                           <param name="maxLength">35</param>
                         </data>
@@ -1071,7 +1077,7 @@
 <!--CALN-->
               <zeroOrMore>
                 <element name="CALN">
-<!-- DATE Schematron rule -->
+<!--  Schematron rule -->
                   <sch:pattern name="Checking length of Source Repository Citation CALN">
                     <sch:rule context="CALN/node()[self::text()]">
                       <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
@@ -1131,23 +1137,16 @@
           <ref name="address_structure"/>
         </optional>
         <optional>
-          <ref name="phone"/>
+          <ref name="phone_number"/>
         </optional>
 <!--OBJE-->
         <zeroOrMore>
           <ref name="multimedia_link"/>
         </zeroOrMore>
 <!--LANG-->
-<!--FIX - This should be constrained to 3 occurences -->
-        <zeroOrMore>
-          <element name="LANG">
-            <data type="string">
-              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
-              <param name="minLength">1</param>
-              <param name="maxLength">15</param>
-            </data>
-          </element>
-        </zeroOrMore>
+        <optional>
+        		<ref name="language_preference"/>
+        </optional>        
 <!--RFN-->
         <optional>
           <element name="RFN">
@@ -1325,22 +1324,23 @@
       </interleave>
     </element>
 <!-- end ADDR -->
-<!-- separate the PHON tags from the ADDR structure, because its at the same
+<!-- separate the PHON tags from the ADDR structure, because it's at the same
  	 level as the ADDR (i.e., not as its child)  and can hence occur anywhere at the same
  	 level -->
   </define>
-<!--CHANGE_DATE-->
+<!--CHANGE_-->
   <define name="change_date">
     <element name="CHAN">
       <interleave>
         <element name="DATE">
-<!-- DATE Schematron rule -->
-          <sch:pattern name="Checking length of Change Date DATE">
-            <sch:rule context="CHAN/DATE/node()[self::text()]">
+<!-- DATE Schematron rule
+	 Limitation: this cannot check DATE_EXACT because xslt 1.0 does not support regex -->
+          <sch:pattern name="Checking length of Change Date ">
+            <sch:rule context="CHAN//node()[self::text()]">
               <sch:assert test="string-length( normalize-space(.) ) &lt; 12">
-              DATE range exceeds maximum of 11</sch:assert>
+               range exceeds maximum of 11</sch:assert>
               <sch:assert test="string-length( normalize-space(.) ) &gt; 9">
-              DATE range fails to meet the minimum of 10</sch:assert>
+               range fails to meet the minimum of 10</sch:assert>
             </sch:rule>
           </sch:pattern>
           <mixed>
@@ -1374,7 +1374,7 @@
           </data>
         </element>
       </optional>
-<!--DATE-->
+<!-- DATE as DATE_VALUE-->
       <optional>
         <element name="DATE">
           <data type="string">
@@ -1420,7 +1420,7 @@
         <ref name="address_structure"/>
       </optional>
       <optional>
-        <ref name="phone"/>
+        <ref name="phone_number"/>
       </optional>
 <!--AGE-->
       <optional>
@@ -2065,6 +2065,7 @@
 <!--LDS_INDIVIDUAL_ORDINANCE-->
   <define name="lds_individual_ordinance">
     <choice>
+<!-- BAPL -->
       <element name="BAPL">
         <interleave>
 <!--STAT-->
@@ -2077,7 +2078,7 @@
               </data>
             </element>
           </optional>
-<!--DATE-->
+<!--DATE (DATE_LDS_ORD) DATE_VALUE -->
           <optional>
             <element name="DATE">
               <data type="string">
@@ -2114,20 +2115,20 @@
           </zeroOrMore>
         </interleave>
       </element>
+<!-- CONL -->
       <element name="CONL">
         <interleave>
 <!--STAT-->
           <optional>
             <element name="STAT">
               <data type="string">
-                <param name="pattern">
-                CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
+                <param name="pattern">CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
                 <param name="minLength">5</param>
                 <param name="maxLength">10</param>
               </data>
             </element>
           </optional>
-<!--DATE-->
+<!--DATE (DATE_LDS_ORD) DATE_VALUE -->
           <optional>
             <element name="DATE">
               <data type="string">
@@ -2164,20 +2165,20 @@
           </zeroOrMore>
         </interleave>
       </element>
+<!-- ENDL -->
       <element name="ENDL">
         <interleave>
 <!--STAT-->
           <optional>
             <element name="STAT">
               <data type="string">
-                <param name="pattern">
-                CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
+                <param name="pattern">CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
                 <param name="minLength">5</param>
                 <param name="maxLength">10</param>
               </data>
             </element>
           </optional>
-<!--DATE-->
+<!--DATE (DATE_LDS_ORD) DATE_VALUE -->
           <optional>
             <element name="DATE">
               <data type="string">
@@ -2214,20 +2215,20 @@
           </zeroOrMore>
         </interleave>
       </element>
+<!-- SLGC -->
       <element name="SLGC">
         <interleave>
 <!--STAT-->
           <optional>
             <element name="STAT">
               <data type="string">
-                <param name="pattern">
-                BIC|CLEARED|COMPLETED|DNS|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
+                <param name="pattern">BIC|CLEARED|COMPLETED|DNS|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
                 <param name="minLength">5</param>
                 <param name="maxLength">10</param>
               </data>
             </element>
           </optional>
-<!--DATE-->
+<!--DATE (DATE_LDS_ORD) DATE_VALUE -->
           <optional>
             <element name="DATE">
               <data type="string">
@@ -2447,8 +2448,11 @@
             <mixed>
               <optional>
                 <element name="ROLE">
-<!--TODO Implement Pattern-->
+<!-- There is a problem with the standard here.  The max length of a ROLE is 15.  
+	  However,the max length of a ROLE_DESCRIPTOR, the last "or" in the pattern below
+	  is 25.  I have defaulted to the 15 -->
                   <data type="string">
+                    <param name="pattern">CHIL|HUSB|WIFE|MOTH|FATH|SPOU|.{15}</param>
                     <param name="minLength">1</param>
                     <param name="maxLength">15</param>
                   </data>
@@ -2462,6 +2466,7 @@
           <element name="DATA">
             <interleave>
               <optional>
+<!--DATE (ENTRY_RECORDING_DATE) as DATE_VALUE -->
                 <element name="DATE">
                   <data type="string">
                     <param name="minLength">1</param>
@@ -2471,7 +2476,7 @@
               </optional>
               <zeroOrMore>
                 <element name="TEXT">
-<!-- DATE Schematron rule -->
+<!-- TEXT Schematron rule -->
                   <sch:pattern name="Checking length of Source Citation TEXT">
                     <sch:rule context="TEXT/node()[self::text()]">
                       <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
@@ -2552,7 +2557,7 @@
             </data>
           </element>
         </zeroOrMore>
-<!--TEXT FIX -->
+<!--TEXT-->
         <zeroOrMore>
           <element name="TEXT">
 <!-- TEXT Schematron rule -->
@@ -2641,7 +2646,7 @@
             </data>
           </element>
         </zeroOrMore>
-<!--TEXT FIX -->
+<!--TEXT -->
         <zeroOrMore>
           <element name="TEXT">
 <!-- TEXT Schematron rule -->
@@ -2687,16 +2692,51 @@
   <define name="age">
     <element name="AGE">
       <data type="string">
-<!-- FIX this pattern chokes on the greater/less than signs -
-      			 It chockes of I209 as well-->
         <param name="pattern">&lt;?&gt;?( ?\d?\dy)?( ?\d?\dm)?( ?\d?\dd)?|CHILD|INFANT|STILLBORN</param>
         <param name="minLength">1</param>
         <param name="maxLength">12</param>
       </data>
     </element>
   </define>
-<!--PHON -->
-  <define name="phone">
+<!-- 
+	  Both the LANGUAGE_PREFERENCE and PHONE_NUMBER implemenation manage to
+     work around relaxng interleave limitation of not permitting more than one
+     occurance of the same element in an interleave.  These limitation also
+     manage to constrain the number of LANG and PHON tags to their GEDCOM 5.5
+     maximum of 3.
+-->
+<!-- LANGUAGE_PREFERENCE -->  
+  <define name="language_preference">
+		<optional>
+          <element name="LANG">
+            <data type="string">
+              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
+              <param name="minLength">1</param>
+              <param name="maxLength">15</param>
+            </data>
+          </element>				
+		</optional>
+		<optional>
+          <element name="LANG">
+            <data type="string">
+              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
+              <param name="minLength">1</param>
+              <param name="maxLength">15</param>
+            </data>
+          </element>				
+		</optional>
+		<optional>
+          <element name="LANG">
+            <data type="string">
+              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
+              <param name="minLength">1</param>
+              <param name="maxLength">15</param>
+            </data>
+          </element>				
+		</optional>
+  </define>
+<!--PHONE_NUMBER -->
+  <define name="phone_number">
 <!--PHON-->
     <optional>
       <element name="PHON">
