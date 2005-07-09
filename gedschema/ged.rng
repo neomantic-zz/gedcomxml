@@ -259,10 +259,9 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <optional>
           <element name="LANG">
             <data type="string">
+              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
               <param name="minLength">1</param>
               <param name="maxLength">15</param>
-              <param name="pattern">
-              Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
             </data>
           </element>
         </optional>
@@ -399,8 +398,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
               <optional>
                 <element name="STAT">
                   <data type="string">
-                    <param name="pattern">
-                    CANCELED|CLEARED|COMPLETED|DNS|DNS/CAN|PRE-1970|QUALIFIED|SUBMITTED|UNCLEARED</param>
+                    <param name="pattern">CANCELED|CLEARED|COMPLETED|DNS|DNS/CAN|PRE-1970|QUALIFIED|SUBMITTED|UNCLEARED</param>
                     <param name="minLength">3</param>
                     <param name="maxLength">10</param>
                   </data>
@@ -1086,8 +1084,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
                     <optional>
                       <element name="MEDI">
                         <data type="string">
-                          <param name="pattern">
-                          audio|book|card|electronic|fiche|film|magazine|manuscript|map|newspaper|photo|tombstone|video</param>
+                          <param name="pattern">audio|book|card|electronic|fiche|film|magazine|manuscript|map|newspaper|photo|tombstone|video</param>
                           <param name="minLength">1</param>
                           <param name="maxLength">15</param>
                         </data>
@@ -1147,10 +1144,9 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
         <zeroOrMore>
           <element name="LANG">
             <data type="string">
+              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
               <param name="minLength">1</param>
               <param name="maxLength">15</param>
-              <param name="pattern">
-              Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
             </data>
           </element>
         </zeroOrMore>
@@ -2077,8 +2073,7 @@ xmlns:sch="http://www.ascc.net/xml/schematron">
           <optional>
             <element name="STAT">
               <data type="string">
-                <param name="pattern">
-                CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
+                <param name="pattern">CHILD|CLEARED|COMPLETED|INFANT|PRE-1970|QUALIFIED|STILLBORN|SUBMITTED|UNCLEARED</param>
                 <param name="minLength">5</param>
                 <param name="maxLength">10</param>
               </data>
