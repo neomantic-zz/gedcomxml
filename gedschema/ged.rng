@@ -182,7 +182,7 @@
           </element>
         </optional>
         <element name="SUBM">
-          <attribute name="REFN">
+          <attribute name="REF">
             <data type="string">
               <param name="minLength">1</param>
               <param name="maxLength">22</param>
@@ -193,7 +193,7 @@
 <!--SUBN-->
         <optional>
           <element name="SUBN">
-            <attribute name="REFN">
+            <attribute name="REF">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -336,7 +336,7 @@
 <!--HUSB XREFN:INDI-->
         <optional>
           <element name="WIFE">
-            <attribute name="REFN">
+            <attribute name="REF">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -348,7 +348,7 @@
 <!--WIFE XREFN:INDI-->
         <optional>
           <element name="HUSB">
-            <attribute name="REFN">
+            <attribute name="REF">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -360,7 +360,7 @@
 <!--CHIL XREFN:INDI-->
         <zeroOrMore>
           <element name="CHIL">
-            <attribute name="REFN">
+            <attribute name="REF">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -381,7 +381,7 @@
 <!--SUMB XREFN:INDI-->
         <zeroOrMore>
           <element name="SUBM">
-            <attribute name="REFN">
+            <attribute name="REF">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -584,7 +584,7 @@
 <!--FAMC-->
         <zeroOrMore>
           <element name="FAMC">
-            <attribute name="REFN">
+            <attribute name="REF">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -611,7 +611,7 @@
 <!--FAMS-->
         <zeroOrMore>
           <element name="FAMS">
-            <attribute name="REFN">
+            <attribute name="REF">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -625,7 +625,7 @@
 <!--SUBM-->
         <zeroOrMore>
           <element name="SUBM">
-            <attribute name="REFN">
+            <attribute name="REF">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -637,7 +637,7 @@
 <!--ASSOCIATION_STRUCTURE-->
         <zeroOrMore>
           <element name="ASSO">
-            <attribute name="REFN">
+            <attribute name="REF">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -665,7 +665,7 @@
 <!--ALIA-->
         <zeroOrMore>
           <element name="ALIA">
-            <attribute name="REFN">
+            <attribute name="REF">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -677,7 +677,7 @@
 <!--ANCI-->
         <zeroOrMore>
           <element name="ANCI">
-            <attribute name="REFN">
+            <attribute name="REF">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -689,7 +689,7 @@
 <!--DESI-->
         <zeroOrMore>
           <element name="DESI">
-            <attribute name="REFN">
+            <attribute name="REF">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -763,7 +763,7 @@
         </element>
 <!--OBJE-->
         <element name="OBJE">
-          <attribute name="REFN">
+          <attribute name="REF">
             <data type="string">
               <param name="minLength">1</param>
               <param name="maxLength">22</param>
@@ -1063,7 +1063,7 @@
 <!--REPO-->
         <optional>
           <element name="REPO">
-            <attribute name="REFN">
+            <attribute name="REF">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -1185,7 +1185,7 @@
 <!--SUBM-->
         <optional>
           <element name="SUBM">
-            <attribute name="REFN">
+            <attribute name="REF">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -1859,7 +1859,7 @@
 <!--FAMC-->
           <optional>
             <element name="FAMC">
-              <attribute name="REFN">
+              <attribute name="REF">
                 <data type="string">
                   <param name="minLength">1</param>
                   <param name="maxLength">22</param>
@@ -1880,7 +1880,7 @@
 <!--FAMC-->
           <optional>
             <element name="FAMC">
-              <attribute name="REFN">
+              <attribute name="REF">
                 <data type="string">
                   <param name="minLength">1</param>
                   <param name="maxLength">22</param>
@@ -1922,7 +1922,7 @@
 <!--FAMC-->
           <optional>
             <element name="FAMC">
-              <attribute name="REFN">
+              <attribute name="REF">
                 <data type="string">
                   <param name="minLength">1</param>
                   <param name="maxLength">22</param>
@@ -2257,7 +2257,7 @@
           </optional>
 <!--FAMC-->
           <element name="FAMC">
-            <attribute name="REFN">
+            <attribute name="REF">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -2286,7 +2286,7 @@
   </define>
   <define name="multimedia_link_ref">
     <element name="OBJE">
-      <attribute name="REFN">
+      <attribute name="REF">
         <data type="string">
           <param name="minLength">1</param>
           <param name="maxLength">22</param>
@@ -2339,7 +2339,7 @@
   </define>
   <define name="note_structure_ref">
     <element name="NOTE">
-      <attribute name="REFN">
+      <attribute name="REF">
         <data type="string">
           <param name="minLength">1</param>
           <param name="maxLength">22</param>
@@ -2348,7 +2348,7 @@
 <!--SOUR-->
       <zeroOrMore>
         <element name="SOUR">
-          <attribute name="REFN">
+          <attribute name="REF">
             <data type="string">
               <param name="minLength">1</param>
               <param name="maxLength">22</param>
@@ -2391,7 +2391,7 @@
 <!--SOUR-->
         <zeroOrMore>
           <element name="SOUR">
-            <attribute name="REFN">
+            <attribute name="REF">
               <data type="string">
                 <param name="minLength">1</param>
                 <param name="maxLength">22</param>
@@ -2419,7 +2419,7 @@
   </define>
   <define name="source_citation_ref">
     <element name="SOUR">
-      <attribute name="REFN">
+      <attribute name="REF">
         <data type="string">
           <param name="minLength">1</param>
           <param name="maxLength">22</param>
