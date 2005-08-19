@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0" xmlns:sch="http://www.ascc.net/xml/schematron" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
-<!-- $Id$ -->
-<!-- REMINDER - When cleaning with tidy, be sure to fix pattern param which may
+  <!-- $Id$ -->
+  <!-- REMINDER - When cleaning with tidy, be sure to fix pattern param which may
      have space added to them -->
-<!-- 
+  <!-- 
  ******************************************************************************
  ******************************************************************************
-    Copyright © 2005 Chad Albers
+    Copyright (c) 2005 Chad Albers
      
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,40 +29,32 @@
     <element name="GED">
       <interleave>
         <ref name="header"/>
-<!--SUBM-->
+        <!--SUBM-->
         <zeroOrMore>
           <ref name="submission_record"/>
         </zeroOrMore>
-<!--Records-->
+        <!--Records-->
         <oneOrMore>
           <ref name="record"/>
         </oneOrMore>
       </interleave>
-<!-- Even though the gedml converter eliminates the TRLR tag, I have 
-      		  decided to keep this as a relaxng requirement because I have 
-      		  tried to reproduce the standard as accurately as possible in 
-      		  relaxng syntax -->
-      <element name="TRLR">
-        <empty/>
-      </element>
     </element>
   </start>
-<!--Record Structures of the Lineage-Linked Form-->
-<!--HEADER-->
+  <!--Record Structures of the Lineage-Linked Form-->
+  <!--HEADER-->
   <define name="header">
     <element name="HEAD">
       <interleave>
         <element name="SOUR">
-<!-- SOUR Schematron rule -->
+          <!-- SOUR Schematron rule -->
           <sch:pattern name="Checking length of Header Record SOUR">
             <sch:rule context="HEAD/SOUR/node()[self::text()]">
-              <sch:assert test="string-length( normalize-space(.) ) &lt; 21">
-              Exceeds maximum SOUR length of 20</sch:assert>
+              <sch:assert test="string-length( normalize-space(.) ) &lt; 21">Exceeds maximum SOUR length of 20</sch:assert>
             </sch:rule>
           </sch:pattern>
           <interleave>
             <text/>
-<!--VERS-->
+            <!--VERS-->
             <optional>
               <element name="VERS">
                 <data type="string">
@@ -71,7 +63,7 @@
                 </data>
               </element>
             </optional>
-<!--NAME-->
+            <!--NAME-->
             <optional>
               <element name="NAME">
                 <data type="string">
@@ -80,19 +72,18 @@
                 </data>
               </element>
             </optional>
-<!--CORP-->
+            <!--CORP-->
             <optional>
               <element name="CORP">
-<!-- CORP Schematron rule -->
+                <!-- CORP Schematron rule -->
                 <sch:pattern name="Checking length of Header Record CORP">
                   <sch:rule context="CORP/node()[self::text()]">
-                    <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
-                    Exceeds maximum CORP length of 90</sch:assert>
+                    <sch:assert test="string-length( normalize-space(.) ) &lt; 91">Exceeds maximum CORP length of 90</sch:assert>
                   </sch:rule>
                 </sch:pattern>
                 <interleave>
                   <text/>
-<!--ADDR -->
+                  <!--ADDR -->
                   <optional>
                     <ref name="address_structure"/>
                   </optional>
@@ -102,20 +93,19 @@
                 </interleave>
               </element>
             </optional>
-<!--DATA-->
+            <!--DATA-->
             <optional>
               <element name="DATA">
-<!-- DATA Schematron rule -->
+                <!-- DATA Schematron rule -->
                 <sch:pattern name="Checking length of Header Record DATA">
                   <sch:rule context="DATA/node()[self::text()]">
-                    <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
-                    Exceeds maximum DATA length of 90</sch:assert>
+                    <sch:assert test="string-length( normalize-space(.) ) &lt; 91">Exceeds maximum DATA length of 90</sch:assert>
                   </sch:rule>
                 </sch:pattern>
                 <interleave>
                   <text/>
-<!-- DATE as DATE_EXACT-->
-<!-- I've implement an English Language Exact Date check which means
+                  <!-- DATE as DATE_EXACT-->
+                  <!-- I've implement an English Language Exact Date check which means
                       it includes English words for the Month.  Gedcom specs also includes
                       French and Hebrew (why not others?) but even these do not fit within
                       the prescribe 10-11 date data length.  Additionally, this implementation
@@ -131,7 +121,7 @@
                       </data>
                     </element>
                   </optional>
-<!--COPR-->
+                  <!--COPR-->
                   <optional>
                     <element name="COPR">
                       <data type="string">
@@ -145,7 +135,7 @@
             </optional>
           </interleave>
         </element>
-<!--DEST-->
+        <!--DEST-->
         <optional>
           <element name="DEST">
             <data type="string">
@@ -154,18 +144,16 @@
             </data>
           </element>
         </optional>
-<!-- DATE (Transmission_DATE) as DATE_EXACT -->
+        <!-- DATE (TRANSMISSION_DATE) as DATE_EXACT -->
         <optional>
           <element name="DATE">
-<!--  Schematron rule -->
-<!--  Limitation:  I can't make schematron check the date format, xlst 1.0 does not
-      support regex patterns, while xlst 2.0 does -->
-            <sch:pattern name="Checking length of Header Record ">
+            <!--  Schematron rule -->
+            <!--  Limitation:  I can't make schematron check the date format, xlst 1.0 does not
+      			support regex patterns, while xlst 2.0 does -->
+            <sch:pattern name="Checking length of Header Record">
               <sch:rule context="GED/HEAD//node()[self::text()]">
-                <sch:assert test="string-length( normalize-space(.) ) &lt; 12">
-                 range exceeds maximum of 11</sch:assert>
-                <sch:assert test="string-length( normalize-space(.) ) &gt; 9">
-                 range fails to meet the minimum of 10</sch:assert>
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 12">range exceeds maximum of 11</sch:assert>
+                <sch:assert test="string-length( normalize-space(.) ) &gt; 9">range fails to meet the minimum of 10</sch:assert>
               </sch:rule>
             </sch:pattern>
             <mixed>
@@ -190,7 +178,7 @@
           </attribute>
           <empty/>
         </element>
-<!--SUBN-->
+        <!--SUBN-->
         <optional>
           <element name="SUBN">
             <attribute name="REF">
@@ -202,7 +190,7 @@
             <empty/>
           </element>
         </optional>
-<!--FILE-->
+        <!--FILE-->
         <optional>
           <element name="FILE">
             <data type="string">
@@ -211,7 +199,7 @@
             </data>
           </element>
         </optional>
-<!--COPR-->
+        <!--COPR-->
         <optional>
           <element name="COPR">
             <data type="string">
@@ -227,7 +215,7 @@
               <param name="maxLength">15</param>
             </data>
           </element>
-<!--TODO - Add default value of LINEAGE-LINKED-->
+          <!--TODO - Add default value of LINEAGE-LINKED-->
           <element name="FORM">
             <data type="string">
               <param name="minLength">14</param>
@@ -236,12 +224,10 @@
           </element>
         </element>
         <element name="CHAR">
-<!-- CHAR Schematron rule -->
+          <!-- CHAR Schematron rule -->
           <sch:pattern name="Checking length of Header Record CHAR">
             <sch:rule context="CHAR/node()[self::text()]">
-              <sch:assert test="contains(., 'ANSEL') or contains(., 'UNICODE') or contains (., 'ASCII')">
-              CHAR of Gedcom file fails to be ANSEL, UNICODE, or
-              ASCII</sch:assert>
+              <sch:assert test="contains(., 'ANSEL') or contains(., 'UNICODE') or contains (., 'ASCII')">CHAR of Gedcom file fails to be ANSEL, UNICODE, or ASCII</sch:assert>
             </sch:rule>
           </sch:pattern>
           <mixed>
@@ -255,7 +241,7 @@
             </optional>
           </mixed>
         </element>
-<!--LANG-->
+        <!--LANG-->
         <optional>
           <element name="LANG">
             <data type="string">
@@ -265,7 +251,7 @@
             </data>
           </element>
         </optional>
-<!--PLAC-->
+        <!--PLAC-->
         <optional>
           <element name="PLAC">
             <optional>
@@ -278,14 +264,13 @@
             </optional>
           </element>
         </optional>
-<!--NOTE-->
+        <!--NOTE-->
         <optional>
           <element name="NOTE">
-<!-- NOTE Schematron rule -->
+            <!-- NOTE Schematron rule -->
             <sch:pattern name="Checking length of Header Record NOTE">
               <sch:rule context="GED/HEAD/NOTE/node()[self::text()]">
-                <sch:assert test="string-length( normalize-space(.) ) &lt; 248">
-                Exceeds maximum NOTE length of 248</sch:assert>
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 248">Exceeds maximum NOTE length of 248</sch:assert>
               </sch:rule>
             </sch:pattern>
             <interleave>
@@ -312,7 +297,7 @@
       </interleave>
     </element>
   </define>
-<!--RECORD-->
+  <!--RECORD-->
   <define name="record">
     <choice>
       <ref name="individual_record"/>
@@ -324,16 +309,16 @@
       <ref name="submitter_record"/>
     </choice>
   </define>
-<!--FAM_RECORD-->
+  <!--FAM_RECORD-->
   <define name="family_record">
     <element name="FAM">
       <attribute name="ID"/>
       <interleave>
-<!--Family Events-->
+        <!--Family Events-->
         <zeroOrMore>
           <ref name="family_event"/>
         </zeroOrMore>
-<!--HUSB XREFN:INDI-->
+        <!--HUSB XREFN:INDI-->
         <optional>
           <element name="WIFE">
             <attribute name="REF">
@@ -345,7 +330,7 @@
             <empty/>
           </element>
         </optional>
-<!--WIFE XREFN:INDI-->
+        <!--WIFE XREFN:INDI-->
         <optional>
           <element name="HUSB">
             <attribute name="REF">
@@ -357,7 +342,7 @@
             <empty/>
           </element>
         </optional>
-<!--CHIL XREFN:INDI-->
+        <!--CHIL XREFN:INDI-->
         <zeroOrMore>
           <element name="CHIL">
             <attribute name="REF">
@@ -369,7 +354,7 @@
             <empty/>
           </element>
         </zeroOrMore>
-<!--COUNT_OF_CHILDREN-->
+        <!--COUNT_OF_CHILDREN-->
         <optional>
           <element name="NCHI">
             <data type="string">
@@ -378,7 +363,7 @@
             </data>
           </element>
         </optional>
-<!--SUMB XREFN:INDI-->
+        <!--SUMB XREFN:INDI-->
         <zeroOrMore>
           <element name="SUBM">
             <attribute name="REF">
@@ -390,11 +375,11 @@
             <empty/>
           </element>
         </zeroOrMore>
-<!--SLGS-->
+        <!--SLGS-->
         <zeroOrMore>
           <element name="SLGS">
             <interleave>
-<!--STAT-->
+              <!--STAT-->
               <optional>
                 <element name="STAT">
                   <data type="string">
@@ -404,17 +389,17 @@
                   </data>
                 </element>
               </optional>
-<!-- DATE (DATE_LDS_ORD) as DATE_VALUE -->
+              <!-- DATE (DATE_LDS_ORD) as DATE_VALUE -->
               <optional>
                 <element name="DATE">
-<!--TODO? Implement DATE_VALUE-->
+                  <!--TODO? Implement DATE_VALUE-->
                   <data type="string">
                     <param name="minLength">4</param>
                     <param name="maxLength">35</param>
                   </data>
                 </element>
               </optional>
-<!--TEMP-->
+              <!--TEMP-->
               <optional>
                 <element name="TEMP">
                   <data type="string">
@@ -423,36 +408,36 @@
                   </data>
                 </element>
               </optional>
-<!--PLAC-->
+              <!--PLAC-->
               <optional>
                 <element name="PLAC">
-<!--Limitation: This should test if the PLAC connect separated by commas -->
+                  <!--Limitation: This should test if the PLAC connect separated by commas -->
                   <data type="string">
                     <param name="minLength">1</param>
                     <param name="maxLength">120</param>
                   </data>
                 </element>
               </optional>
-<!--SOUR-->
+              <!--SOUR-->
               <zeroOrMore>
                 <ref name="source_citation_obje"/>
               </zeroOrMore>
-<!--NOTE-->
+              <!--NOTE-->
               <zeroOrMore>
                 <ref name="note_structure"/>
               </zeroOrMore>
             </interleave>
           </element>
         </zeroOrMore>
-<!--SOUR-->
+        <!--SOUR-->
         <zeroOrMore>
           <ref name="source_citation"/>
         </zeroOrMore>
-<!--OBJE-->
+        <!--OBJE-->
         <zeroOrMore>
           <ref name="multimedia_link"/>
         </zeroOrMore>
-<!--NOTE-->
+        <!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
@@ -460,7 +445,7 @@
       </interleave>
     </element>
   </define>
-<!--INDIVIDUAL_RECORD-->
+  <!--INDIVIDUAL_RECORD-->
   <define name="individual_record">
     <element name="INDI">
       <attribute name="ID">
@@ -470,7 +455,7 @@
         </data>
       </attribute>
       <interleave>
-<!--RESN-->
+        <!--RESN-->
         <optional>
           <element name="RESN">
             <data type="string">
@@ -480,21 +465,20 @@
             </data>
           </element>
         </optional>
-<!--PERSONAL_NAME_STRUCTURE-->
+        <!--PERSONAL_NAME_STRUCTURE-->
         <zeroOrMore>
           <element name="NAME">
-<!-- NAME Schematron rule -->
-<!-- Limitation:  I have not figure out a schematron way to check if the name is formatted correctly, i.e.,
-	 names separated by / -->
+            <!-- NAME Schematron rule -->
+            <!-- Limitation:  I have not figure out a schematron way to check if the name is formatted correctly, i.e.,
+         names separated by / -->
             <sch:pattern name="Checking length of Individual Record NAME">
               <sch:rule context="INDI/NAME/node()[self::text()]">
-                <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
-                Exceeds maximum NAME length of 120</sch:assert>
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 121">Exceeds maximum NAME length of 120</sch:assert>
               </sch:rule>
             </sch:pattern>
             <interleave>
               <text/>
-<!--NPFX-->
+              <!--NPFX-->
               <optional>
                 <element name="NPFX">
                   <data type="string">
@@ -503,7 +487,7 @@
                   </data>
                 </element>
               </optional>
-<!--GIVN-->
+              <!--GIVN-->
               <optional>
                 <element name="GIVN">
                   <data type="string">
@@ -512,7 +496,7 @@
                   </data>
                 </element>
               </optional>
-<!--NICK-->
+              <!--NICK-->
               <optional>
                 <element name="NICK">
                   <data type="string">
@@ -521,7 +505,7 @@
                   </data>
                 </element>
               </optional>
-<!--SPFX-->
+              <!--SPFX-->
               <optional>
                 <element name="SPFX">
                   <data type="string">
@@ -530,7 +514,7 @@
                   </data>
                 </element>
               </optional>
-<!--SURN-->
+              <!--SURN-->
               <optional>
                 <element name="SURN">
                   <data type="string">
@@ -539,7 +523,7 @@
                   </data>
                 </element>
               </optional>
-<!--NSFX-->
+              <!--NSFX-->
               <optional>
                 <element name="NSFX">
                   <data type="string">
@@ -548,18 +532,18 @@
                   </data>
                 </element>
               </optional>
-<!--SOUR-->
+              <!--SOUR-->
               <zeroOrMore>
                 <ref name="source_citation_obje"/>
               </zeroOrMore>
-<!--NOTE-->
+              <!--NOTE-->
               <zeroOrMore>
                 <ref name="note_structure"/>
               </zeroOrMore>
             </interleave>
           </element>
         </zeroOrMore>
-<!--SEX-->
+        <!--SEX-->
         <optional>
           <element name="SEX">
             <data type="string">
@@ -569,19 +553,19 @@
             </data>
           </element>
         </optional>
-<!--Events-->
+        <!--Events-->
         <zeroOrMore>
           <ref name="individual_event"/>
         </zeroOrMore>
-<!--Attributes-->
+        <!--Attributes-->
         <zeroOrMore>
           <ref name="individual_attribute"/>
         </zeroOrMore>
-<!--LDS Individual Ordinances-->
+        <!--LDS Individual Ordinances-->
         <zeroOrMore>
           <ref name="lds_individual_ordinance"/>
         </zeroOrMore>
-<!--FAMC-->
+        <!--FAMC-->
         <zeroOrMore>
           <element name="FAMC">
             <attribute name="REF">
@@ -591,7 +575,7 @@
               </data>
             </attribute>
             <interleave>
-<!--PEDI-->
+              <!--PEDI-->
               <optional>
                 <element name="PEDI">
                   <data type="string">
@@ -601,14 +585,14 @@
                   </data>
                 </element>
               </optional>
-<!--NOTE-->
+              <!--NOTE-->
               <zeroOrMore>
                 <ref name="note_structure"/>
               </zeroOrMore>
             </interleave>
           </element>
         </zeroOrMore>
-<!--FAMS-->
+        <!--FAMS-->
         <zeroOrMore>
           <element name="FAMS">
             <attribute name="REF">
@@ -622,7 +606,7 @@
             </zeroOrMore>
           </element>
         </zeroOrMore>
-<!--SUBM-->
+        <!--SUBM-->
         <zeroOrMore>
           <element name="SUBM">
             <attribute name="REF">
@@ -634,7 +618,7 @@
             <empty/>
           </element>
         </zeroOrMore>
-<!--ASSOCIATION_STRUCTURE-->
+        <!--ASSOCIATION_STRUCTURE-->
         <zeroOrMore>
           <element name="ASSO">
             <attribute name="REF">
@@ -643,7 +627,7 @@
                 <param name="maxLength">22</param>
               </data>
             </attribute>
-<!--RELA-->
+            <!--RELA-->
             <interleave>
               <element name="RELA">
                 <data type="string">
@@ -651,18 +635,18 @@
                   <param name="maxLength">25</param>
                 </data>
               </element>
-<!--NOTE-->
+              <!--NOTE-->
               <zeroOrMore>
                 <ref name="note_structure"/>
               </zeroOrMore>
-<!--SOUR-->
+              <!--SOUR-->
               <zeroOrMore>
                 <ref name="source_citation"/>
               </zeroOrMore>
             </interleave>
           </element>
         </zeroOrMore>
-<!--ALIA-->
+        <!--ALIA-->
         <zeroOrMore>
           <element name="ALIA">
             <attribute name="REF">
@@ -674,7 +658,7 @@
             <empty/>
           </element>
         </zeroOrMore>
-<!--ANCI-->
+        <!--ANCI-->
         <zeroOrMore>
           <element name="ANCI">
             <attribute name="REF">
@@ -686,7 +670,7 @@
             <empty/>
           </element>
         </zeroOrMore>
-<!--DESI-->
+        <!--DESI-->
         <zeroOrMore>
           <element name="DESI">
             <attribute name="REF">
@@ -698,15 +682,15 @@
             <empty/>
           </element>
         </zeroOrMore>
-<!--SOUR-->
+        <!--SOUR-->
         <zeroOrMore>
           <ref name="source_citation"/>
         </zeroOrMore>
-<!--OBJE-->
+        <!--OBJE-->
         <zeroOrMore>
           <ref name="multimedia_link"/>
         </zeroOrMore>
-<!--NOTE-->
+        <!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
@@ -714,7 +698,7 @@
       </interleave>
     </element>
   </define>
-<!--MULTIMEDIA_RECORD-->
+  <!--MULTIMEDIA_RECORD-->
   <define name="multimedia_record">
     <element name="OBJE">
       <attribute name="ID">
@@ -724,7 +708,7 @@
         </data>
       </attribute>
       <interleave>
-<!--FORM-->
+        <!--FORM-->
         <element name="FORM">
           <data type="string">
             <param name="pattern">bmp|gif|jpeg|ole|pcx|tiff|wav</param>
@@ -732,7 +716,7 @@
             <param name="maxLength">4</param>
           </data>
         </element>
-<!--TITL-->
+        <!--TITL-->
         <optional>
           <element name="TITL">
             <data type="string">
@@ -741,17 +725,17 @@
             </data>
           </element>
         </optional>
-<!--NOTE-->
+        <!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
-<!--SOUR-->
+        <!--SOUR-->
         <zeroOrMore>
           <ref name="source_citation"/>
         </zeroOrMore>
-<!--BLOB-->
+        <!--BLOB-->
         <element name="BLOB">
-<!--CONT-->
+          <!--CONT-->
           <oneOrMore>
             <element name="CONT">
               <data type="string">
@@ -761,7 +745,7 @@
             </element>
           </oneOrMore>
         </element>
-<!--OBJE-->
+        <!--OBJE-->
         <element name="OBJE">
           <attribute name="REF">
             <data type="string">
@@ -775,7 +759,7 @@
       </interleave>
     </element>
   </define>
-<!--NOTE_RECORD-->
+  <!--NOTE_RECORD-->
   <define name="note_record">
     <element name="NOTE">
       <attribute name="ID">
@@ -784,16 +768,15 @@
           <param name="maxLength">22</param>
         </data>
       </attribute>
-<!-- NOTE Schematron rule -->
+      <!-- NOTE Schematron rule -->
       <sch:pattern name="Checking length of Note Record NOTE">
         <sch:rule context="NOTE/node()[self::text()]">
-          <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
-          Exceeds maximum NOTE length of 248</sch:assert>
+          <sch:assert test="string-length( normalize-space(.) ) &lt; 249">Exceeds maximum NOTE length of 248</sch:assert>
         </sch:rule>
       </sch:pattern>
       <interleave>
         <text/>
-<!--CONC-->
+        <!--CONC-->
         <zeroOrMore>
           <element name="CONC">
             <data type="string">
@@ -802,7 +785,7 @@
             </data>
           </element>
         </zeroOrMore>
-<!--CONT-->
+        <!--CONT-->
         <zeroOrMore>
           <element name="CONT">
             <data type="string">
@@ -811,7 +794,7 @@
             </data>
           </element>
         </zeroOrMore>
-<!--SOUR-->
+        <!--SOUR-->
         <zeroOrMore>
           <ref name="source_citation"/>
         </zeroOrMore>
@@ -819,7 +802,7 @@
       </interleave>
     </element>
   </define>
-<!--REPOSITORY_RECORD-->
+  <!--REPOSITORY_RECORD-->
   <define name="repository_record">
     <element name="REPO">
       <attribute name="ID">
@@ -829,7 +812,7 @@
         </data>
       </attribute>
       <interleave>
-<!--NAME-->
+        <!--NAME-->
         <optional>
           <element name="NAME">
             <data type="string">
@@ -838,14 +821,14 @@
             </data>
           </element>
         </optional>
-<!--ADDR -->
+        <!--ADDR -->
         <optional>
           <ref name="address_structure"/>
         </optional>
         <optional>
           <ref name="phone_number"/>
         </optional>
-<!--NOTE-->
+        <!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
@@ -853,7 +836,7 @@
       </interleave>
     </element>
   </define>
-<!--SOURCE_RECORD-->
+  <!--SOURCE_RECORD-->
   <define name="source_record">
     <element name="SOUR">
       <attribute name="ID">
@@ -863,35 +846,34 @@
         </data>
       </attribute>
       <interleave>
-<!--DATA-->
+        <!--DATA-->
         <optional>
           <element name="DATA">
             <interleave>
-<!--EVEN-->
+              <!--EVEN-->
               <zeroOrMore>
                 <element name="EVEN">
-<!-- EVEN Schematron rule -->
+                  <!-- EVEN Schematron rule -->
                   <sch:pattern name="Checking length of Source Record EVEN">
                     <sch:rule context="SOUR/DATA/EVEN/node()[self::text()]">
-                      <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
-                      EVEN exceeds maximum of 90</sch:assert>
+                      <sch:assert test="string-length( normalize-space(.) ) &lt; 91">EVEN exceeds maximum of 90</sch:assert>
                     </sch:rule>
                   </sch:pattern>
                   <interleave>
                     <text/>
-<!-- DATE as DATE_PERIOD -->
-<!-- The regex pattern below is almost perfect. However, it fails to handle the DATE _CALENDAR_ESCAPE
-	  It also fails to handle to throw an exception on FROM 11 1976 -->
+                    <!-- DATE as DATE_PERIOD -->
+                    <!-- The regex pattern below is almost perfect. However, it fails to handle the DATE _CALENDAR_ESCAPE
+          It also fails to handle to throw an exception on FROM 11 1976 -->
                     <optional>
-                      <element name="DATE">                      
-  								<data type="string">
- 								<param name="pattern">(FROM\s{1}([1-3]?\d\s{1})?((JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1})?\d{4})|(TO\s{1}([1-3]?\d\s{1})?((JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1})?\d{4})|(FROM\s{1}([1-3]?\d\s{1})?((JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1})?\d{4}\s{1}TO\s{1}([1-3]?\d\s{1})?((JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1})?\d{4})</param>                                                
+                      <element name="DATE">
+                        <data type="string">
+                          <param name="pattern">(FROM\s{1}([1-3]?\d\s{1})?((JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1})?\d{4})|(TO\s{1}([1-3]?\d\s{1})?((JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1})?\d{4})|(FROM\s{1}([1-3]?\d\s{1})?((JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1})?\d{4}\s{1}TO\s{1}([1-3]?\d\s{1})?((JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1})?\d{4})</param>
                           <param name="minLength">7</param>
                           <param name="maxLength">35</param>
                         </data>
                       </element>
                     </optional>
-<!--PLAC-->
+                    <!--PLAC-->
                     <optional>
                       <element name="PLAC">
                         <data type="string">
@@ -903,7 +885,7 @@
                   </interleave>
                 </element>
               </zeroOrMore>
-<!--AGNC-->
+              <!--AGNC-->
               <optional>
                 <element name="AGNC">
                   <data type="string">
@@ -912,26 +894,25 @@
                   </data>
                 </element>
               </optional>
-<!--NOTE-->
+              <!--NOTE-->
               <zeroOrMore>
                 <ref name="note_structure"/>
               </zeroOrMore>
             </interleave>
           </element>
         </optional>
-<!--AUTH-->
+        <!--AUTH-->
         <optional>
           <element name="AUTH">
-<!-- AUTH Schematron rule -->
+            <!-- AUTH Schematron rule -->
             <sch:pattern name="Checking length of Header Record AUTH">
               <sch:rule context="AUTH/node()[self::text()]">
-                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
-                Exceeds maximum AUTH length of 248</sch:assert>
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">Exceeds maximum AUTH length of 248</sch:assert>
               </sch:rule>
             </sch:pattern>
             <interleave>
               <text/>
-<!--CONC-->
+              <!--CONC-->
               <zeroOrMore>
                 <element name="CONC">
                   <data type="string">
@@ -940,7 +921,7 @@
                   </data>
                 </element>
               </zeroOrMore>
-<!--CONT-->
+              <!--CONT-->
               <zeroOrMore>
                 <element name="CONT">
                   <data type="string">
@@ -952,19 +933,18 @@
             </interleave>
           </element>
         </optional>
-<!--TITL-->
+        <!--TITL-->
         <optional>
           <element name="TITL">
-<!-- TITL Schematron rule -->
+            <!-- TITL Schematron rule -->
             <sch:pattern name="Checking length of Source Record TITL">
               <sch:rule context="SOUR/TITL/node()[self::text()]">
-                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
-                Exceeds maximum TITL length of 248</sch:assert>
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">Exceeds maximum TITL length of 248</sch:assert>
               </sch:rule>
             </sch:pattern>
             <interleave>
               <text/>
-<!--CONC-->
+              <!--CONC-->
               <zeroOrMore>
                 <element name="CONC">
                   <data type="string">
@@ -973,7 +953,7 @@
                   </data>
                 </element>
               </zeroOrMore>
-<!--CONT-->
+              <!--CONT-->
               <zeroOrMore>
                 <element name="CONT">
                   <data type="string">
@@ -985,7 +965,7 @@
             </interleave>
           </element>
         </optional>
-<!--ABBR-->
+        <!--ABBR-->
         <optional>
           <element name="ABBR">
             <data type="string">
@@ -994,19 +974,18 @@
             </data>
           </element>
         </optional>
-<!--PUBL-->
+        <!--PUBL-->
         <optional>
           <element name="PUBL">
-<!-- PUBL Schematron rule -->
+            <!-- PUBL Schematron rule -->
             <sch:pattern name="Checking length of Source Record PUBL">
               <sch:rule context="PUBL/node()[self::text()]">
-                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
-                Exceeds maximum PUBL length of 248</sch:assert>
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">Exceeds maximum PUBL length of 248</sch:assert>
               </sch:rule>
             </sch:pattern>
             <interleave>
               <text/>
-<!--CONC-->
+              <!--CONC-->
               <zeroOrMore>
                 <element name="CONC">
                   <data type="string">
@@ -1015,7 +994,7 @@
                   </data>
                 </element>
               </zeroOrMore>
-<!--CONT-->
+              <!--CONT-->
               <zeroOrMore>
                 <element name="CONT">
                   <data type="string">
@@ -1027,19 +1006,18 @@
             </interleave>
           </element>
         </optional>
-<!--TEXT-->
+        <!--TEXT-->
         <optional>
           <element name="TEXT">
-<!-- TEXT Schematron rule -->
+            <!-- TEXT Schematron rule -->
             <sch:pattern name="Checking length of Source Record TEXT">
               <sch:rule context="SOUR/TEXT/node()[self::text()]">
-                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
-                Exceeds maximum TEXT length of 248</sch:assert>
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">Exceeds maximum TEXT length of 248</sch:assert>
               </sch:rule>
             </sch:pattern>
             <interleave>
               <text/>
-<!--CONC-->
+              <!--CONC-->
               <zeroOrMore>
                 <element name="CONC">
                   <data type="string">
@@ -1048,7 +1026,7 @@
                   </data>
                 </element>
               </zeroOrMore>
-<!--CONT-->
+              <!--CONT-->
               <zeroOrMore>
                 <element name="CONT">
                   <data type="string">
@@ -1060,7 +1038,7 @@
             </interleave>
           </element>
         </optional>
-<!--REPO-->
+        <!--REPO-->
         <optional>
           <element name="REPO">
             <attribute name="REF">
@@ -1070,18 +1048,17 @@
               </data>
             </attribute>
             <interleave>
-<!--NOTE-->
+              <!--NOTE-->
               <zeroOrMore>
                 <ref name="note_structure"/>
               </zeroOrMore>
-<!--CALN-->
+              <!--CALN-->
               <zeroOrMore>
                 <element name="CALN">
-<!--  Schematron rule -->
+                  <!--  Schematron rule -->
                   <sch:pattern name="Checking length of Source Repository Citation CALN">
                     <sch:rule context="CALN/node()[self::text()]">
-                      <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
-                      CALN range exceeds maximum of 120</sch:assert>
+                      <sch:assert test="string-length( normalize-space(.) ) &lt; 121">CALN range exceeds maximum of 120</sch:assert>
                     </sch:rule>
                   </sch:pattern>
                   <mixed>
@@ -1100,15 +1077,15 @@
             </interleave>
           </element>
         </optional>
-<!--SOUR-->
+        <!--SOUR-->
         <zeroOrMore>
           <ref name="source_citation"/>
         </zeroOrMore>
-<!--OBJE-->
+        <!--OBJE-->
         <zeroOrMore>
           <ref name="multimedia_link"/>
         </zeroOrMore>
-<!--NOTE-->
+        <!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
@@ -1116,7 +1093,7 @@
       </interleave>
     </element>
   </define>
-<!--SUBMITTER_RECORD-->
+  <!--SUBMITTER_RECORD-->
   <define name="submitter_record">
     <element name="SUBM">
       <attribute name="ID">
@@ -1132,22 +1109,22 @@
             <param name="maxLength">60</param>
           </data>
         </element>
-<!--ADDR  -->
+        <!--ADDR  -->
         <optional>
           <ref name="address_structure"/>
         </optional>
         <optional>
           <ref name="phone_number"/>
         </optional>
-<!--OBJE-->
+        <!--OBJE-->
         <zeroOrMore>
           <ref name="multimedia_link"/>
         </zeroOrMore>
-<!--LANG-->
+        <!--LANG-->
         <optional>
-        		<ref name="language_preference"/>
-        </optional>        
-<!--RFN-->
+          <ref name="language_preference"/>
+        </optional>
+        <!--RFN-->
         <optional>
           <element name="RFN">
             <data type="string">
@@ -1156,7 +1133,7 @@
             </data>
           </element>
         </optional>
-<!--RIN-->
+        <!--RIN-->
         <optional>
           <element name="RIN">
             <data type="string">
@@ -1165,14 +1142,14 @@
             </data>
           </element>
         </optional>
-<!--CHAN-->
+        <!--CHAN-->
         <optional>
           <ref name="change_date"/>
         </optional>
       </interleave>
     </element>
   </define>
-<!--SUBMISSION_RECORD-->
+  <!--SUBMISSION_RECORD-->
   <define name="submission_record">
     <element name="SUBN">
       <attribute name="ID">
@@ -1182,7 +1159,7 @@
         </data>
       </attribute>
       <interleave>
-<!--SUBM-->
+        <!--SUBM-->
         <optional>
           <element name="SUBM">
             <attribute name="REF">
@@ -1194,7 +1171,7 @@
             <empty/>
           </element>
         </optional>
-<!--FAMF-->
+        <!--FAMF-->
         <optional>
           <element name="FAMF">
             <data type="string">
@@ -1203,7 +1180,7 @@
             </data>
           </element>
         </optional>
-<!--TEMP-->
+        <!--TEMP-->
         <optional>
           <element name="TEMP">
             <data type="string">
@@ -1212,7 +1189,7 @@
             </data>
           </element>
         </optional>
-<!--ANCE-->
+        <!--ANCE-->
         <optional>
           <element name="ANCE">
             <data type="string">
@@ -1221,7 +1198,7 @@
             </data>
           </element>
         </optional>
-<!--DESC-->
+        <!--DESC-->
         <optional>
           <element name="DESC">
             <data type="string">
@@ -1230,7 +1207,7 @@
             </data>
           </element>
         </optional>
-<!--ORDI-->
+        <!--ORDI-->
         <optional>
           <element name="ORDI">
             <data type="string">
@@ -1240,7 +1217,7 @@
             </data>
           </element>
         </optional>
-<!--RIN-->
+        <!--RIN-->
         <optional>
           <element name="RIN">
             <data type="string">
@@ -1252,15 +1229,14 @@
       </interleave>
     </element>
   </define>
-<!--Substructures of the Lineage-Linked Form-->
-<!--ADDRESS_STRUCTURE-->
+  <!--Substructures of the Lineage-Linked Form-->
+  <!--ADDRESS_STRUCTURE-->
   <define name="address_structure">
     <element name="ADDR">
-<!-- ADDR Schematron rule -->
+      <!-- ADDR Schematron rule -->
       <sch:pattern name="Checking length of Address Structure ADDR">
         <sch:rule context="ADDR/node()[self::text()]">
-          <sch:assert test="string-length( normalize-space(.) ) &lt; 61">
-          Exceeds maximum NOTE length of 60</sch:assert>
+          <sch:assert test="string-length( normalize-space(.) ) &lt; 61">Exceeds maximum NOTE length of 60</sch:assert>
         </sch:rule>
       </sch:pattern>
       <interleave>
@@ -1323,24 +1299,22 @@
         </optional>
       </interleave>
     </element>
-<!-- end ADDR -->
-<!-- separate the PHON tags from the ADDR structure, because it's at the same
- 	 level as the ADDR (i.e., not as its child)  and can hence occur anywhere at the same
- 	 level -->
+    <!-- end ADDR -->
+    <!-- separate the PHON tags from the ADDR structure, because it's at the same
+         level as the ADDR (i.e., not as its child)  and can hence occur anywhere at the same
+         level -->
   </define>
-<!--CHANGE_-->
+  <!--CHANGE_-->
   <define name="change_date">
     <element name="CHAN">
       <interleave>
         <element name="DATE">
-<!-- DATE Schematron rule
-	 Limitation: this cannot check DATE_EXACT because xslt 1.0 does not support regex -->
-          <sch:pattern name="Checking length of Change Date ">
+          <!-- DATE Schematron rule
+         Limitation: this cannot check DATE_EXACT because xslt 1.0 does not support regex -->
+          <sch:pattern name="Checking length of Change Date">
             <sch:rule context="CHAN//node()[self::text()]">
-              <sch:assert test="string-length( normalize-space(.) ) &lt; 12">
-               range exceeds maximum of 11</sch:assert>
-              <sch:assert test="string-length( normalize-space(.) ) &gt; 9">
-               range fails to meet the minimum of 10</sch:assert>
+              <sch:assert test="string-length( normalize-space(.) ) &lt; 12">range exceeds maximum of 11</sch:assert>
+              <sch:assert test="string-length( normalize-space(.) ) &gt; 9">range fails to meet the minimum of 10</sch:assert>
             </sch:rule>
           </sch:pattern>
           <mixed>
@@ -1355,17 +1329,17 @@
             </optional>
           </mixed>
         </element>
-<!--NOTE-->
+        <!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
       </interleave>
     </element>
   </define>
-<!--EVENT_DETAIL-->
+  <!--EVENT_DETAIL-->
   <define name="event_detail">
     <interleave>
-<!--TYPE-->
+      <!--TYPE-->
       <optional>
         <element name="TYPE">
           <data type="string">
@@ -1374,7 +1348,7 @@
           </data>
         </element>
       </optional>
-<!-- DATE as DATE_VALUE-->
+      <!-- DATE as DATE_VALUE-->
       <optional>
         <element name="DATE">
           <data type="string">
@@ -1383,19 +1357,18 @@
           </data>
         </element>
       </optional>
-<!--PLAC-->
+      <!--PLAC-->
       <optional>
         <element name="PLAC">
-<!-- PLAC Schematron rule -->
+          <!-- PLAC Schematron rule -->
           <sch:pattern name="Checking length of Event Detail Structure PLAC">
             <sch:rule context="PLAC/node()[self::text()]">
-              <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
-              PLAC range exceeds maximum of 121</sch:assert>
+              <sch:assert test="string-length( normalize-space(.) ) &lt; 121">PLAC range exceeds maximum of 121</sch:assert>
             </sch:rule>
           </sch:pattern>
           <interleave>
             <text/>
-<!--FORM-->
+            <!--FORM-->
             <optional>
               <element name="FORM">
                 <data type="string">
@@ -1404,29 +1377,29 @@
                 </data>
               </element>
             </optional>
-<!--SOUR-->
+            <!--SOUR-->
             <zeroOrMore>
               <ref name="source_citation_obje"/>
             </zeroOrMore>
-<!--NOTE-->
+            <!--NOTE-->
             <zeroOrMore>
               <ref name="note_structure"/>
             </zeroOrMore>
           </interleave>
         </element>
       </optional>
-<!--ADDR -->
+      <!--ADDR -->
       <optional>
         <ref name="address_structure"/>
       </optional>
       <optional>
         <ref name="phone_number"/>
       </optional>
-<!--AGE-->
+      <!--AGE-->
       <optional>
         <ref name="age"/>
       </optional>
-<!--AGNC-->
+      <!--AGNC-->
       <optional>
         <element name="AGNC">
           <data type="string">
@@ -1435,7 +1408,7 @@
           </data>
         </element>
       </optional>
-<!--CAUS-->
+      <!--CAUS-->
       <optional>
         <element name="CAUS">
           <data type="string">
@@ -1444,27 +1417,28 @@
           </data>
         </element>
       </optional>
-<!--SOUR-->
+      <!--SOUR-->
       <zeroOrMore>
         <ref name="source_citation"/>
       </zeroOrMore>
-<!--OBJE-->
+      <!--OBJE-->
       <zeroOrMore>
         <ref name="multimedia_link"/>
       </zeroOrMore>
-<!--NOTE-->
+      <!--NOTE-->
       <zeroOrMore>
         <ref name="note_structure"/>
       </zeroOrMore>
     </interleave>
   </define>
-<!--FAMILY_EVENT_STRUCTURE-->
+  <!--FAMILY_EVENT_STRUCTURE-->
   <define name="family_event">
     <choice>
       <element name="ANUL">
-<!-- Used interleave instead of mixed for family events because of the HUSB
-                                and WIFE elements; mixed seems to require them to be in a certain order (against
-                                spec) and interleave "leaves" them be in any order -->
+        <!-- Used interleave instead of mixed for family events because of the HUSB
+             and WIFE elements; mixed seems to require them to be in a certain order (against
+             spec) and interleave "leaves" them be in any order 
+        -->
         <interleave>
           <text/>
           <optional>
@@ -1664,15 +1638,14 @@
       </element>
     </choice>
   </define>
-<!--INDIVIDUAL_ATTRIBUTE_STRUCTURE-->
+  <!--INDIVIDUAL_ATTRIBUTE_STRUCTURE-->
   <define name="individual_attribute">
     <choice>
       <element name="CAST">
-<!-- CAST Schematron rule -->
+        <!-- CAST Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure CAST">
           <sch:rule context="CAST/node()[self::text()]">
-            <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
-            Exceeds maximum CAST length of 90</sch:assert>
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 91">Exceeds maximum CAST length of 90</sch:assert>
           </sch:rule>
         </sch:pattern>
         <mixed>
@@ -1682,11 +1655,10 @@
         </mixed>
       </element>
       <element name="DSCR">
-<!-- DSCR Schematron rule -->
+        <!-- DSCR Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure DSCR">
           <sch:rule context="DSCR/node()[self::text()]">
-            <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
-            Exceeds maximum DSCR length of 248</sch:assert>
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 249">Exceeds maximum DSCR length of 248</sch:assert>
           </sch:rule>
         </sch:pattern>
         <mixed>
@@ -1696,11 +1668,10 @@
         </mixed>
       </element>
       <element name="EDUC">
-<!-- EDUC Schematron rule -->
+        <!-- EDUC Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure EDUC">
           <sch:rule context="EDUC/node()[self::text()]">
-            <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
-            Exceeds maximum EDUC length of 248</sch:assert>
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 249">Exceeds maximum EDUC length of 248</sch:assert>
           </sch:rule>
         </sch:pattern>
         <mixed>
@@ -1710,11 +1681,10 @@
         </mixed>
       </element>
       <element name="IDNO">
-<!-- INDO Schematron rule -->
+        <!-- INDO Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure INDO">
           <sch:rule context="INDO/node()[self::text()]">
-            <sch:assert test="string-length( normalize-space(.) ) &lt; 31">
-            Exceeds maximum INDO length of 30</sch:assert>
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 31">Exceeds maximum INDO length of 30</sch:assert>
           </sch:rule>
         </sch:pattern>
         <mixed>
@@ -1724,11 +1694,10 @@
         </mixed>
       </element>
       <element name="NATI">
-<!-- NATI Schematron rule -->
+        <!-- NATI Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure NATI">
           <sch:rule context="NATI/node()[self::text()]">
-            <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
-            Exceeds maximum NATI length of 120</sch:assert>
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 121">Exceeds maximum NATI length of 120</sch:assert>
           </sch:rule>
         </sch:pattern>
         <mixed>
@@ -1738,11 +1707,10 @@
         </mixed>
       </element>
       <element name="NCHI">
-<!-- NCHI Schematron rule -->
+        <!-- NCHI Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure NCHI">
           <sch:rule context="NCHI/node()[self::text()]">
-            <sch:assert test="string-length( normalize-space(.) ) &lt; 4">
-            Exceeds maximum NCHI length of 3</sch:assert>
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 4">Exceeds maximum NCHI length of 3</sch:assert>
           </sch:rule>
         </sch:pattern>
         <mixed>
@@ -1752,11 +1720,10 @@
         </mixed>
       </element>
       <element name="NMR">
-<!-- NMR Schematron rule -->
+        <!-- NMR Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure NMR">
           <sch:rule context="NMR/node()[self::text()]">
-            <sch:assert test="string-length( normalize-space(.) ) &lt; 4">
-            Exceeds maximum NMR length of 3</sch:assert>
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 4">Exceeds maximum NMR length of 3</sch:assert>
           </sch:rule>
         </sch:pattern>
         <mixed>
@@ -1766,11 +1733,10 @@
         </mixed>
       </element>
       <element name="OCCU">
-<!-- OCCU Schematron rule -->
+        <!-- OCCU Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure OCCU">
           <sch:rule context="OCCU/node()[self::text()]">
-            <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
-            Exceeds maximum OCCU length of 90</sch:assert>
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 91">Exceeds maximum OCCU length of 90</sch:assert>
           </sch:rule>
         </sch:pattern>
         <mixed>
@@ -1780,11 +1746,10 @@
         </mixed>
       </element>
       <element name="PROP">
-<!-- PROP Schematron rule -->
+        <!-- PROP Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure PROP">
           <sch:rule context="PROP/node()[self::text()]">
-            <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
-            Exceeds maximum PROP length of 248</sch:assert>
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 249">Exceeds maximum PROP length of 248</sch:assert>
           </sch:rule>
         </sch:pattern>
         <mixed>
@@ -1794,11 +1759,10 @@
         </mixed>
       </element>
       <element name="RELI">
-<!-- RELI Schematron rule -->
+        <!-- RELI Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure RELI">
           <sch:rule context="RELI/node()[self::text()]">
-            <sch:assert test="string-length( normalize-space(.) ) &lt; 91">
-            Exceeds maximum RELI length of 90</sch:assert>
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 91">Exceeds maximum RELI length of 90</sch:assert>
           </sch:rule>
         </sch:pattern>
         <mixed>
@@ -1813,15 +1777,13 @@
         </optional>
       </element>
       <element name="SSN">
-<!-- SSN Schematron rule -->
+        <!-- SSN Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure SSN">
           <sch:rule context="SSN/node()[self::text()]">
-            <sch:assert test="string-length( normalize-space(.) ) &lt; 12">
-            Exceeds maximum SSN length of 11</sch:assert>
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 12">Exceeds maximum SSN length of 11</sch:assert>
           </sch:rule>
           <sch:rule context="SSN/node()[self::text()]">
-            <sch:assert test="string-length( normalize-space(.) ) &gt; 8">
-            Fails maximum SSN length of 9</sch:assert>
+            <sch:assert test="string-length( normalize-space(.) ) &gt; 8">Fails maximum SSN length of 9</sch:assert>
           </sch:rule>
         </sch:pattern>
         <mixed>
@@ -1831,11 +1793,10 @@
         </mixed>
       </element>
       <element name="TITL">
-<!-- TITL Schematron rule -->
+        <!-- TITL Schematron rule -->
         <sch:pattern name="Checking length of Individual Attribute Structure TITL">
           <sch:rule context="INDI/TITL/node()[self::text()]">
-            <sch:assert test="string-length( normalize-space(.) ) &lt; 121">
-            Exceeds maximum NOTE length of 120</sch:assert>
+            <sch:assert test="string-length( normalize-space(.) ) &lt; 121">Exceeds maximum NOTE length of 120</sch:assert>
           </sch:rule>
         </sch:pattern>
         <mixed>
@@ -1846,17 +1807,17 @@
       </element>
     </choice>
   </define>
-<!--INDIVIDUAL_EVENT_STRUCTURE-->
+  <!--INDIVIDUAL_EVENT_STRUCTURE-->
   <define name="individual_event">
     <choice>
       <element name="BIRT">
         <interleave>
           <text/>
-<!--Event Detail-->
+          <!--Event Detail-->
           <optional>
             <ref name="event_detail"/>
           </optional>
-<!--FAMC-->
+          <!--FAMC-->
           <optional>
             <element name="FAMC">
               <attribute name="REF">
@@ -1873,11 +1834,11 @@
       <element name="CHR">
         <interleave>
           <text/>
-<!--Event Detail-->
+          <!--Event Detail-->
           <optional>
             <ref name="event_detail"/>
           </optional>
-<!--FAMC-->
+          <!--FAMC-->
           <optional>
             <element name="FAMC">
               <attribute name="REF">
@@ -1915,11 +1876,11 @@
       <element name="ADOP">
         <interleave>
           <text/>
-<!--Event Detail-->
+          <!--Event Detail-->
           <optional>
             <ref name="event_detail"/>
           </optional>
-<!--FAMC-->
+          <!--FAMC-->
           <optional>
             <element name="FAMC">
               <attribute name="REF">
@@ -2062,13 +2023,13 @@
       </element>
     </choice>
   </define>
-<!--LDS_INDIVIDUAL_ORDINANCE-->
+  <!--LDS_INDIVIDUAL_ORDINANCE-->
   <define name="lds_individual_ordinance">
     <choice>
-<!-- BAPL -->
+      <!-- BAPL -->
       <element name="BAPL">
         <interleave>
-<!--STAT-->
+          <!--STAT-->
           <optional>
             <element name="STAT">
               <data type="string">
@@ -2078,7 +2039,7 @@
               </data>
             </element>
           </optional>
-<!--DATE (DATE_LDS_ORD) DATE_VALUE -->
+          <!--DATE (DATE_LDS_ORD) DATE_VALUE -->
           <optional>
             <element name="DATE">
               <data type="string">
@@ -2087,7 +2048,7 @@
               </data>
             </element>
           </optional>
-<!--TEMP-->
+          <!--TEMP-->
           <optional>
             <element name="TEMP">
               <data type="string">
@@ -2096,7 +2057,7 @@
               </data>
             </element>
           </optional>
-<!--PLAC-->
+          <!--PLAC-->
           <optional>
             <element name="PLAC">
               <data type="string">
@@ -2105,20 +2066,20 @@
               </data>
             </element>
           </optional>
-<!--SOUR-->
+          <!--SOUR-->
           <zeroOrMore>
             <ref name="source_citation"/>
           </zeroOrMore>
-<!--NOTE-->
+          <!--NOTE-->
           <zeroOrMore>
             <ref name="note_structure"/>
           </zeroOrMore>
         </interleave>
       </element>
-<!-- CONL -->
+      <!-- CONL -->
       <element name="CONL">
         <interleave>
-<!--STAT-->
+          <!--STAT-->
           <optional>
             <element name="STAT">
               <data type="string">
@@ -2128,7 +2089,7 @@
               </data>
             </element>
           </optional>
-<!--DATE (DATE_LDS_ORD) DATE_VALUE -->
+          <!--DATE (DATE_LDS_ORD) DATE_VALUE -->
           <optional>
             <element name="DATE">
               <data type="string">
@@ -2137,7 +2098,7 @@
               </data>
             </element>
           </optional>
-<!--TEMP-->
+          <!--TEMP-->
           <optional>
             <element name="TEMP">
               <data type="string">
@@ -2146,7 +2107,7 @@
               </data>
             </element>
           </optional>
-<!--PLAC-->
+          <!--PLAC-->
           <optional>
             <element name="PLAC">
               <data type="string">
@@ -2155,20 +2116,20 @@
               </data>
             </element>
           </optional>
-<!--SOUR-->
+          <!--SOUR-->
           <zeroOrMore>
             <ref name="source_citation"/>
           </zeroOrMore>
-<!--NOTE-->
+          <!--NOTE-->
           <zeroOrMore>
             <ref name="note_structure"/>
           </zeroOrMore>
         </interleave>
       </element>
-<!-- ENDL -->
+      <!-- ENDL -->
       <element name="ENDL">
         <interleave>
-<!--STAT-->
+          <!--STAT-->
           <optional>
             <element name="STAT">
               <data type="string">
@@ -2178,7 +2139,7 @@
               </data>
             </element>
           </optional>
-<!--DATE (DATE_LDS_ORD) DATE_VALUE -->
+          <!--DATE (DATE_LDS_ORD) DATE_VALUE -->
           <optional>
             <element name="DATE">
               <data type="string">
@@ -2187,7 +2148,7 @@
               </data>
             </element>
           </optional>
-<!--TEMP-->
+          <!--TEMP-->
           <optional>
             <element name="TEMP">
               <data type="string">
@@ -2196,7 +2157,7 @@
               </data>
             </element>
           </optional>
-<!--PLAC-->
+          <!--PLAC-->
           <optional>
             <element name="PLAC">
               <data type="string">
@@ -2205,20 +2166,20 @@
               </data>
             </element>
           </optional>
-<!--SOUR-->
+          <!--SOUR-->
           <zeroOrMore>
             <ref name="source_citation"/>
           </zeroOrMore>
-<!--NOTE-->
+          <!--NOTE-->
           <zeroOrMore>
             <ref name="note_structure"/>
           </zeroOrMore>
         </interleave>
       </element>
-<!-- SLGC -->
+      <!-- SLGC -->
       <element name="SLGC">
         <interleave>
-<!--STAT-->
+          <!--STAT-->
           <optional>
             <element name="STAT">
               <data type="string">
@@ -2228,7 +2189,7 @@
               </data>
             </element>
           </optional>
-<!--DATE (DATE_LDS_ORD) DATE_VALUE -->
+          <!--DATE (DATE_LDS_ORD) DATE_VALUE -->
           <optional>
             <element name="DATE">
               <data type="string">
@@ -2237,7 +2198,7 @@
               </data>
             </element>
           </optional>
-<!--TEMP-->
+          <!--TEMP-->
           <optional>
             <element name="TEMP">
               <data type="string">
@@ -2246,7 +2207,7 @@
               </data>
             </element>
           </optional>
-<!--PLAC-->
+          <!--PLAC-->
           <optional>
             <element name="PLAC">
               <data type="string">
@@ -2255,7 +2216,7 @@
               </data>
             </element>
           </optional>
-<!--FAMC-->
+          <!--FAMC-->
           <element name="FAMC">
             <attribute name="REF">
               <data type="string">
@@ -2265,11 +2226,11 @@
             </attribute>
             <empty/>
           </element>
-<!--SOUR-->
+          <!--SOUR-->
           <zeroOrMore>
             <ref name="source_citation"/>
           </zeroOrMore>
-<!--NOTE-->
+          <!--NOTE-->
           <zeroOrMore>
             <ref name="note_structure"/>
           </zeroOrMore>
@@ -2277,7 +2238,7 @@
       </element>
     </choice>
   </define>
-<!--MULTIMEDIA_LINK-->
+  <!--MULTIMEDIA_LINK-->
   <define name="multimedia_link">
     <choice>
       <ref name="multimedia_link_ref"/>
@@ -2305,7 +2266,7 @@
             <param name="maxLength">4</param>
           </data>
         </element>
-<!--TITL-->
+        <!--TITL-->
         <optional>
           <element name="TITL">
             <data type="string">
@@ -2314,7 +2275,7 @@
             </data>
           </element>
         </optional>
-<!--FILE-->
+        <!--FILE-->
         <optional>
           <element name="FILE">
             <data type="string">
@@ -2323,14 +2284,14 @@
             </data>
           </element>
         </optional>
-<!--NOTE-->
+        <!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
       </interleave>
     </element>
   </define>
-<!--NOTE_STRUCTURE-->
+  <!--NOTE_STRUCTURE-->
   <define name="note_structure">
     <choice>
       <ref name="note_structure_ref"/>
@@ -2345,7 +2306,7 @@
           <param name="maxLength">22</param>
         </data>
       </attribute>
-<!--SOUR-->
+      <!--SOUR-->
       <zeroOrMore>
         <element name="SOUR">
           <attribute name="REF">
@@ -2361,16 +2322,15 @@
   </define>
   <define name="note_structure_simple">
     <element name="NOTE">
-<!-- NOTE Schematron rule -->
+      <!-- NOTE Schematron rule -->
       <sch:pattern name="Checking length of Note Structure NOTE">
         <sch:rule context="NOTE/node()[self::text()]">
-          <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
-          NOTE range exceeds maximum of 248</sch:assert>
+          <sch:assert test="string-length( normalize-space(.) ) &lt; 249">NOTE range exceeds maximum of 248</sch:assert>
         </sch:rule>
       </sch:pattern>
       <interleave>
         <text/>
-<!--CONC-->
+        <!--CONC-->
         <zeroOrMore>
           <element name="CONC">
             <data type="string">
@@ -2379,7 +2339,7 @@
             </data>
           </element>
         </zeroOrMore>
-<!--CONT-->
+        <!--CONT-->
         <zeroOrMore>
           <element name="CONT">
             <data type="string">
@@ -2388,7 +2348,7 @@
             </data>
           </element>
         </zeroOrMore>
-<!--SOUR-->
+        <!--SOUR-->
         <zeroOrMore>
           <element name="SOUR">
             <attribute name="REF">
@@ -2403,14 +2363,14 @@
       </interleave>
     </element>
   </define>
-<!--SOURCE_CITATION-->
+  <!--SOURCE_CITATION-->
   <define name="source_citation">
     <choice>
       <ref name="source_citation_ref"/>
       <ref name="source_citation_simple"/>
     </choice>
   </define>
-<!-- to prevent annoying interleave ovelap -->
+  <!-- to prevent annoying interleave ovelap -->
   <define name="source_citation_obje">
     <choice>
       <ref name="source_citation_ref"/>
@@ -2426,7 +2386,7 @@
         </data>
       </attribute>
       <interleave>
-<!--PAGE-->
+        <!--PAGE-->
         <optional>
           <element name="PAGE">
             <data type="string">
@@ -2435,22 +2395,21 @@
             </data>
           </element>
         </optional>
-<!--EVEN-->
+        <!--EVEN-->
         <optional>
           <element name="EVEN">
-<!-- EVEN Schematron rule -->
+            <!-- EVEN Schematron rule -->
             <sch:pattern name="Checking length of Source Citation EVEN">
               <sch:rule context="EVEN/node()[self::text()]">
-                <sch:assert test="string-length( normalize-space(.) ) &lt; 16">
-                EVEN range exceeds maximum of 15</sch:assert>
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 16">EVEN range exceeds maximum of 15</sch:assert>
               </sch:rule>
             </sch:pattern>
             <mixed>
               <optional>
                 <element name="ROLE">
-<!-- There is a problem with the standard here.  The max length of a ROLE is 15.  
-	  However,the max length of a ROLE_DESCRIPTOR, the last "or" in the pattern below
-	  is 25.  I have defaulted to the 15 -->
+                  <!-- There is a problem with the standard here.  The max length of a ROLE is 15.  
+          However,the max length of a ROLE_DESCRIPTOR, the last "or" in the pattern below
+          is 25.  I have defaulted to the 15 -->
                   <data type="string">
                     <param name="pattern">CHIL|HUSB|WIFE|MOTH|FATH|SPOU|.{15}</param>
                     <param name="minLength">1</param>
@@ -2461,12 +2420,12 @@
             </mixed>
           </element>
         </optional>
-<!--DATA-->
+        <!--DATA-->
         <optional>
           <element name="DATA">
             <interleave>
               <optional>
-<!--DATE (ENTRY_RECORDING_DATE) as DATE_VALUE -->
+                <!--DATE (ENTRY_RECORDING_DATE) as DATE_VALUE -->
                 <element name="DATE">
                   <data type="string">
                     <param name="minLength">1</param>
@@ -2476,11 +2435,10 @@
               </optional>
               <zeroOrMore>
                 <element name="TEXT">
-<!-- TEXT Schematron rule -->
+                  <!-- TEXT Schematron rule -->
                   <sch:pattern name="Checking length of Source Citation TEXT">
                     <sch:rule context="TEXT/node()[self::text()]">
-                      <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
-                      TEXT range exceeds maximum of 248</sch:assert>
+                      <sch:assert test="string-length( normalize-space(.) ) &lt; 249">TEXT range exceeds maximum of 248</sch:assert>
                     </sch:rule>
                   </sch:pattern>
                   <interleave>
@@ -2507,7 +2465,7 @@
             </interleave>
           </element>
         </optional>
-<!--QUAY-->
+        <!--QUAY-->
         <optional>
           <element name="QUAY">
             <data type="string">
@@ -2517,11 +2475,11 @@
             </data>
           </element>
         </optional>
-<!--OBJE-->
+        <!--OBJE-->
         <zeroOrMore>
           <ref name="multimedia_link"/>
         </zeroOrMore>
-<!--NOTE-->
+        <!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
@@ -2530,16 +2488,15 @@
   </define>
   <define name="source_citation_simple">
     <element name="SOUR">
-<!-- SOUR Schematron rule -->
+      <!-- SOUR Schematron rule -->
       <sch:pattern name="Checking length of Source Citaton (simple) SOUR">
         <sch:rule context="SOUR/node()[self::text()]">
-          <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
-          SOUR range exceeds maximum of 248</sch:assert>
+          <sch:assert test="string-length( normalize-space(.) ) &lt; 249">SOUR range exceeds maximum of 248</sch:assert>
         </sch:rule>
       </sch:pattern>
       <interleave>
         <text/>
-<!--CONC-->
+        <!--CONC-->
         <zeroOrMore>
           <element name="CONC">
             <data type="string">
@@ -2548,7 +2505,7 @@
             </data>
           </element>
         </zeroOrMore>
-<!--CONT-->
+        <!--CONT-->
         <zeroOrMore>
           <element name="CONT">
             <data type="string">
@@ -2557,14 +2514,13 @@
             </data>
           </element>
         </zeroOrMore>
-<!--TEXT-->
+        <!--TEXT-->
         <zeroOrMore>
           <element name="TEXT">
-<!-- TEXT Schematron rule -->
+            <!-- TEXT Schematron rule -->
             <sch:pattern name="Checking length of Source Citation (simple) TEXT">
               <sch:rule context="TEXT/node()[self::text()]">
-                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
-                TEXT range exceeds maximum of 248</sch:assert>
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">TEXT range exceeds maximum of 248</sch:assert>
               </sch:rule>
             </sch:pattern>
             <interleave>
@@ -2588,14 +2544,14 @@
             </interleave>
           </element>
         </zeroOrMore>
-<!--NOTE-->
+        <!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
       </interleave>
     </element>
   </define>
-<!-- This is a strange necessity caused by the following GEDCOM structures 
+  <!-- This is a strange necessity caused by the following GEDCOM structures 
   n  NAME <NAME_PERSONAL>  {1:1}
     +1 NPFX <NAME_PIECE_PREFIX>  {0:1}
     +1 GIVN <NAME_PIECE_GIVEN>  {0:1}
@@ -2616,19 +2572,18 @@
     
     This occurs in three structures: the Personal Name Structure (above), the Event Detail
     Structure, and the Family record
--->
+    -->
   <define name="source_citation_simple_obje">
     <element name="SOUR">
-<!-- SOUR Schematron rule -->
+      <!-- SOUR Schematron rule -->
       <sch:pattern name="Checking length of Source Citation (simple) SOUR">
         <sch:rule context="SOUR/node()[self::text()]">
-          <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
-          SOUR range exceeds maximum of 248</sch:assert>
+          <sch:assert test="string-length( normalize-space(.) ) &lt; 249">SOUR range exceeds maximum of 248</sch:assert>
         </sch:rule>
       </sch:pattern>
       <interleave>
         <text/>
-<!--CONC-->
+        <!--CONC-->
         <zeroOrMore>
           <element name="CONC">
             <data type="string">
@@ -2637,7 +2592,7 @@
             </data>
           </element>
         </zeroOrMore>
-<!--CONT-->
+        <!--CONT-->
         <zeroOrMore>
           <element name="CONT">
             <data type="string">
@@ -2646,14 +2601,13 @@
             </data>
           </element>
         </zeroOrMore>
-<!--TEXT -->
+        <!--TEXT -->
         <zeroOrMore>
           <element name="TEXT">
-<!-- TEXT Schematron rule -->
+            <!-- TEXT Schematron rule -->
             <sch:pattern name="Checking length of Source Citation (simple) TEXT">
               <sch:rule context="TEXT/node()[self::text()]">
-                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">
-                TEXT range exceeds maximum of 248</sch:assert>
+                <sch:assert test="string-length( normalize-space(.) ) &lt; 249">TEXT range exceeds maximum of 248</sch:assert>
               </sch:rule>
             </sch:pattern>
             <interleave>
@@ -2677,7 +2631,7 @@
             </interleave>
           </element>
         </zeroOrMore>
-<!--NOTE-->
+        <!--NOTE-->
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
@@ -2687,8 +2641,8 @@
       </interleave>
     </element>
   </define>
-<!--Miscellaneous-->
-<!--AGE_AT_EVENT-->
+  <!--Miscellaneous-->
+  <!--AGE_AT_EVENT-->
   <define name="age">
     <element name="AGE">
       <data type="string">
@@ -2698,46 +2652,46 @@
       </data>
     </element>
   </define>
-<!-- 
-	  Both the LANGUAGE_PREFERENCE and PHONE_NUMBER implemenation manage to
+  <!-- 
+     Both the LANGUAGE_PREFERENCE and PHONE_NUMBER implementation manage to
      work around relaxng interleave limitation of not permitting more than one
      occurance of the same element in an interleave.  These limitation also
      manage to constrain the number of LANG and PHON tags to their GEDCOM 5.5
      maximum of 3.
--->
-<!-- LANGUAGE_PREFERENCE -->  
+  -->
+  <!-- LANGUAGE_PREFERENCE -->
   <define name="language_preference">
-		<optional>
-          <element name="LANG">
-            <data type="string">
-              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
-              <param name="minLength">1</param>
-              <param name="maxLength">15</param>
-            </data>
-          </element>				
-		</optional>
-		<optional>
-          <element name="LANG">
-            <data type="string">
-              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
-              <param name="minLength">1</param>
-              <param name="maxLength">15</param>
-            </data>
-          </element>				
-		</optional>
-		<optional>
-          <element name="LANG">
-            <data type="string">
-              <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
-              <param name="minLength">1</param>
-              <param name="maxLength">15</param>
-            </data>
-          </element>				
-		</optional>
+    <optional>
+      <element name="LANG">
+        <data type="string">
+          <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
+          <param name="minLength">1</param>
+          <param name="maxLength">15</param>
+        </data>
+      </element>
+    </optional>
+    <optional>
+      <element name="LANG">
+        <data type="string">
+          <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
+          <param name="minLength">1</param>
+          <param name="maxLength">15</param>
+        </data>
+      </element>
+    </optional>
+    <optional>
+      <element name="LANG">
+        <data type="string">
+          <param name="pattern">Afrikaans|Albanian|Anglo-Saxon|Catalan|Catalan_Spn|Czech|Danish|Dutch|English|Esperanto|Estonian|Faroese|Finnish|French|German|Hawaiian|Hungarian|Icelandic|Indonesian|Italian|Latvian|Lithuanian|Navaho|Norwegian|Polish|Portuguese|Romanian|Serbo_Croa|Slovak|Slovene|Spanish|Swedish|Turkish|Wendic</param>
+          <param name="minLength">1</param>
+          <param name="maxLength">15</param>
+        </data>
+      </element>
+    </optional>
   </define>
-<!--PHONE_NUMBER -->
+  <!--PHONE_NUMBER -->
   <define name="phone_number">
-<!--PHON-->
+    <!--PHON-->
     <optional>
       <element name="PHON">
         <data type="string">
@@ -2746,7 +2700,7 @@
         </data>
       </element>
     </optional>
-<!--PHON-->
+    <!--PHON-->
     <optional>
       <element name="PHON">
         <data type="string">
@@ -2755,7 +2709,7 @@
         </data>
       </element>
     </optional>
-<!--PHON-->
+    <!--PHON-->
     <optional>
       <element name="PHON">
         <data type="string">
@@ -2765,14 +2719,13 @@
       </element>
     </optional>
   </define>
-<!--USER_REFERENCE_NUMBER-->
+  <!--USER_REFERENCE_NUMBER-->
   <define name="user_reference_number">
     <element name="REFN">
-<!-- REFN Schematron rule -->
+      <!-- REFN Schematron rule -->
       <sch:pattern name="Checking length of User_Reference_Number">
         <sch:rule context="REFN/node()[self::text()]">
-          <sch:assert test="string-length( normalize-space(.) ) &lt; 21">
-          REFN exceeds maximum of 20</sch:assert>
+          <sch:assert test="string-length( normalize-space(.) ) &lt; 21">REFN exceeds maximum of 20</sch:assert>
         </sch:rule>
       </sch:pattern>
       <mixed>
@@ -2787,13 +2740,13 @@
       </mixed>
     </element>
   </define>
-<!--record end-->
+  <!--record end-->
   <define name="record_end">
-<!--REFN-->
+    <!--REFN-->
     <zeroOrMore>
       <ref name="user_reference_number"/>
     </zeroOrMore>
-<!--RIN-->
+    <!--RIN-->
     <optional>
       <element name="RIN">
         <data type="string">
@@ -2802,7 +2755,7 @@
         </data>
       </element>
     </optional>
-<!--CHAN-->
+    <!--CHAN-->
     <optional>
       <ref name="change_date"/>
     </optional>
