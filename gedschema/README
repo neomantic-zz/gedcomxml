@@ -1,0 +1,206 @@
+
+                     RELAX NG/Schematron Schema for GedML
+
+   Used in conjunction with other programs, ged.rng can determine the
+   validity (in the XML sense) of a GEDCOM 5.5 as if it were an XML file.
+   The file ged.rng contains a RELAX NG schema of the [1]GEDCOM 5.5
+   standard as it is envisioned Michael H. Kay's [2]GedML. It cannot be
+   used to validate the GEDCOM 6.0 XML standard, the presumed
+   next-generation GEDCOM standard proposed by the Church of the Latter
+   Day Saints.
+
+Why RELAX NG/Schematron rather than DTD or W3C XML Schema?
+
+   Although Kay released a [3]DTD for GEDML which could be used in a
+   similar way, I chose to implement the schema in [4]RELAX NG for
+   several reasons.
+    1. DTDs are less precise than RELAX NG and WC3 XML Schema, and the
+       GEDCOM 5.5 standard (upon which GedML is based) requires more
+       precision. For instance, Kay's DTD checks the structure of a GedML
+       xml file, but it does not check if the content is correctly
+       formatted. DTDs have very limited ways to describe valid content,
+       while RELAX NG, Schematron, and WC3 XML Schema can describe valid
+       content.
+    2. RELAX NG is easier to learn and a more elegant solution to schemas
+       than the overly complicated, committee designed W3C XML Schema.
+    3. Unlike W3C XML Schema, RELAX NG gave me a way to handle the mixed
+       content possibilities inherent in the GedML tree. This was
+       accomplished by embedding [5]Schematron patterns into the RELAX NG
+       schema.
+
+How to Use ged.rng
+
+   Validating a GedML document with ged.rng is currently a complicated
+   process. It requires familiarity with Java, a bit of programming
+   skills, and some comfortability with a command line user interface. If
+   I have the time (and/or the desire), I plan to write a Java
+   application that should simplify the process. I've released ged.rng
+   because perhaps someone else will do this. Here are the steps to
+   validate a GEDCOM 5.5 file using ged.rng.
+    1. Convert the GEDCOM 5.5 file to GedML
+    2. Currently there is no quick and easy way to convert a GEDCOM 5.5
+       (or a .ged) file into an GedML (or .xml) file. I know of only one
+       way to do accomplish it now (there may be another) and it requires
+       some programming skills.
+         1. Kay has released Java source code which, when used in
+            conjunction with his saxon parser, can perform this
+            conversion.
+              1. Download the Kay's [6]source code
+              2. Compile it using your favorite Java distribution Java
+                 compiler - javac - (Sun's, IBM's, Blackdown's, or
+                 Classpath's - I have used both Sun's and IBM's on
+                 GNU/Linux x86/PowerPC).
+              3. Download Kay's [7]saxon parser and install it somewhere
+                 on your computer's hardrive. I have successfully used
+                 Saxon version 6.5.4.
+              4. Issue the following command or your command line
+                 terminal:
+                 java -cp <path to saxon>:<pathtogedmlclasses>
+                 com.icl.saxon.StyleSheet -x GedcomParser my.ged
+                 <pathtogedmlclasses>/GEDCOMtoXML.xsl > my.xml
+    3. There may be another way to convert a GEDCOM 5.5 file to a GedML
+       file. Danny Ayers has [8]released Java source code call SAG or
+       Simple API for GEDCOM. Although I have not tested it out, the
+       compiled source code is a library of functions which would
+       facilitate the conversion; the source code itself does not produce
+       a suitable binary to perform the conversion. More Java coding
+       skills would be needed.
+       The advantages of using his code over Kay's is that Danny Ayer has
+       given up his copyright claim and contributed his code to the
+       public domain.
+
+     * Validate the GedML file
+
+   Validating xml file with RELAX NG and Schematron is another
+   complicated affair. The complication arises because for ged.rng to
+   fully validate your GedML file, it must be used by a RELAX NG
+   validator and a Schematron validator. (The entire process is described
+   [9]here, if you are curious about the gory details). There are a few
+   easy solutions and a few complicated solutions.
+    1. Topologi.com makes available a free (as in cost) trial version of
+       a graphical program that can perform both the RELAX NG and
+       Schematron validations. You can download it from [10]here. Since
+       this program is closed source (not free as in freedom),I have not
+       tested this solution. 
+    2. Another cost free and semi-free (as in freedom) way of validating
+       a GedML file with ged.rng, can be downloaded [11]here
+    3. . This Java command line program performs both validations. I have
+       used this program and it works well. The source code is available
+       in the zip file. (Please note that the error messages are not very
+       robust. The program tells you were the errors have occured by
+       indicating a line number but the rest of the error message is
+       rather cryptic.)
+    4. The last method is the most difficult, cost free, and the most
+       free (as in freedom). Performing both the RELAX NG and the
+       Schematron validations individually.
+         1. First validate the GedML file using the RELAX NG schemas
+            The gold standard for RELAX NG validation is a open source
+            Java program called jing, written by the author of the RELAX
+            NG standard. This command line Java application can be
+            downloaded [12]here.
+            To perform the RELAX NG validation, type the following
+            command in a terminal:
+            java -jar <path-to-jing>/jing.jar ged.rng
+            <your-family-gedml-file.>.xml
+            The result with show in the terminal's standard output. jing
+            will report all the errors it encounters. It won't say
+            exactly what is wrong, but it will report what lines have
+            errors in them. If jing reports no errors, you gedml.xml file
+            is valid, both in terms of its structure and some of its
+            content.
+         2. Second perform the Schematron validation
+         3. The first validation only tests the validity of some of the
+            content. RELAX NG, by itself, cannot test the mixed-content
+            inherent in the GEDCOM 5.5 (and GedML) object model. The
+            schematron patterns will test the remainder.
+            To test the gedml.xml file with ged.rng schematron's
+            patterns, normally requires three transformations. Since the
+            schematron patterns are embedded inside ged.rng, they would
+            need to be extracted using the RNG2Schtrn.xsl stylesheet
+            available [13]here. To use the extracted schematron patterns,
+            you would need to transform them using another stylesheet
+            available [14]here This transformation would yield a filed
+            used to transform your family-gedml.xml file and finally
+            validate it.
+            Instead, for your convinence, I have included both the
+            extracted schematron patterns - ged.sch - and the validation
+            file - sch-validate-gedml.xsl - with ged.rng. To finally
+            validate all the remaining content of your family-gedml.xml
+            file, you will have to apply sch-validate-gedml.xsl using
+            saxon. Issue the following command in a terminal:
+            <path-to-saxon>/saxon family-gedml.xml sch-validate-gedml.xsl
+            Saxon will issue error messages if it finds any problems.
+
+Limitations of this ged.rng in relation to the GedML standard
+
+     * Kay's GedML standard is not a complete XML replication of the
+       GEDCOM 5.5 standard. In particular, the GEDCOM 5.5 standard
+       requires the TRLR tag at the end of a GEDCOM 5.5 file. This tag
+       indicates the end of the file. Kay's GedML standard does not
+       include the TRLR because the closed </GED> tag indicates the end
+       of the GedML file. ged.rng follows the GedML standard in this
+       regard and doesn't check for the TRLR tag.
+     * ged.rng is unable to determine if GEDCOM 5.5's [15]DATE_VALUE has
+       valid content. The possible combinations of DATE_VALUEs is simply
+       too numerous to handle using RELAX NG or Schematron alone.
+       Currently, all ged.rng can check is if the DATE_VALUE data is
+       between 1 and 35 characters.
+     * ged.rng has limited support for checking the [16]EXACT_DATE GEDCOM
+       5.5 data. Due to limitations in the Schematron language, ged.rng
+       cannot check the EXACT_DATE values of [17]TRANSMISSION_DATE and
+       [18]CHANGE_DATE. When it's able to check the the EXACT_DATE value,
+       it only check for the English [19]MONTH abbreviations, (i.e, JAN,
+       FEB, MAR, etc...).
+     * Normally, the regions in the PLAC tag are separated by commas
+       (i.e, Kansas City, Jackson County, Missouri, USA) or,
+       alternatively, the delimiter specified in the HEAD.PLAC.FORM tag.
+       ged.rng does not check if the PLAC data is delimited.
+     * The names of individuals in the NAME tag are usually formatted
+       with backslashes to indicate first and last names (i.e.,
+       Joseph/Smith/). ged.rng, regrettably, cannot check the syntax of
+       NAME data.
+
+   Most of the limitations are due to the fact that the data occurs in
+   mixed-content structures. ged.rng currently relies on Schematron to
+   check the GedML files mixed content. Unfortunately, though,
+   Schematron, as far as I know, does not currently support regex pattern
+   checking, which could easily remove these limitations. When Schematron
+   and the rest of the world make the transition to the XPATH/XSLT 2.0
+   standard, these limitations should easily be fixed.
+
+License
+
+   I'm releasing the ged.rng, ged.sch, and sch-validate-gedml.xsl under
+   the [20]GNU General Public License Version 2 (GPL). The full text of
+   this license can be found file called "COPYING".
+
+   I'm releasing also this README Document under the [21]GNU Free
+   Documentation License Version 1.2. The full text of this license is
+   found in the file called "fdl.txt".
+
+   To find out why the GNU licensing is important, read [22]here.
+
+References
+
+   1. http://homepages.rootsweb.com/~pmcbride/gedcom/55gctoc.htm
+   2. http://homepage.ntlworld.com/michael.h.kay/gedml/
+   3. http://users.breathe.com/mhkay/gedml/dtd.html
+   4. http://www.oasis-open.org/committees/relax-ng/spec-20011203.html
+   5. http://www.schematron.com/
+   6. http://homepage.ntlworld.com/michael.h.kay/gedml/
+   7. http://saxon.sourceforge.net/
+   8. http://dannyayers.com/2002/02/sag/
+   9. http://www.xml.com/pub/a/2004/02/11/relaxtron.html?page=5
+  10. http://www.topologi.com/products/validator/index.html
+  11. http://www.topologi.com/public/Schematron.zip
+  12. http://www.thaiopensource.com/relaxng/jing.html
+  13. http://www.topologi.com/public/Schtrn_XSD/RNG2Schtrn.zip
+  14. http://www.ascc.net/xml/schematron/1.5/basic1-5/schematron-basic.xsl
+  15. http://homepages.rootsweb.com/~pmcbride/gedcom/55gcch2.htm#DATE_VALUE
+  16. http://homepages.rootsweb.com/~pmcbride/gedcom/55gcch2.htm#DATE_EXACT
+  17. http://homepages.rootsweb.com/~pmcbride/gedcom/55gcch2.htm#TRANSMISSION_DATE
+  18. http://homepages.rootsweb.com/~pmcbride/gedcom/55gcch2.htm#CHANGE_DATE_STRUCTURE
+  19. http://homepages.rootsweb.com/~pmcbride/gedcom/55gcch2.htm#MONTH
+  20. http://www.gnu.org/copyleft/gpl.html
+  21. http://www.gnu.org/licenses/licenses.html#FDL
+  22. http://www.gnu.org/licenses/licenses.html#WhatIsCopyleft
