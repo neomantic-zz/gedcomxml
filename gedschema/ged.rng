@@ -786,6 +786,24 @@
         <zeroOrMore>
           <ref name="note_structure"/>
         </zeroOrMore>
+        <!-- RFN -->
+      	<zeroOrMore>
+      		<element name="RFN">
+      			<data type="string">
+	              <param name="minLength">1</param>
+	              <param name="maxLength">90</param>
+      			</data>
+      		</element>
+      	</zeroOrMore>
+      	<!-- AFN -->
+      	<zeroOrMore>
+      		<element name="AFN">
+      			<data type="string">
+	              <param name="minLength">1</param>
+	              <param name="maxLength">12</param>
+      			</data>
+      		</element>
+      	</zeroOrMore>
         <!--REFN-->
         <zeroOrMore>
           <ref name="user_reference_number"/>
@@ -859,7 +877,7 @@
           <oneOrMore>
             <element name="CONT">
               <data type="string">
-                <param name="minLength">1</param>
+                <param name="minLength">0</param>
                 <param name="maxLength">87</param>
               </data>
             </element>
@@ -925,7 +943,7 @@
         <zeroOrMore>
           <element name="CONT">
             <data type="string">
-              <param name="minLength">1</param>
+              <param name="minLength">0</param>
               <param name="maxLength">248</param>
             </data>
           </element>
@@ -1100,7 +1118,7 @@
               <zeroOrMore>
                 <element name="CONT">
                   <data type="string">
-                    <param name="minLength">1</param>
+                    <param name="minLength">0</param>
                     <param name="maxLength">248</param>
                   </data>
                 </element>
@@ -1132,7 +1150,7 @@
               <zeroOrMore>
                 <element name="CONT">
                   <data type="string">
-                    <param name="minLength">1</param>
+                    <param name="minLength">0</param>
                     <param name="maxLength">248</param>
                   </data>
                 </element>
@@ -1173,7 +1191,7 @@
               <zeroOrMore>
                 <element name="CONT">
                   <data type="string">
-                    <param name="minLength">1</param>
+                    <param name="minLength">0</param>
                     <param name="maxLength">248</param>
                   </data>
                 </element>
@@ -1205,7 +1223,7 @@
               <zeroOrMore>
                 <element name="CONT">
                   <data type="string">
-                    <param name="minLength">1</param>
+                    <param name="minLength">0</param>
                     <param name="maxLength">248</param>
                   </data>
                 </element>
@@ -2590,7 +2608,7 @@
         <zeroOrMore>
           <element name="CONT">
             <data type="string">
-              <param name="minLength">1</param>
+              <param name="minLength">0</param>
               <param name="maxLength">248</param>
             </data>
           </element>
@@ -2666,13 +2684,13 @@
                 <element name="ROLE">
                   <!-- There is a problem with the standard here.  The max length of a ROLE is 15.  
 			          However,the max length of a ROLE_DESCRIPTOR, the last "or" in the pattern below
-			         is 25.  I have defaulted to the 15. Additionally, the value for ROLE can be
+			         is 25.  I have defaulted to the larger. Additionally, the value for ROLE can be
 			         CHIL, HUSB, WIFE, MOTH, FATH, SPOU, and anything text between 1 and 15 characters.
 			         Since I can't check both the defaults and the arbitrary text, I'm only checking for
 			         length here  -->
                   <data type="string">
                     <param name="minLength">1</param>
-                    <param name="maxLength">15</param>
+                    <param name="maxLength">25</param>
                   </data>
                 </element>
               </optional>
@@ -2713,7 +2731,7 @@
                     <zeroOrMore>
                       <element name="CONT">
                         <data type="string">
-                          <param name="minLength">1</param>
+                          <param name="minLength">0</param>
                           <param name="maxLength">248</param>
                         </data>
                       </element>
