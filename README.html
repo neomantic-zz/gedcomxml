@@ -2,56 +2,74 @@
 <html>
 <!-- $Id$ -->
 <head>
-<title>RELAX NG/Schematron Schema for GedML</title>
+<title>RELAX NG/Schematron Schema for GEDCOM 5.5 XML</title>
 </head>
 <body>
-<h1>RELAX NG/Schematron Schema for GedML</h1>
-<p>Used in conjunction with other programs, <em>ged.rng</em> can
-determine the validity (in the XML sense) of a GEDCOM 5.5 as if it
-were an XML file. The file <em>ged.rng</em> contains a RELAX NG
-schema of the <a href=
+<h1>RELAX NG/Schematron Schema for GEDCOM 5.5 XML</h1>
+<h2>Background</h2>
+<p>The Church of the Latter Days Saints  <a href=
 "http://homepages.rootsweb.com/~pmcbride/gedcom/55gctoc.htm">GEDCOM
-5.5 standard</a> as it is envisioned by Michael H. Kay's <a href=
-"http://homepage.ntlworld.com/michael.h.kay/gedml/">GedML</a>
-proposal. It cannot be used to validate the GEDCOM 6.0 XML
-standard, the presumed next-generation GEDCOM standard proposed by
-the Church of the Latter Day Saints.</p>
+5.5 standard</a> provides a structured way to digitally store and transfer genealogical
+data in flat text files.  As such, it is similar documents formatted using
+the <a href="http://www.w3.org/XML/">Extensible Markup Language (XML)</a>.</p>
+<p>Currently, there are several ways to represent GEDCOM document as an XML document.
+<ul>
+<li><p>The Church of the the Latter Day Saints has proposed the <a href="http://www.familysearch.org/GEDCOM/GedXML60.pdf">GEDCOM 6.0 Standard</a>. This
+standard represents nearly a complete rewrite of the GEDCOM 5.5 in XML.  Instead of GEDCOM 5.5 tags, GEDCOM 6.0
+uses elements to structure the genealogical data.  Some of these elements are similar to GEDCOM 5.5 tags, but
+the differences between the standards are so numerous as to prevent a one-to-one translation between them.  A DTD of this
+standard is published in their pdf documentation.  An unofficial DTD has also been <a href="http://members.cox.net/leebr/genealogy/GEDCOM60.dtd">released</a></p></li>
+<li><p>Michael H. Kay has proposed a standard called <a href=
+"http://homepage.ntlworld.com/michael.h.kay/gedml/">GedML</a>.  A DTD for this standard has been <a href="http://users.breathe.com/mhkay/gedml/dtd.html">released</a>.
+Like GEDCOM 6.0, GedML uses elements to structure the genealogical data, instead of GEDCOM 5.5 tags.  The differences, 
+though between GedML and GEDCOM 5.5 are ones of translations.  For instance, first level GEDCOM 5.5 SOUR tags are translated as 
+&lt;Source&gt; elements.  However, other GEDCOM 5.5 tags are not translated: a INDI tag is simply an &lt;INDI&gt;. Why
+Kay translated some elements and left other untranslated is unknown.  Another difference between GedML and GEDCOM 5.5 is
+the absent TRLR tag which indicates the end of the GEDCOM 5.5 data (this element is superfulous in XML since the closed
+root element indicates the end of the document).  Because of these difference (inherent in the use of DTDs), GedML is not a one-to-one translation of GEDCOM 5.5, like the GEDCOM 6.0 standard.</p></li>
+</ul>
+
+<p><em>I propose a much easier, third alternative to the XML proposals: GEDCOM 5.5 XML.</em>  Quitely simply, it represents a one-to-one translation
+of GEDCOM 5.5 into XML.  It includes all tags (even the TRLR tag).  Unlike the other 
+proposals, I do not offer a GEDCOM 5.5 XML DTD. The gedcom55XML.rng distributed with
+this README document provides instead a RELAX NG/Schematron representation of a GEDCOM 5.5 XML document.</p>
+
+<p>Just like a DTD, this RELAX NG/Schematron schema can be used to determine the validity (in the XML sense) of a
+GEDCOM 5.5 document, when used in conjunction with other programs.  It cannot be used to validate a GEDCOM 6.0 or 
+a GedML XML document.</p>
+
 <h2>Why RELAX NG/Schematron rather than DTD or W3C XML Schema?</h2>
-<p>Although Kay released a <a href=
-"http://users.breathe.com/mhkay/gedml/dtd.html">DTD</a> for GEDML
-which could be used in a similar way, I chose to implement the
-schema in <a href=
+<p>I chose to represent an GEDCOM 5.5 XML document in <a href=
 "http://www.oasis-open.org/committees/relax-ng/spec-20011203.html">RELAX
 NG</a> for several reasons.</p>
 <ol>
 <li>
 <p>DTDs are less precise than RELAX NG and WC3 XML Schema, and the
-GEDCOM 5.5 standard (upon which GedML is based) requires more
-precision. For instance, Kay's DTD checks the structure of a GedML
-XML file, but it does not check if the content is correctly
-formatted. DTDs have very limited ways to describe valid content,
+GEDCOM 5.5 standard requires more precision. For instance, Kay's DTD 
+checks the structure of a GedML XML file, but it does not check if the 
+content is correctly formatted.  DTDs have very limited ways to describe valid content,
 while RELAX NG, Schematron, and WC3 XML Schema can describe valid
 content.</p>
 </li>
 <li>
 <p>RELAX NG is easier to learn and a more elegant solution to
-schemas than the overly complicated, committee designed W3C XML
+schemas than the overly complicated, committee-designed W3C XML
 Schema.</p>
 </li>
 <li>
 <p>RELAX NG gave me a way to handle the mixed content possibilities
-inherent in the GedML tree. This was accomplished by embedding
+inherent in the GEDCOM 5.5. This was accomplished by embedding
 <a href="http://www.schematron.com/">Schematron</a> patterns into
 the RELAX NG schema.</p>
 </li>
 </ol>
-<h2>How to Use <em>ged.rng</em></h2>
-<p>Validating a GedML document with <em>ged.rng</em> is currently a
+<h2>How to Use <em>gedcom55XML.rng</em></h2>
+<p>Validating a GEDCOM 5.5 XML document with <em>gedcom55XML.rng</em> is currently a
 complicated process. It requires familiarity with Java, a bit of
 programming skills, and some comfortability with a command line
 user interface. If I have the time (and/or the desire), I plan to
 write a Java application that should simplify the process. I've
-released <em>ged.rng</em> because perhaps someone else will do
+released <em>gedcom55XML.rng</em> because perhaps someone else will do
 this.</p>
 <p>The instructions below follow several conventions:</p>
 <ul>
@@ -59,7 +77,7 @@ this.</p>
 <p><em>family.ged</em> represents a GEDCOM 5.5 file</p>
 </li>
 <li>
-<p><em>family.xml</em> stands for the GedML version of
+<p><em>family.xml</em> stands for the GEDCOM 5.5 XML version of
 <em>family.ged</em></p>
 </li>
 <li>
@@ -69,9 +87,9 @@ depend upon your runtime environment</p>
 </ul>
 <ol>
 <li>
-<p><b>Convert the GEDCOM 5.5 file to GedML</b></p>
+<p><b>Convert the GEDCOM 5.5 file to GEDCOM 5.5 XML</b></p>
 <p>Currently there is no quick and easy way to convert a GEDCOM 5.5
-(or a .ged) file into an GedML (or .xml) file. I know of only one
+(or a .ged) file into an GEDCOM 5.5 XML (or .xml) file. I know of only one
 way to accomplish it now (there may be another) and it requires
 some programming skills.</p>
 <ol>
@@ -108,7 +126,7 @@ family.xml</code></p>
 </li>
 <li>
 <p>For the courageous, there may be another way to convert a GEDCOM
-5.5 file to a GedML file. Danny Ayers has <a href=
+5.5 file to a GEDCOM 5.5 XML file. Danny Ayers has <a href=
 "http://dannyayers.com/2002/02/sag/">released</a><a href="#1">2</a>
 Java source code called SAG (Simple API for GEDCOM). Although I
 have not tested it, the compiled source code is a library of
@@ -119,10 +137,10 @@ conversion. More Java coding are required.</p>
 </ol>
 </li>
 <li>
-<p><b>Validate the GedML file</b></p>
+<p><b>Validate the GEDCOM 5.5 XML file</b></p>
 <p>Validating the XML file with RELAX NG and Schematron is another
 complicated affair. The complication arises because for
-<em>ged.rng</em> to fully validate your GedML file, it must be used
+<em>gedcom55XML.rng</em> to fully validate your GEDCOM 5.5 XML file, it must be used
 by a RELAX NG validator and a Schematron validator. (The entire
 process is described <a href=
 "http://www.xml.com/pub/a/2004/02/11/relaxtron.html?page=5">here</a>,
@@ -136,7 +154,7 @@ validations. You can download it from <a href=
 "http://www.topologi.com/products/validator/index.html">here</a>.<a href="#3">3</a></p>
 </li>
 <li>
-<p>Another way of validating a GedML file with <em>ged.rng</em>,
+<p>Another way of validating a GEDCOM 5.5 XML file with <em>gedcom55XML.rng</em>,
 can be downloaded <a href=
 "http://www.topologi.com/public/Schematron.zip">here</a>.<a href=
 "#4">4</a> This Java command line program performs both
@@ -151,7 +169,7 @@ message is rather cryptic.)</p>
 NG and the Schematron validations individually.</p>
 <ol>
 <li>
-<p>First validate the GedML file using the RELAX NG schemas</p>
+<p>First validate the GEDCOM 5.5 XML file using the RELAX NG schemas</p>
 <p>The gold standard for RELAX NG validation is a open source Java
 program called jing,<a href="#5">5</a> written by the author of the
 RELAX NG standard. This command line Java application can be
@@ -160,24 +178,24 @@ downloaded <a href=
 <p>To perform the RELAX NG validation, type the following command
 in a terminal:<br>
 <br>
-<code>java -jar &lt;path-to-jing&gt;/jing.jar ged.rng
+<code>java -jar &lt;path-to-jing&gt;/jing.jar gedcom55XML.rng
 family.xml</code><br>
 <br>
 The result with show in the terminal's standard output. jing will
 report all the errors it encounters. It won't say exactly what is
 wrong, but it will report what lines have errors in them. If jing
-reports no errors, your GedML file is valid, both in terms of its
+reports no errors, your GEDCOM 5.5 XML file is valid, both in terms of its
 structure and some of its content.</p>
 </li>
 <li>
 <p>Second perform the Schematron validation</p>
 <p>The first validation only tests the validity of some of the
 content. RELAX NG, by itself, cannot test the mixed-content
-inherent in the GEDCOM 5.5 (and GedML) object model. The Schematron
+inherent in the GEDCOM 5.5 (and GEDCOM 5.5 XML) object model. The Schematron
 patterns will test the remainder.</p>
-<p>Testing the GedML file with <em>ged.rng's</em> Schematron
+<p>Testing the GEDCOM 5.5 XML file with <em>gedcom55XML.rng's</em> Schematron
 patterns, normally requires three transformations. Since the
-Schematron patterns are embedded inside <em>ged.rng</em>, they
+Schematron patterns are embedded inside <em>gedcom55XML.rng</em>, they
 would need to be extracted using the RNG2Schtrn.xsl stylesheet
 available <a href=
 "http://www.topologi.com/public/Schtrn_XSD/RNG2Schtrn.zip">here</a>.
@@ -189,7 +207,7 @@ your family.xml file and finally validate it.</p>
 <p>Instead, for your convenience, I have included both the
 extracted Schematron patterns - <em>ged.sch</em> - and the
 validation file - <em>sch-validate-gedml.xsl</em> - with
-<em>ged.rng</em>. To finally validate all the remaining content of
+<em>gedcom55XML.rng</em>. To finally validate all the remaining content of
 your family-gedml.xml file, you will have to apply
 <em>sch-validate-gedml.xsl</em> using saxon. Issue the following
 command in a terminal:<br>
@@ -205,39 +223,30 @@ Saxon will issue error messages if it finds any problems.</p>
 </li>
 </ol>
 <p>My preferred method of validation is a combination of B and C. I
-first follow the C.i instructions and validate the GedML file using
+first follow the C.i instructions and validate the GEDCOM 5.5 XML file using
 jing. This validates the file using only the RELAX NG schema.
 (jing, supposedly, can also perform the Schematron validation, but
 I haven't manage to get it to work). I next follow the instructions
-in B to validate the GedML file using the Schematron patterns,
+in B to validate the GEDCOM 5.5 XML file using the Schematron patterns,
 rather than following the method of C.ii. The error messages
 produced using B's method are more verbose than C.ii's. Method B
 will also perform the RELAX NG validation, but after it encounters
 only one error, it stops checking for other errors. I prefer the
 C.i. instructions because it will reveal all the RELAX NG
 validation errors.</p>
-<h2>Limitations of <em>ged.rng</em> in relation to the GedML
+<h2>Limitations of <em>gedcom55XML.rng</em> in relation to the GEDCOM 5.5 XML
 standard</h2>
 <ul>
 <li>
-<p>Kay's GedML standard is not a complete XML replication of the
-GEDCOM 5.5 standard. In particular, the GEDCOM 5.5 standard
-requires the TRLR tag at the end of a GEDCOM 5.5 file. This tag
-indicates the end of the file. Kay's GedML standard does not
-include the TRLR because the closed &lt;/GED&gt; tag indicates the
-end of the GedML file. <em>ged.rng</em> follows the GedML standard
-in this regard and doesn't check for the TRLR tag.</p>
-</li>
-<li>
-<p><em>ged.rng</em> is unable to determine if GEDCOM 5.5's <a href=
+<p><em>gedcom55XML.rng</em> is unable to determine if GEDCOM 5.5's <a href=
 "http://homepages.rootsweb.com/~pmcbride/gedcom/55gcch2.htm#DATE_VALUE">
 DATE_VALUE</a> has valid content. The possible combinations of
 DATE_VALUEs are simply too numerous to handle using RELAX NG or
-Schematron alone. Currently, all <em>ged.rng</em> can check is if
+Schematron alone. Currently, all <em>gedcom55XML.rng</em> can check is if
 the DATE_VALUE data is between 1 and 35 characters.</p>
 </li>
 <li>
-<p><em>ged.rng</em> has limited support for checking the <a href=
+<p><em>gedcom55XML.rng</em> has limited support for checking the <a href=
 "http://homepages.rootsweb.com/~pmcbride/gedcom/55gcch2.htm#DATE_EXACT">
 EXACT_DATE</a> GEDCOM 5.5 data. To be specific, it cannot check the
 EXACT_DATE values of <a href=
@@ -254,22 +263,22 @@ etc.).</p>
 <p>Normally, the regions in the PLAC tag are separated by commas
 (i.e., Kansas City, Jackson County, Missouri, USA) or,
 alternatively, the delimiter specified in the HEAD.PLAC.FORM tag.
-<em>ged.rng</em> does not check if the PLAC data is delimited.</p>
+<em>gedcom55XML.rng</em> does not check if the PLAC data is delimited.</p>
 </li>
 <li>
 <p>The names of individuals in the NAME tag are usually formatted
 with backslashes to indicate first and last names (i.e.,
-Joseph/Smith/). <em>ged.rng</em>, regrettably, cannot check the
+Joseph/Smith/). <em>gedcom55XML.rng</em>, regrettably, cannot check the
 syntax of NAME data.</p>
 </li>
 <li>
 <p>Since there is no way to anticipate user-defined tags,
-<em>ged.rng</em> causes the validators to emit errors when they are
-encountered. Strictly speaking, while GEDCOM 5.5 discourages
+<em>gedcom55XML.rng</em> causes the validators to emit errors when they are
+encountered.  Strictly speaking, although GEDCOM 5.5 discourages
 user-defined tags, they are perfectly legal.</p>
 </li>
 <li>
-<p>Currently, <em>ged.rng</em> does not error check the content of
+<p>Currently, <em>gedcom55XML.rng</em> does not error check the content of
 SOURCE_CITATIONs EVEN tag's <a href=
 "http://homepages.rootsweb.com/~pmcbride/gedcom/55gcch2.htm#EVENT_TYPE_CITED_FROM">
 EVENT_TYPE_CITED_FROM</a>. It also does not error check the content
@@ -284,38 +293,38 @@ specifies a restricted set of values.</p>
 AGE</a> tag permits values such as CHILD, INFANT, STILLBORN, along
 with 'y','m','d' which respectively signify year, month, and day.
 Following the specification strictly, these value should be
-case-insensitive. However, in <em>ged.rng</em> they currently are
+case-insensitive. However, in <em>gedcom55XML.rng</em> they currently are
 case-sensitive, defaulting to the lowercase values</p>
 </li>
 <li>
 <p>Similarly, the <a href=
 "http://homepages.rootsweb.com/~pmcbride/gedcom/55gcch2.htm#MONTH">MONTH</a>
 values of DATE_EXACT should also be case-insensitive, but in
-<em>ged.rng</em>'s current implementation they are not. The
+<em>gedcom55XML.rng</em>'s current implementation they are not. The
 defaults are the uppercases values.</p>
 </li>
 </ul>
 <p>Most of the limitations are due to the fact that the data occurs
-in mixed-content structures. <em>ged.rng</em> currently relies on
-Schematron to check a GedML file's mixed content. Unfortunately, 
+in mixed-content structures. <em>gedcom55XML.rng</em> currently relies on
+Schematron to check a GEDCOM 5.5 XML file's mixed content. Unfortunately, 
 Schematron, as far as I know, does not currently support
 regex pattern checking, which could easily remove these
 limitations. When Schematron makes the
 transition to the XPATH/XSLT 2.0 standard, these limitations could be fixed.</p>
 <h2>License</h2>
-<p>I'm releasing <em>ged.rng</em>, <em>ged.sch</em>, and
+<p>I'm releasing <em>gedcom55XML.rng</em>, <em>ged.sch</em>, and
 <em>sch-validate-gedml.xsl</em> under the <a href=
 "http://www.gnu.org/copyleft/gpl.html">GNU General Public License
 Version 2 (GPL)</a>. The full text of this license can be found in
-file called "COPYING" included with <em>ged.rng</em></p>
+file called "COPYING" included with <em>gedcom55XML.rng</em></p>
 <p>I'm also releasing this README Document under the <a href=
 "http://www.gnu.org/licenses/licenses.html#FDL">GNU Free
 Documentation License Version 1.2</a>. The full text of this
 license is found in the file called "fdl.txt" released with
-<em>ged.rng</em></p>
+<em>gedcom55XML.rng</em></p>
 <h2>Copyrights</h2>
 <p>Copyright issues have become increasingly important in the
-software industry. Releasing <em>ged.rng</em> under the GPL and
+software industry. Releasing <em>gedcom55XML.rng</em> under the GPL and
 this documentation under the FDL means that I retain the copyrights
 but permit modifications so long as these follow the above
 licenses. In practice this means that the source code will be
