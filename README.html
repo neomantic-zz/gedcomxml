@@ -114,7 +114,7 @@ Java source code called SAG (Simple API for GEDCOM). Although I
 have not tested it, the compiled source code is a library of
 functions which would facilitate the conversion; the source code
 itself does not produce a suitable binary to perform the
-conversion. More Java coding skills would be needed.</p>
+conversion. More Java coding are required.</p>
 </li>
 </ol>
 </li>
@@ -143,7 +143,7 @@ can be downloaded <a href=
 validations. I have used this program and it works well. The source
 code is available in the zip file. (Please note that the error
 messages are not very robust. The program tells you were the errors
-have occurred by indicating a line number but the rest of the error
+have occurred by indicating a line number, but the rest of the error
 message is rather cryptic.)</p>
 </li>
 <li>
@@ -185,7 +185,7 @@ To use the extracted Schematron patterns, you would need to
 transform them using another stylesheet available <a href=
 "http://www.ascc.net/xml/schematron/1.5/basic1-5/schematron-basic.xsl">
 here</a>. This transformation would yield a file used to transform
-your family-gedml.xml file and finally validate it.</p>
+your family.xml file and finally validate it.</p>
 <p>Instead, for your convenience, I have included both the
 extracted Schematron patterns - <em>ged.sch</em> - and the
 validation file - <em>sch-validate-gedml.xsl</em> - with
@@ -248,7 +248,7 @@ CHANGE_DATE</a>. When it's able to check the the EXACT_DATE value,
 it only check the English <a href=
 "http://homepages.rootsweb.com/~pmcbride/gedcom/55gcch2.htm#MONTH">MONTH</a>
 abbreviations, <span lang="en-US">(i.e.,</span> JAN, FEB, MAR,
-etc...).</p>
+etc.).</p>
 </li>
 <li>
 <p>Normally, the regions in the PLAC tag are separated by commas
@@ -276,13 +276,13 @@ EVENT_TYPE_CITED_FROM</a>. It also does not error check the content
 of SOURCE_RECORDs EVEN tag's <a href=
 "http://homepages.rootsweb.com/~pmcbride/gedcom/55gcch2.htm#EVENTS_RECORDED">
 EVENTS_RECORDED</a>. In both cases, the GEDCOM 5.5 standard
-specified a restricted set of values.</p>
+specifies a restricted set of values.</p>
 </li>
 <li>
 <p>The <a href=
 "http://homepages.rootsweb.com/~pmcbride/gedcom/55gcch2.htm#AGE_AT_EVENT">
 AGE</a> tag permits values such as CHILD, INFANT, STILLBORN, along
-with 'y','m','d' which respectively signifying year, month, day.
+with 'y','m','d' which respectively signify year, month, and day.
 Following the specification strictly, these value should be
 case-insensitive. However, in <em>ged.rng</em> they currently are
 case-sensitive, defaulting to the lowercase values</p>
@@ -291,25 +291,24 @@ case-sensitive, defaulting to the lowercase values</p>
 <p>Similarly, the <a href=
 "http://homepages.rootsweb.com/~pmcbride/gedcom/55gcch2.htm#MONTH">MONTH</a>
 values of DATE_EXACT should also be case-insensitive, but in
-<em>ged.rng</em>'s currently implementation they are not. The
-default are the uppercases values.</p>
+<em>ged.rng</em>'s current implementation they are not. The
+defaults are the uppercases values.</p>
 </li>
 </ul>
 <p>Most of the limitations are due to the fact that the data occurs
 in mixed-content structures. <em>ged.rng</em> currently relies on
-Schematron to check the GedML files mixed content. Unfortunately,
-though, Schematron, as far as I know, does not currently support
+Schematron to check a GedML file's mixed content. Unfortunately, 
+Schematron, as far as I know, does not currently support
 regex pattern checking, which could easily remove these
-limitations. When Schematron and the rest of the world make the
-transition to the XPATH/XSLT 2.0 standard, these limitations could
-easily be fixed.</p>
+limitations. When Schematron makes the
+transition to the XPATH/XSLT 2.0 standard, these limitations could be fixed.</p>
 <h2>License</h2>
-<p>I'm releasing the <em>ged.rng</em>, <em>ged.sch</em>, and
+<p>I'm releasing <em>ged.rng</em>, <em>ged.sch</em>, and
 <em>sch-validate-gedml.xsl</em> under the <a href=
 "http://www.gnu.org/copyleft/gpl.html">GNU General Public License
 Version 2 (GPL)</a>. The full text of this license can be found in
 file called "COPYING" included with <em>ged.rng</em></p>
-<p>I'm releasing also this README Document under the <a href=
+<p>I'm also releasing this README Document under the <a href=
 "http://www.gnu.org/licenses/licenses.html#FDL">GNU Free
 Documentation License Version 1.2</a>. The full text of this
 license is found in the file called "fdl.txt" released with
@@ -318,7 +317,7 @@ license is found in the file called "fdl.txt" released with
 <p>Copyright issues have become increasingly important in the
 software industry. Releasing <em>ged.rng</em> under the GPL and
 this documentation under the FDL means that I retain the copyrights
-but permits modifications so long as these follow the above
+but permit modifications so long as these follow the above
 licenses. In practice this means that the source code will be
 freely available, not only in terms of costs, but in terms of
 freedom. In its present form, it will always been available for
@@ -331,7 +330,7 @@ validate a GEDCOM 5.5 file.</p>
 <ol>
 <li>
 <p><a name="1"></a>Michael K. Hay retains the copyright to the
-GedML conversion code. He offers it free of charge but since he has
+GedML conversion code. He offers it free of charge, but since he has
 not licensed under an Open Source license it is not free as in
 freedom. Instead, he releases it with the following notice:</p>
 <p><code>There are no restrictions on its use, but equally, it is
