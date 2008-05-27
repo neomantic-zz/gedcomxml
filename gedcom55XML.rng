@@ -37,6 +37,13 @@
           <ref name="record"/>
         </oneOrMore>
       </interleave>
+      <!-- TRLR indicates the end of a GEDCOM 5.5 file.  The closed root element of a 
+      GEDCOM 5.5 XML file sufficiently indicates the end of a document, effectively
+      rendering the TRLR tag/element redundant.  However, to remain a close to the
+      GEDCOM 5.5 as possible, the TRLR tag is included.
+      <element name="TRLR">
+        <empty/>
+      </element>
     </element>
   </start>
   <!--Record Structures of the Lineage-Linked Form-->
