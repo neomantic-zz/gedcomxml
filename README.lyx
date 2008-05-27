@@ -3,6 +3,7 @@
 \begin_document
 \begin_header
 \textclass docbook
+\options .-
 \language english
 \inputencoding auto
 \font_roman default
@@ -15,6 +16,7 @@
 \font_tt_scale 100
 \graphics default
 \paperfontsize default
+\spacing single
 \papersize default
 \use_geometry false
 \use_amsmath 0
@@ -24,14 +26,15 @@
 \paperorientation portrait
 \secnumdepth 3
 \tocdepth 3
-\paragraph_separation indent
+\paragraph_separation skip
 \defskip medskip
-\quotes_language english
+\quotes_language swedish
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
 \tracking_changes false
 \output_changes false
+\author "" 
 \author "" 
 \end_header
 
@@ -70,7 +73,7 @@ Albers
 
 \end_layout
 
-\begin_layout Section
+\begin_layout Section*
 Background
 \end_layout
 
@@ -82,18 +85,16 @@ target "http://homepages.rootsweb.com/~pmcbride/gedcom/55gctoc.htm"
 
 \end_inset
 
- provides a way to structure genealogical data to digitally store and transfer
- it in flat text files.
- As such, it is similar to documents formatted using the 
+ provides a way to format genealogical data to digitally store and transfer
+ it in a human readable text file.
+ Over the years, new standards, using 
 \begin_inset LatexCommand url
 name "Extensible Markup Language (XML)"
 target "http://www.w3.org/XML/"
 
 \end_inset
 
-.
- Currently, there are several ways to represent GEDCOM document as an XML
- document.
+, have been proposed.
 \end_layout
 
 \begin_layout Itemize
@@ -105,13 +106,8 @@ target "http://www.familysearch.org/GEDCOM/GedXML60.pdf"
 \end_inset
 
 .
- This standard represents a complete rewrite of the GEDCOM 5.5 in XML.
- Instead of GEDCOM 5.5 tags, GEDCOM 6.0 uses XML elements to structure the
- genealogical data.
- Some of these elements are similar to GEDCOM 5.5 tags, but the differences
- between the standards are so numerous as to prevent a one-to-one translation
- between them.
- A DTD of this standard is published in their pdf documentation.
+ This standard represents a complete rewrite of GEDCOM 5.5 into XML markup.
+ A DTD of this standard is published in the pdf documentation.
  An unofficial DTD has also been 
 \begin_inset LatexCommand url
 name "released"
@@ -120,12 +116,54 @@ target "http://members.cox.net/leebr/genealogy/GEDCOM60.dtd"
 \end_inset
 
 .
- 
+ Considering that the LDS originally created the 5.5 standard, this was probably
+ the best contender to replace GEDCOM 5.5.
+ However, the numerous and often radical differences between the two standards
+ renders the translation of old GEDCOM 5.5 data to new GEDCOM 6.0 XML data
+ a non-trivial task.
 \end_layout
 
 \begin_layout Itemize
-Michael H.
- Kay has proposed a standard called 
+\begin_inset LatexCommand url
+name "GenXML 2.0"
+target "http://cosoft.org/genxml/index.html"
+
+\end_inset
+
+ by Cosoft.
+ A schema for this proposal can be found 
+\begin_inset LatexCommand url
+name "here"
+target "http://cosoft.org/genxml/genxml20.xsd"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+GeniML developed by Jerry Fitzpatrick of Software Renovation Corporation.
+ As far as I have seen, no dtd or schema has been published describing this
+ proposal.
+ More information about it can be found 
+\begin_inset LatexCommand url
+name "here"
+target "http://www.softwarerenovation.com/igenie/GeniML.aspx"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+In 1998, Michael H.
+ Kay 
+\begin_inset LatexCommand url
+target "proposed"
+
+\end_inset
+
+ a standard called 
 \begin_inset LatexCommand url
 name "GedML"
 target "http://homepage.ntlworld.com/michael.h.kay/gedml/"
@@ -133,7 +171,7 @@ target "http://homepage.ntlworld.com/michael.h.kay/gedml/"
 \end_inset
 
 .
- A DTD for this standard has been 
+ A DTD for this proposal has been 
 \begin_inset LatexCommand url
 name "released"
 target "http://users.breathe.com/mhkay/gedml/dtd.html"
@@ -141,34 +179,73 @@ target "http://users.breathe.com/mhkay/gedml/dtd.html"
 \end_inset
 
 .
- Like GEDCOM 6.0, GedML uses XML elements to structure the genealogical data,
- instead of GEDCOM 5.5 tags.
- The differences, though between GedML and GEDCOM 5.5 are ones of translations.
- For instance, first level GEDCOM 5.5 SOUR tags are translated as <Source>
- elements.
- However, other GEDCOM 5.5 tags are not translated: a INDI tag is simply
- an <INDI>.
- Why Kay translated some elements and left other untranslated is unknown.
- Another difference between GedML and GEDCOM 5.5 is the absent TRLR tag which
- indicates the end of the GEDCOM 5.5 data (this element is superfluous in
- XML since the closed root element indicates the end of the document).
- Because of these difference (inherent in the use of DTDs), GedML is not
- a one-to-one translation of GEDCOM 5.5, like the GEDCOM 6.0 standard.
  
+\end_layout
+
+\begin_layout Standard
+None of these proposals have gained widespread adoption, and GEDCOM 5.5 remains
+ the format that nearly all genealogical programs export to and that users
+ exchange their genealogical data using.
+\end_layout
+
+\begin_layout Standard
+XML proponents can console themselves with the fact that the GEDCOM 5.5 standard
+ has many of XML's features.
+ Despite it's non-standard character set (Ansel), it is human-readable.
+ Like XML elements, it also uses tags to delimit genealogical data; they
+ precede the data.
+ Finally, GEDCOM 5.5 tags can be nested under other tags, resembling XML's
+ element's parent and child node trees.
+ 
+\end_layout
+
+\begin_layout Standard
+Given these similarities, it is easy to envision a one-to-one translation
+ of GEDCOM 5.5 into an XML format.
+ GEDCOM 5.5 tags could be XML elements; XML's greater than 
+\begin_inset Quotes ers
+\end_inset
+
+>
+\begin_inset Quotes ers
+\end_inset
+
+ and less than 
+\begin_inset Quotes ers
+\end_inset
+
+<
+\begin_inset Quotes ers
+\end_inset
+
+ characters could convert tags into elements, and these closed elements
+ could delimit genealogical data.
+ Kay's GedML comes close to proposing such a one-to-one translation.
+ Many of GedML's XML elements correspond to GEDCOM 5.5 tags; e.g., INDI tags
+ are simply <INDI> elements.
+ However, other tags have been translated; e.g., SOUR tags are <Source> elements.
+ Another difference between GedML and GEDCOM 5.5 is the absent <TRLR> element
+ which is a required by GEDCOM 5.5 to indicate the end of a GEDCOM 5.5 file.
+ This element is left out of the GedML proposal because the closed document
+ root element makes it superfluous.
+ Due to these differences, GedML is not a one-to-one translation of GEDCOM
+ 5.5.
 \end_layout
 
 \begin_layout Standard
 
 \emph on
-I propose a much easier, third alternative to the other XML proposals: GEDCOM
- 5.5 XML.
-
+The simplest XML alternative to GEDCOM 5.5 is a one-to-one translation of
+ it's format into XML.
+ 
 \emph default
- Quite simply, it represents a one-to-one translation of GEDCOM 5.5 into
- XML.
- All GEDCOM 5.5 tags correspond to XML elements with the same name.
- Rather than writing a DTD for XML proposal, I have instead chosen to define
- this proposal using 
+All GEDCOM 5.5 tags correspond to XML elements with the same name.
+ It is called 
+\emph on
+GEDCOM 5.5 XML
+\emph default
+.
+ To define this proposal in XML itself, I have written a 
 \begin_inset LatexCommand url
 name "RELAX NG"
 target "http://www.oasis-open.org/committees/relax-ng/spec-20011203.html"
@@ -182,44 +259,18 @@ target "http://www.schematron.com/"
 
 \end_inset
 
- schema.
- The file name for the schema is called "gedcom55XML.rng.
-\begin_inset Quotes erd
+ schema, contained in the file called 
+\begin_inset Quotes sld
 \end_inset
 
+gedcom55XML.rng
+\begin_inset Quotes srd
+\end_inset
 
+ accompanying this documentation.
 \end_layout
 
-\begin_layout Subsection
-Why RELAX NG/Schematron rather than DTD or W3C XML Schema?
-\end_layout
-
-\begin_layout Standard
-RELAX NG/Schematron schemas has several advantages over DTDs or W3C XML
- Schemas:
-\end_layout
-
-\begin_layout Itemize
-DTDs are less precise than RELAX NG and WC3 XML Schema, and the GEDCOM 5.5
- standard requires more precision.
- For instance, Kay's DTD checks the structure of a GedML XML file, but it
- does not check if the content is correctly formatted.
- DTDs have very limited ways to describe valid content, while RELAX NG,
- Schematron, and WC3 XML Schema can describe valid content.
-\end_layout
-
-\begin_layout Itemize
-RELAX NG is easier to learn and a more elegant solution to schemas than
- the overly complicated, committee-designed W3C XML Schema.
-\end_layout
-
-\begin_layout Itemize
-RELAX NG can handle the mixed content elements in the GEDCOM 5.5 standard.
- This was accomplished by embedding Schematron patterns into the RELAX NG
- schema.
-\end_layout
-
-\begin_layout Subsection
+\begin_layout Subsection*
 Limitations of 
 \emph on
 gedcom55XML.rng
@@ -228,12 +279,17 @@ gedcom55XML.rng
 \end_layout
 
 \begin_layout Standard
-Ideally, this schema would capture, in XML form, 100 percent of the GEDCOM
- 5.5 standard.
+Ideally, this schema would re-represented 100 percent of the GEDCOM 5.5 standard
+ in XML form.
  It, unfortunately, does not.
- It does, however, capture it better than a DTD would.
- Most of its limitations are due to difficulties in describing mixed-content
- structures.
+ Most of its shortcomings are due to difficulties in describing what would
+ be considered, in XML terms, mixed-content elements.
+ Schematron handles most of these mix-content elements, but not all of them.
+ Below is a small list 
+\emph on
+gedcom5XML.rng's
+\emph default
+ shortcomings.
  
 \end_layout
 
@@ -285,7 +341,7 @@ gedcom55XML.rng
 \end_layout
 
 \begin_layout Itemize
-GEDCOM 5.5 allows for user-defined tags, even though it discourages there
+GEDCOM 5.5 allows for user-defined tags, even though it discourages their
  usage.
  
 \emph on
@@ -305,9 +361,9 @@ ROM, even though the GEDCOM 5.5 standard specifies a restricted set of values.
 \end_layout
 
 \begin_layout Itemize
-It also does not describe the content of SOURCE_RECORDs EVEN tag's EVENTS_RECORD
-ED, even though the GEDCOM 5.5 standard also specifies a restricted set of
- values.
+It also does not describe the content of SOURCE_RECORD's EVEN tag's EVENTS_RECOR
+DED, even though the GEDCOM 5.5 standard also specifies a restricted set
+ of values.
 \end_layout
 
 \begin_layout Itemize
@@ -316,7 +372,7 @@ The AGE tag permits values such as CHILD, INFANT, STILLBORN, along with
  Following the specification strictly, these value should be case-insensitive.
  However, in 
 \emph on
-gedcom55XML.rng
+gedcom55XML.rng,
 \emph default
  they currently are case-sensitive, defaulting to the lowercase values.
 \end_layout
@@ -330,7 +386,7 @@ gedcom55XML.rng
  The defaults are the upper case values.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsection*
 GEDCOM 5.5 XML Schema License
 \end_layout
 
@@ -355,21 +411,80 @@ gedcom55XML.rng
  
 \end_layout
 
-\begin_layout Section
-Usage
+\begin_layout Subsection*
+GEDCOM 5.5 XML Schema Updates
 \end_layout
 
 \begin_layout Standard
-XML Schemas can be used for two purposes: providing guidance about how to
- write a valid XML document and testing if a XML document is valid.
- The documentation below will demonstrate how to use the RELAX NG/Schematron
+Like any XML schema, the GEDCOM 5.5 XML schema will be posted on the web
+ with a URL (Universal Resource Locator).
+ The most recent version will always be located at 
+\begin_inset LatexCommand url
+name "http://www.neomantic.com/gedcom55xml/gedcom55XML.rng"
+target "http://www.neomantic.com/gedcom55xml/gedcom55XML.rng"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Section*
+Using 
+\emph on
+gedcom55XML.rng - 
+\emph default
+Validating a GEDCOM 5.5 Document
+\end_layout
+
+\begin_layout Standard
+All XML schemas can be used for two purposes: providing guidance for how
+ to write a valid XML document and testing if a XML document is 
+\begin_inset Quotes sld
+\end_inset
+
+welformed
+\begin_inset Quotes srd
+\end_inset
+
+ or 
+\begin_inset Quotes sld
+\end_inset
+
+valid.
+\begin_inset Quotes srd
+\end_inset
+
+ LDS's GEDCOM 5.5 standard already clearly describes how write genealogical
+ data in marked up text files.
+ Since the standard is not expressed in an XML schema, it cannot provide
+ us a way to computationally determine if a GEDCOM 5.5 document is structured
+ correctly.
+ The schema in 
+\emph on
+gedcom55xml.rng
+\emph default
+ was written to fill that gap.
+ If a GEDCOM 5.5 document can be converted into a GEDCOM 5.5 XML document,
+ we have a way to check if the data is structured and formatted correctly
+ by using 
+\emph on
+gedcom55XML.rng
+\emph default
+; we have a way to test if the GEDCOM 5.5 tags are appropriately ordered
+ and nested, and if the content of tags fits within the parameter described
+ in the standard.
+\end_layout
+
+\begin_layout Standard
+The documentation below will demonstrate how to use the RELAX NG/Schematron
  GEDCOM 5.5 XML schema, 
 \emph on
 gedcom55XML.rng
 \emph default
-, to determine the validity (in the XML sense) of of preexisting GEDCOM
- 5.5 documents.
- (It cannot be used to validate a GEDCOM 6.0 or a GedML XML document.)
+, to determine the validity (in the XML sense) of a preexisting GEDCOM 5.5
+ files.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -380,13 +495,6 @@ gedcom55XML.rng
  is currently a complicated process.
  It requires familiarity with Java, a bit of programming skills, and some
  comfort with a command line user interface.
- If I have the time (and/or the desire), I plan to write a Java application
- that should simplify the process.
- I've released 
-\emph on
-gedcom55XML.rng
-\emph default
- because perhaps someone else will do this.
  
 \end_layout
 
@@ -396,25 +504,33 @@ The instructions below follow several conventions:
 
 \begin_layout Itemize
 
-\emph on
+\family typewriter
 family.ged
+\emph on
+ 
+\family default
 \emph default
- represents a GEDCOM 5.5 file
+represents a GEDCOM 5.5 file.
 \end_layout
 
 \begin_layout Itemize
 
-\emph on
+\family typewriter
 family.xml
-\emph default
- stands for the GEDCOM 5.5 XML version of 
 \emph on
+ 
+\family default
+\emph default
+represents the 
+\family typewriter
 family.ged
+\family default
+ file translated into a GEDCOM 5.5 XML document.
 \end_layout
 
 \begin_layout Itemize
 Text sandwiched between < > indicates variables that will depend upon your
- run time environment
+ computer's command line environment.
 \end_layout
 
 \begin_layout Standard
@@ -422,26 +538,31 @@ In rough outline, the process has two steps:
 \end_layout
 
 \begin_layout Enumerate
-Convert the GEDCOM 5.5 file to a GEDCOM 5.5 XML document
+Convert the GEDCOM 5.5 file to a GEDCOM 5.5 XML document.
 \end_layout
 
 \begin_layout Enumerate
-Validate the GEDCOM 5.5 XML document using gedcom55XML.rng
+Validate the GEDCOM 5.5 XML document using 
+\emph on
+gedcom55XML.rng
+\emph default
+.
 \end_layout
 
-\begin_layout Subsection
+\begin_layout Subsection*
 
 \series bold
-Convert the GEDCOM 5.5 file to GEDCOM 5.5 XML
+Convert the GEDCOM 5.5 File to a GEDCOM 5.5 XML Document
 \end_layout
 
 \begin_layout Standard
 Currently there is no quick and easy way to convert a GEDCOM 5.5 (or a .ged)
  file into an GEDCOM 5.5 XML (or .xml) file.
- I know of only one way to accomplish it now (there may be another) and
- it requires some programming skills.
- To perform the conversion, we will use Java source code release by Michael
- Kay used in conjunction with his saxon parser.
+ I know of only one way to accomplish it now, and it requires some programming
+ skills.
+ To perform the conversion, we will need to compile Java source code, released
+ by Michael Kay, to produce a java executable that can be used with Kay's
+ saxon XML parser.
 \end_layout
 
 \begin_layout Enumerate
@@ -452,48 +573,33 @@ target "http://homepage.ntlworld.com/michael.h.kay/gedml/"
 
 \end_inset
 
+and unzip it a location of your choose.
+ Remember the path to this location.
+ You need to know this path which will be referred to in another step using
+ the variable
+\family typewriter
+ <path-to-gedml-classes>
+\family default
 .
 \end_layout
 
 \begin_layout Enumerate
-Compile it using your favorite Java distribution Java compiler - javac.
+Find the files called GedcomParser.java and GedcomToXml.xsl.
 \end_layout
 
 \begin_layout Enumerate
-Download Kay's 
-\begin_inset LatexCommand url
-name "saxon"
-target "http://saxon.sourceforge.net/"
-
-\end_inset
-
- parser and install it somewhere on your computer's hard drive.
- I have successfully used Saxon version 6.5.4.
-\end_layout
-
-\begin_layout Enumerate
-Issue the following command on your command line terminal:
+Compile the file GedcomParser.java using your favorite Java distribution's
+ compiler - javac.
+ This will produces a class file called GedcomParser.class
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
-\begin_inset Box Frameless
-position "t"
-hor_pos "c"
-has_inner_box 1
-inner_pos "t"
-use_parbox 0
-width "100col%"
-special "none"
-height "1in"
-height_special "totalheight"
+\begin_inset Note Framed
 status open
 
-\begin_layout Standard
-
-\family typewriter
-java -cp <path-to-saxon>:<path-to-gedml-classes> com.icl.saxon.StyleSheet -x
- GedcomParser family.ged <path-to-gedml-classes>/GEDCOMtoXML.xsl > family.xml
+\begin_layout Code
+javac GedcomParser.java
 \end_layout
 
 \end_inset
@@ -502,35 +608,106 @@ java -cp <path-to-saxon>:<path-to-gedml-classes> com.icl.saxon.StyleSheet -x
 \end_layout
 
 \end_deeper
-\begin_layout Subsection
+\begin_layout Enumerate
+Download Kay's 
+\begin_inset LatexCommand url
+name "saxon"
+target "http://saxon.sourceforge.net/"
+
+\end_inset
+
+ parser, install it somewhere on your computer's hard drive, and remember
+ it's location - which will be referred to below using the 
+\family typewriter
+<path-to-saxon>
+\family default
+ variable.
+ (It may already be installed on your computer; on my GNU/Linux Debian system
+ it was located at /usr/share/java/saxon.jar.) 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Issue the following command on your command line terminal:
+\begin_inset Note Framed
+status open
+
+\begin_layout Code
+
+\family typewriter
+java -cp <path-to-saxon>:<path-to-gedml-classes> com.icl.saxon.StyleSheet -x
+ GedcomParser family.ged <path-to-gedml-classes>/GedcomToXml.xsl
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+The output of this command will be an XML version of a 
+\family typewriter
+family.ged
+\family default
+ file.
+ The output will be piped to the standard output, but you can also redirect
+ the output by appending 
+\begin_inset Quotes sld
+\end_inset
+
+
+\family typewriter
+> family.xml
+\family default
+
+\begin_inset Quotes srd
+\end_inset
+
+ to the command above.
+ The XML output will be a near perfect reproduction of a GEDCOM 5.5 into
+ GEDCOM 5.5 XML.
+ The only problem with the output is that it fails to add the <TRLR/> element
+ before the </GED> element at the end of the document.
+ This is because it is actually an irrelevant tag, and because the GedcomToXml.xs
+l stylesheet was written by Michael Kay, whose GedML proposal, eliminated
+ it.
+\end_layout
+
+\begin_layout Subsection*
 
 \series bold
-Validate the GEDCOM 5.5 XML document using gedcom55XML.rng
+Validate the GEDCOM 5.5 XML Document Using 
 \series default
+\emph on
+gedcom55XML.rng
+\emph default
  
 \end_layout
 
 \begin_layout Standard
 Validating the XML file with RELAX NG and Schematron is another complicated
  affair.
- The complication arises because for 
-\emph on
-gedcom55XML.rng
-\emph default
- to fully validate your GEDCOM 5.5 XML file, it must be used by a RELAX NG
- validator 
+ The complication arises because, to fully validate your GEDCOM 5.5 XML file
+ using gedcom55XML.rng, we must use a RELAX NG validator 
 \emph on
 and
 \emph default
  a Schematron validator.
- (The entire process is described here, if you are curious about the gory
- details).
+ (The entire process is described 
+\begin_inset LatexCommand url
+name "here"
+target "http://www.xml.com/pub/a/2004/02/11/relaxtron.html?page=5"
+
+\end_inset
+
+, if you are curious about the details).
  There are a few easy solutions and a few complicated solutions.
  
 \end_layout
 
-\begin_layout Subsubsection
-Method 1
+\begin_layout Subsubsection*
+Method 1 - Validating XML against RELAX NG and Schematron Simultaneously
 \end_layout
 
 \begin_layout Standard
@@ -538,17 +715,49 @@ One way of validating a GEDCOM 5.5 XML file with
 \emph on
 gedcom55XML.rng
 \emph default
-, can be downloaded here.
- This Java command line program performs both validations.
- I have used this program and it works well.
- The source code is available in the zip file.
- (Please note that the error messages are not very robust.
- The program tells you were the errors have occurred by indicating a line
- number, but the rest of the error message is rather cryptic.)
+ is by using Topologi.com's schematron Java.
+ The 
+\begin_inset LatexCommand url
+name "zip file"
+target "http://www.topologi.com/public/Schematron.zip"
+
+\end_inset
+
+ containes all the binary and scripts needed to validate an XML file with
+ Schematron patterns embedded in RELAX NG or to simply test an XML file
+ against only Schematron patterns.
+ 
 \end_layout
 
-\begin_layout Subsubsection
-Method 2
+\begin_layout Standard
+To test both the RELAX NG and Schematron descriptions of a GEDCOM 5.5 XML
+ file in a unix command line environment type the following command in the
+ Schematron directory:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Framed
+status open
+
+\begin_layout Code
+java -cp ./Saxon/saxon.jar:./Java/Schematron.jar:./Jing/jing.jar com.topologi.schematron.
+EmbRNGValidator family.xml gedcom55xml.rng
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Please note that the error messages are not very robust.
+ The program tells you were the errors have occurred by indicating a line
+ number.
+ It is up to you to figure out why the line is incorrect.
+\end_layout
+
+\begin_layout Subsubsection*
+Method 2 - Validating XML against RELAX NG and Schematron Sequentially
 \end_layout
 
 \begin_layout Standard
@@ -564,25 +773,24 @@ Validate the GEDCOM 5.5 XML file using the RELAX NG schemas.
 
 \begin_deeper
 \begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Standard
-The gold standard for RELAX NG validation is a open source Java program
- called 
-\begin_inset LatexCommand url
-target "jing"
-
-\end_inset
-
-, written by the author of the RELAX NG standard.
- This command line Java application can be downloaded here.
+RELAX NG validation can be performed by an open source Java program called
  
-\end_layout
+\begin_inset Quotes sld
+\end_inset
+
+jing,
+\begin_inset Quotes srd
+\end_inset
+
+ written by the author of the RELAX NG standard.
+ This command line Java application can be downloaded 
+\begin_inset LatexCommand url
+name "here"
+target "http://www.thaiopensource.com/relaxng/jing.html"
 
 \end_inset
 
-
+.
 \end_layout
 
 \begin_layout Standard
@@ -590,19 +798,10 @@ To perform the RELAX NG validation, type the following command in a terminal
 \end_layout
 
 \begin_layout Standard
-\begin_inset Box Frameless
-position "t"
-hor_pos "c"
-has_inner_box 1
-inner_pos "t"
-use_parbox 0
-width "100col%"
-special "none"
-height "1in"
-height_special "totalheight"
+\begin_inset Note Framed
 status open
 
-\begin_layout Standard
+\begin_layout Code
 
 \family typewriter
 java -jar <path-to-jing>/jing.jar gedcom55XML.rng family.xml
@@ -619,7 +818,7 @@ The result will pipe to the terminal's standard output.
  It won't say exactly what is wrong, but it will report what lines have
  errors in them.
  If jing reports no errors, your GEDCOM 5.5 XML file is valid, both in terms
- of its structure and mo of its content.
+ of its structure and most of its content.
 \end_layout
 
 \end_deeper
@@ -629,11 +828,11 @@ Perform the Schematron validation
 
 \begin_deeper
 \begin_layout Standard
-The first validation only tests the validity of some of the content.
- RELAX NG, by itself, cannot test the mixed-content inherent in the GEDCOM
- 5.5 (and GEDCOM 5.5 XML) object model.
- The Schematron patterns will test the remainder.
- 
+Step one only tests the validity of the XML file described by RELAX NG.
+ It does not test the mixed-content inherent in the GEDCOM 5.5 (and GEDCOM
+ 5.5 XML) object model.
+ To test the mixed content nodes, the XML file needs to be tested against
+ only the Schematron patterns.
 \end_layout
 
 \begin_layout Standard
@@ -646,20 +845,21 @@ gedcom55XML.rng's
 \emph on
 gedcom55XML.rng
 \emph default
-, they would need to be extracted.
- These extracted Schematron patters need to be additionally transformedusing
- the RNG2Schtrn.xsl stylesheet available 
+, they need to be extracted.
+ These extracted Schematron patterns need to be additionally transformed
+ using the RNG2Schtrn.xsl stylesheet available 
 \begin_inset LatexCommand url
-name "file"
+name "here"
 target "http://www.topologi.com/public/Schtrn_XSD/RNG2Schtrn.zip"
 
 \end_inset
 
 .
- To use the extracted Schematron patterns, you would need to transform them
- using another stylesheet available 
+ To use the extracted Schematron patterns, another transformation would
+ need to take place using yet another style sheet available 
 \begin_inset LatexCommand url
-target "here"
+name "here"
+target "http://www.ascc.net/xml/schematron/1.5/basic1-5/schematron-basic.xsl"
 
 \end_inset
 
@@ -700,66 +900,34 @@ validate-gedcom55XML-with-schematron.xsl
 \end_layout
 
 \begin_layout Standard
-\begin_inset Box Frameless
-position "t"
-hor_pos "c"
-has_inner_box 1
-inner_pos "t"
-use_parbox 0
-width "100col%"
-special "none"
-height "1in"
-height_special "totalheight"
-status open
-
-\begin_layout Standard
 
 \family typewriter
-<path-to-saxon>/saxon family.xml validate-gedcom55XML-with-schematron.xsl
+\begin_inset Note Framed
+status open
+
+\begin_layout Code
+
+\family typewriter
+java -jar <path-to-saxon>/saxon.jar family.xml validate-gedcom55XML-with-schematro
+n.xsl
 \end_layout
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Standard
 Saxon will issue error messages if it finds any problems.
+ The error messages are more straightforward than those of the first method.
 \end_layout
 
 \end_deeper
-\begin_layout Standard
-My preferred method of validation is a combination of B and C.
- I first follow the C.i instructions and validate the GEDCOM 5.5 XML file
- using jing.
- This validates the file using only the RELAX NG schema.
- (jing, supposedly, can also perform the Schematron validation, but I haven't
- manage to get it to work).
- I next follow the instructions in B to validate the GEDCOM 5.5 XML file
- using the Schematron patterns, rather than following the method of C.ii.
- The error messages produced using B's method are more verbose than C.ii's.
- Method B will also perform the RELAX NG validation, but after it encounters
- only one error, it stops checking for other errors.
- I prefer the C.i.
- instructions because it will reveal all the RELAX NG validation errors.
+\begin_layout Section*
+Documentation 
 \end_layout
 
 \begin_layout Subsection*
-Copyrights
-\end_layout
-
-\begin_layout Standard
-Michael K.
- Hay retains the copyright to the GedML conversion code.
- He offers it free of charge, but since he has not licensed under an Open
- Source license it is not free as in freedom.
- Instead, he releases it with the following notice: 
-\end_layout
-
-\begin_layout Standard
-
-\family typewriter
-There are no restrictions on its use, but equally, it is provided with no
- warranty or support.
-\end_layout
-
-\begin_layout Section
 Documentation License
 \end_layout
 
@@ -775,7 +943,51 @@ target "http://www.gnu.org/licenses/fdl.html"
  The full text of this license is found in the file called "fdl.txt" released
  with 
 \emph on
-gedcom55XML.rng
+gedcom55XML.rng.
+
+\emph default
+ 
+\end_layout
+
+\begin_layout Subsection*
+Documentation Updates
+\end_layout
+
+\begin_layout Standard
+Updated versions of this documentation will be posted at 
+\begin_inset LatexCommand url
+name "http://www.neomantic.com/gedcom55XML/README.html"
+target "http://www.neomantic.com/gedcom55XML/README.html"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Section*
+Contact
+\end_layout
+
+\begin_layout Standard
+Please direct questions or requests for more information to 
+\begin_inset CharStyle Email
+show_label false
+status inlined
+
+\begin_layout Standard
+\begin_inset LatexCommand url
+name "chad@neomantic.com"
+target "mailto:chad@neomantic.com"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body
