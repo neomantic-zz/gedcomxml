@@ -8,7 +8,7 @@
 \inputencoding auto
 \font_roman default
 \font_sans default
-\font_typewriter default
+\font_typewriter courier
 \font_default_family default
 \font_sc false
 \font_osf false
@@ -45,7 +45,7 @@ RELAX NG/Schematron Schema for GEDCOM 5.5 XML
 \end_layout
 
 \begin_layout Date
-May 21, 2008 
+May 21, 2008
 \end_layout
 
 \begin_layout Author
@@ -85,9 +85,9 @@ target "http://homepages.rootsweb.com/~pmcbride/gedcom/55gctoc.htm"
 
 \end_inset
 
- provides a way to format genealogical data to digitally store and transfer
- it in a human readable text file.
- Over the years, new standards, using 
+ provides a way to format, digitally store, and transfer genealogical data
+ in a standardized, human readable, text file.
+ Over the years, new standards, using the 
 \begin_inset LatexCommand url
 name "Extensible Markup Language (XML)"
 target "http://www.w3.org/XML/"
@@ -95,19 +95,28 @@ target "http://www.w3.org/XML/"
 \end_inset
 
 , have been proposed.
+ The web page 
+\begin_inset LatexCommand url
+name "here"
+target "http://xml.coverpages.org/genealogy.html"
+
+\end_inset
+
+ provides a list.
 \end_layout
 
 \begin_layout Itemize
-The Church of the the Latter Day Saints has proposed the 
+The Church of the Latter Day Saints (LDS) has proposed the GEDCOM XML 6.0
+ Standard.
+ This proposal represents a complete rewrite of GEDCOM 5.5 into XML markup.
+ A DTD of this standard is published in the pdf 
 \begin_inset LatexCommand url
-name "GEDCOM 6.0 Standard"
+name "documentation"
 target "http://www.familysearch.org/GEDCOM/GedXML60.pdf"
 
 \end_inset
 
 .
- This standard represents a complete rewrite of GEDCOM 5.5 into XML markup.
- A DTD of this standard is published in the pdf documentation.
  An unofficial DTD has also been 
 \begin_inset LatexCommand url
 name "released"
@@ -119,40 +128,8 @@ target "http://members.cox.net/leebr/genealogy/GEDCOM60.dtd"
  Considering that the LDS originally created the 5.5 standard, this was probably
  the best contender to replace GEDCOM 5.5.
  However, the numerous and often radical differences between the two standards
- renders the translation of old GEDCOM 5.5 data to new GEDCOM 6.0 XML data
+ renders the translation of old GEDCOM 5.5 data to new GEDCOM XML 6.0 data
  a non-trivial task.
-\end_layout
-
-\begin_layout Itemize
-\begin_inset LatexCommand url
-name "GenXML 2.0"
-target "http://cosoft.org/genxml/index.html"
-
-\end_inset
-
- by Cosoft.
- A schema for this proposal can be found 
-\begin_inset LatexCommand url
-name "here"
-target "http://cosoft.org/genxml/genxml20.xsd"
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Itemize
-GeniML developed by Jerry Fitzpatrick of Software Renovation Corporation.
- As far as I have seen, no dtd or schema has been published describing this
- proposal.
- More information about it can be found 
-\begin_inset LatexCommand url
-name "here"
-target "http://www.softwarerenovation.com/igenie/GeniML.aspx"
-
-\end_inset
-
-.
 \end_layout
 
 \begin_layout Itemize
@@ -180,6 +157,38 @@ target "http://users.breathe.com/mhkay/gedml/dtd.html"
 
 .
  
+\end_layout
+
+\begin_layout Itemize
+Cosoft has proposed 
+\begin_inset LatexCommand url
+name "GenXML 2.0"
+target "http://cosoft.org/genxml/index.html"
+
+\end_inset
+
+.
+ A schema for this proposal can be found 
+\begin_inset LatexCommand url
+name "here"
+target "http://cosoft.org/genxml/genxml20.xsd"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Jerry Fitzpatrick of Software Renovation Corporation developed 
+\begin_inset LatexCommand url
+name "GeniML"
+target "http://www.softwarerenovation.com/igenie/GeniML.aspx"
+
+\end_inset
+
+.
+ As far as I have seen, no dtd or schema has been published describing this
+ proposal.
 \end_layout
 
 \begin_layout Standard
@@ -222,27 +231,62 @@ Given these similarities, it is easy to envision a one-to-one translation
  could delimit genealogical data.
  Kay's GedML comes close to proposing such a one-to-one translation.
  Many of GedML's XML elements correspond to GEDCOM 5.5 tags; e.g., 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 INDI
-\family default
+\end_layout
+
+\end_inset
+
  tags are simply 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 <INDI>
-\family default
+\end_layout
+
+\end_inset
+
  elements.
  However, other tags have been translated; e.g., 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 SOUR
-\family default
+\end_layout
+
+\end_inset
+
  tags are 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 <Source>
-\family default
+\end_layout
+
+\end_inset
+
  elements.
  Another difference between GedML and GEDCOM 5.5 is the absent 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 <TRLR>
-\family default
+\end_layout
+
+\end_inset
+
  element which is a required by GEDCOM 5.5 to indicate the end of a GEDCOM
  5.5 file.
  This element is left out of the GedML proposal because the closed document
@@ -286,13 +330,20 @@ target "http://www.schematron.com/"
 \end_inset
 
  schema, contained in the file called 
-\begin_inset Quotes sld
+\begin_inset Quotes srd
 \end_inset
 
 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\family default
+\end_layout
+
+\end_inset
+
 
 \begin_inset Quotes srd
 \end_inset
@@ -302,9 +353,16 @@ gedcom55XML.rng
 
 \begin_layout Subsection*
 Limitations of 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\family default
+\end_layout
+
+\end_inset
+
  in relation to the GEDCOM 5.5 standard
 \end_layout
 
@@ -316,110 +374,241 @@ Ideally, this schema would re-represented 100 percent of the GEDCOM 5.5 standard
  be considered, in XML terms, mixed-content elements.
  Schematron handles most of these mix-content elements, but not all of them.
  Below is a small list 
-\family typewriter
-gedcom5XML.rng's
-\emph on
- 
-\family default
-\emph default
-shortcomings.
- 
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
+gedcom55XML.rng
+\end_layout
+
+\end_inset
+
+'s shortcomings.
 \end_layout
 
 \begin_layout Itemize
+\begin_inset CharStyle Filename
+show_label false
+status inlined
 
-\family typewriter
+\begin_layout Standard
 gedcom55XML.rng
-\family default
+\end_layout
+
+\end_inset
+
  is unable to specify if a GEDCOM 5.5 data 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 DATE_VALUE
-\family default
+\end_layout
+
+\end_inset
+
  has valid content.
  The possible combinations of 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 DATE_VALUE
-\family default
+\end_layout
+
+\end_inset
+
 s are simply too numerous to handle using RELAX NG or Schematron alone.
  
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\family default
- can only be used to check if the 
-\family typewriter
+\end_layout
+
+\end_inset
+
+can only be used to check if the 
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 DATE_VALUE
-\family default
+\end_layout
+
+\end_inset
+
  data is between 1 and 35 characters.
 \end_layout
 
 \begin_layout Itemize
+\begin_inset CharStyle Filename
+show_label false
+status inlined
 
-\family typewriter
+\begin_layout Standard
 gedcom55XML.rng
-\emph on
- 
-\family default
-\emph default
-can only specify 
-\family typewriter
+\end_layout
+
+\end_inset
+
+ can only specify 
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 EXACT_DATE
-\family default
+\end_layout
+
+\end_inset
+
  GEDCOM 5.5 data within certain limits.
  It cannot check the 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 EXACT_DATE
-\family default
+\end_layout
+
+\end_inset
+
  values of 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 TRANSMISSION_DATE
-\family default
+\end_layout
+
+\end_inset
+
  and 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 CHANGE_DATE
-\family default
+\end_layout
+
+\end_inset
+
 .
  When it's able to specify the 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 EXACT_DATE
-\family default
+\end_layout
+
+\end_inset
+
  value, it only check the English 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 MONTH
-\family default
+\end_layout
+
+\end_inset
+
  abbreviations, (i.e., 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 JAN
-\family default
+\end_layout
+
+\end_inset
+
 , 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 FEB
-\family default
+\end_layout
+
+\end_inset
+
 , 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 MAR
-\family default
+\end_layout
+
+\end_inset
+
 , etc.).
 \end_layout
 
 \begin_layout Itemize
 Normally, the regions in the 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 PLAC
-\family default
+\end_layout
+
+\end_inset
+
  tag are separated by commas (i.e., Kansas City, Jackson County, Missouri,
  USA) or, alternatively, the delimiter specified in the 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 HEAD.PLAC.FORM
-\family default
+\end_layout
+
+\end_inset
+
  tag.
  
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\family default
+\end_layout
+
+\end_inset
+
  does not specify if the 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 PLAC
-\family default
+\end_layout
+
+\end_inset
+
  data is delimited.
 \end_layout
 
@@ -431,13 +620,27 @@ NAME
  tag are usually formatted with backslashes to indicate first and last names
  (i.e., Joseph/Smith/).
  
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\family default
+\end_layout
+
+\end_inset
+
 , regrettably, cannot describe the syntax of 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 NAME
-\family default
+\end_layout
+
+\end_inset
+
  data.
 \end_layout
 
@@ -445,108 +648,234 @@ NAME
 GEDCOM 5.5 allows for user-defined tags, even though it discourages their
  usage.
  
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\family default
+\end_layout
+
+\end_inset
+
  cannot anticipate user-defined tags.
 \end_layout
 
 \begin_layout Itemize
+\begin_inset CharStyle Filename
+show_label false
+status inlined
 
-\family typewriter
+\begin_layout Standard
 gedcom55XML.rng
-\family default
+\end_layout
+
+\end_inset
+
  does not describe the content of 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 SOURCE_CITATION
-\family default
-s 
-\family typewriter
+\end_layout
+
+\end_inset
+
+'s 
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 EVEN
-\family default
+\end_layout
+
+\end_inset
+
  tag's 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 EVENT_TYPE_CITED_FROM
-\family default
+\end_layout
+
+\end_inset
+
 , even though the GEDCOM 5.5 standard specifies a restricted set of values.
  
 \end_layout
 
 \begin_layout Itemize
 It also does not describe the content of 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 SOURCE_RECORD
-\family default
+\end_layout
+
+\end_inset
+
 's 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 EVEN
-\family default
+\end_layout
+
+\end_inset
+
  tag's 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 EVENTS_RECORDED
-\family default
+\end_layout
+
+\end_inset
+
 , even though the GEDCOM 5.5 standard also specifies a restricted set of
  values.
 \end_layout
 
 \begin_layout Itemize
 The 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 AGE
-\family default
+\end_layout
+
+\end_inset
+
  tag permits values such as 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 CHILD
-\family default
+\end_layout
+
+\end_inset
+
 , 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 INFANT
-\family default
+\end_layout
+
+\end_inset
+
 , 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 STILLBORN
-\family default
+\end_layout
+
+\end_inset
+
 , along with '
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 y
-\family default
+\end_layout
+
+\end_inset
+
 ','
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 m
-\family default
+\end_layout
+
+\end_inset
+
 ','
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 d
-\family default
+\end_layout
+
+\end_inset
+
 ' which respectively signify year, month, and day.
  Following the specification strictly, these value should be case-insensitive.
  However, in 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\family default
-\emph on
-,
-\emph default
- they currently are case-sensitive, defaulting to the lowercase values.
+\end_layout
+
+\end_inset
+
+, they currently are case-sensitive, defaulting to the lowercase values.
 \end_layout
 
 \begin_layout Itemize
 The 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 MONTH
-\family default
+\end_layout
+
+\end_inset
+
  values of 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 DATE_EXACT
-\family default
+\end_layout
+
+\end_inset
+
  should also be case-insensitive, but in 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\emph on
-'s 
-\family default
-\emph default
-current implementation they are not.
+\end_layout
+
+\end_inset
+
+'s current implementation they are not.
  The defaults are the upper case values.
 \end_layout
 
@@ -555,10 +884,16 @@ Schema License
 \end_layout
 
 \begin_layout Standard
+\begin_inset CharStyle Filename
+show_label false
+status inlined
 
-\family typewriter
+\begin_layout Standard
 gedcom55XML.rng
-\family default
+\end_layout
+
+\end_inset
+
  is released under the 
 \begin_inset LatexCommand url
 name "GNU General Public License Version 2"
@@ -567,15 +902,37 @@ target "http://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
 \end_inset
 
  (GPL).
- The full text of this license can be found in file called "
-\family typewriter
-gpl-2.0"
-\family default
+ The full text of this license can be found in file called 
+\begin_inset Quotes sld
+\end_inset
+
+
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
+gpl-2.0
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes srd
+\end_inset
+
  included with 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\emph on
- 
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection*
@@ -586,9 +943,19 @@ Schema Updates
 Like any XML schema, the GEDCOM 5.5 XML schema will be posted on the web
  with a URL (Universal Resource Locator).
  The most up to date version will always be located at 
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 \begin_inset LatexCommand url
 name "http://www.neomantic.com/gedcom55xml/gedcom55XML.rng"
 target "http://www.neomantic.com/gedcom55xml/gedcom55XML.rng"
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -598,12 +965,11 @@ target "http://www.neomantic.com/gedcom55xml/gedcom55XML.rng"
 
 \begin_layout Standard
 Using the 
-\begin_inset Quotes sld
-\end_inset
+\begin_inset CharStyle Literal
+show_label false
+status inlined
 
-
-\family typewriter
-
+\begin_layout Standard
 \begin_inset LatexCommand url
 name "trang"
 target "http://www.thaiopensource.com/relaxng/trang.html"
@@ -611,13 +977,12 @@ target "http://www.thaiopensource.com/relaxng/trang.html"
 \end_inset
 
 
-\family default
+\end_layout
 
-\begin_inset Quotes srd
 \end_inset
 
- program, the XML version of the GEDCOM 5.5 XML RELAX NG schema will also
- be released using RELAX NG's 
+ program, the XML version of the GEDCOM 5.5 XML RELAX NG schema has been
+ converted to RELAX NG's 
 \begin_inset LatexCommand url
 name "compact syntax"
 target "http://relaxng.org/compact-20021121.html"
@@ -630,35 +995,59 @@ target "http://relaxng.org/compact-20021121.html"
 \end_inset
 
 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rnc
-\family default
-.
+\end_layout
+
+\end_inset
+
+
 \begin_inset Quotes srd
 \end_inset
 
- The source code is licensed under the GNU General Public License Version
- 2.
+.
  The most recent up to date of the schema in compact syntax will be located
  at this url: 
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 \begin_inset LatexCommand url
 name "http://www.neomantic.com/gedcom55xml/gedcom55XML.rnc"
 target "http://www.neomantic.com/gedcom55xml/gedcom55XML.rnc"
 
 \end_inset
 
+
+\end_layout
+
+\end_inset
+
 .
+ The source code is licensed under the GNU General Public License Version
+ 2.
+ Please note that I have been unable to use this file to validate a GEDCOM
+ 5.5 XML document.
 \end_layout
 
 \begin_layout Section*
 Using 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\family default
-\emph on
- - 
-\emph default
-Validating a GEDCOM 5.5 Document
+\end_layout
+
+\end_inset
+
+ - Validating a GEDCOM 5.5 Document
 \end_layout
 
 \begin_layout Standard
@@ -685,16 +1074,30 @@ valid.
  us a way to computationally determine if a GEDCOM 5.5 document is structured
  correctly.
  The schema in 
-\family typewriter
-gedcom55xml.rng
-\family default
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
+gedcom55XML.rng
+\end_layout
+
+\end_inset
+
  was written to fill that gap.
  If a GEDCOM 5.5 document can be converted into a GEDCOM 5.5 XML document,
  we have a way to check if the data is structured and formatted correctly
  by using 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\family default
+\end_layout
+
+\end_inset
+
 ; we have a way to test if the GEDCOM 5.5 tags are appropriately ordered
  and nested, and if the content of tags fits within the parameter described
  in the standard.
@@ -703,9 +1106,16 @@ gedcom55XML.rng
 \begin_layout Standard
 The documentation below will demonstrate how to use the RELAX NG/Schematron
  GEDCOM 5.5 XML schema, 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\family default
+\end_layout
+
+\end_inset
+
 , to determine the validity (in the XML sense) of a preexisting GEDCOM 5.5
  files.
  
@@ -713,13 +1123,17 @@ gedcom55XML.rng
 
 \begin_layout Standard
 Validating a GEDCOM 5.5 XML document with 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\emph on
- 
-\family default
-\emph default
-is currently a complicated process.
+\end_layout
+
+\end_inset
+
+ is currently a complicated process.
  It requires familiarity with Java, a bit of programming skills, and some
  comfort with a command line user interface.
  
@@ -730,28 +1144,41 @@ The instructions below follow several conventions:
 \end_layout
 
 \begin_layout Itemize
+\begin_inset CharStyle Filename
+show_label false
+status inlined
 
-\family typewriter
+\begin_layout Standard
 family.ged
-\emph on
- 
-\family default
-\emph default
-represents a GEDCOM 5.5 file.
+\end_layout
+
+\end_inset
+
+ represents a GEDCOM 5.5 file.
 \end_layout
 
 \begin_layout Itemize
+\begin_inset CharStyle Filename
+show_label false
+status inlined
 
-\family typewriter
+\begin_layout Standard
 family.xml
-\emph on
- 
-\family default
-\emph default
-represents the 
-\family typewriter
+\end_layout
+
+\end_inset
+
+ represents the 
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 family.ged
-\family default
+\end_layout
+
+\end_inset
+
  file translated into a GEDCOM 5.5 XML document.
 \end_layout
 
@@ -770,9 +1197,16 @@ Convert the GEDCOM 5.5 file to a GEDCOM 5.5 XML document.
 
 \begin_layout Enumerate
 Validate the GEDCOM 5.5 XML document using 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\family default
+\end_layout
+
+\end_inset
+
 .
 \end_layout
 
@@ -789,7 +1223,18 @@ Currently there is no quick and easy way to convert a GEDCOM 5.5 (or a .ged)
  skills.
  To perform the conversion, we will need to compile Java source code, released
  by Michael Kay, to produce a java executable that can be used with Kay's
- saxon XML parser.
+ 
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
+saxon
+\end_layout
+
+\end_inset
+
+ XML parser.
 \end_layout
 
 \begin_layout Enumerate
@@ -803,98 +1248,173 @@ target "http://homepage.ntlworld.com/michael.h.kay/gedml/"
  and unzip it a location of your choose.
  Remember the path to this location.
  You need to know this path which will be referred to in another step using
- the variable
-\family typewriter
- <path-to-gedml-classes>
-\family default
+ the variable 
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
+<path-to-gedml-classes>
+\end_layout
+
+\end_inset
+
 .
 \end_layout
 
 \begin_layout Enumerate
 Find the files called 
-\family typewriter
+\begin_inset Quotes sld
+\end_inset
+
+
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 GedcomParser.java
-\family default
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes srd
+\end_inset
+
  and 
-\family typewriter
+\begin_inset Quotes sld
+\end_inset
+
+
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 GedcomToXml.xsl
-\family default
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes srd
+\end_inset
+
 .
 \end_layout
 
 \begin_layout Enumerate
 Compile the file GedcomParser.java using your favorite Java distribution's
  compiler - 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 javac
-\family default
-.
- This will produces a class file called 
-\family typewriter
-GedcomParser.class
 \end_layout
 
-\begin_deeper
-\begin_layout Standard
-\begin_inset Note Framed
-status open
+\end_inset
 
-\begin_layout Code
-javac GedcomParser.java
+.
+ This will produces a class file called 
+\begin_inset Quotes sld
+\end_inset
+
+
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
+GedcomParser.class
 \end_layout
 
 \end_inset
 
 
+\begin_inset Quotes srd
+\end_inset
+
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Code
+javac GedcomParser.java
 \end_layout
 
 \end_deeper
 \begin_layout Enumerate
 Download Kay's 
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 \begin_inset LatexCommand url
 name "saxon"
 target "http://saxon.sourceforge.net/"
 
 \end_inset
 
+
+\end_layout
+
+\end_inset
+
  parser, install it somewhere on your computer's hard drive, and remember
  it's location - which will be referred to below using the 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 <path-to-saxon>
-\family default
+\end_layout
+
+\end_inset
+
  variable.
  (It may already be installed on your computer; on my GNU/Linux Debian system
  it was located at 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 /usr/share/java/saxon.jar
-\family default
+\end_layout
+
+\end_inset
+
 .) 
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
 Issue the following command in your terminal:
-\begin_inset Note Framed
-status open
-
-\begin_layout Code
-
-\family typewriter
-java -cp <path-to-saxon>:<path-to-gedml-classes> com.icl.saxon.StyleSheet -x
- GedcomParser family.ged <path-to-gedml-classes>/GedcomToXml.xsl
 \end_layout
 
-\end_inset
-
-
+\begin_layout Code
+java -cp <path-to-saxon>:<path-to-gedml-classes> com.icl.saxon.StyleSheet -x
+ GedcomParser family.ged <path-to-gedml-classes>/GedcomToXml.xsl
 \end_layout
 
 \end_deeper
 \begin_layout Enumerate
 The output of this command will be an XML version of a 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 family.ged
-\family default
+\end_layout
+
+\end_inset
+
  file.
  The output will be piped to the standard output, but you can also redirect
  the output to a file by appending 
@@ -902,9 +1422,16 @@ family.ged
 \end_inset
 
 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 > family.xml
-\family default
+\end_layout
+
+\end_inset
+
 
 \begin_inset Quotes srd
 \end_inset
@@ -913,24 +1440,62 @@ family.ged
  The XML output will be a near perfect reproduction of a GEDCOM 5.5 into
  GEDCOM 5.5 XML.
  The only problem with the output is that it fails to add the 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 <TRLR/>
-\family default
+\end_layout
+
+\end_inset
+
  element before the 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 </GED>
-\family default
+\end_layout
+
+\end_inset
+
  element at the end of the document.
  Kay's GedcomParser removes this tag, because it is redundant; the 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 </GED>
-\family default
- element performs the same function as the TRLR; it indicates the end of
- a document.
+\end_layout
+
+\end_inset
+
+ element performs the same function as the 
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
+TRLR
+\end_layout
+
+\end_inset
+
+; it indicates the end of a document.
  To remain 100% faithful to the GEDCOM 5.5 standard, the 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 <TRLR>
-\family default
+\end_layout
+
+\end_inset
+
  element has been included in the GEDCOM 5.5 XML schema.
 \end_layout
 
@@ -938,11 +1503,6 @@ family.ged
 
 \series bold
 Validate the GEDCOM 5.5 XML Document Using 
-\family typewriter
-\series default
-gedcom55XML.rng
-\emph on
- 
 \end_layout
 
 \begin_layout Standard
@@ -950,9 +1510,16 @@ Validating the XML file with RELAX NG and Schematron is another complicated
  affair.
  The complication arises because, to fully validate your GEDCOM 5.5 XML file
  using 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\family default
+\end_layout
+
+\end_inset
+
 , we must use a RELAX NG validator 
 \emph on
 and
@@ -976,9 +1543,16 @@ Method 1 - Validating XML against RELAX NG and Schematron Simultaneously
 
 \begin_layout Standard
 One way of validating a GEDCOM 5.5 XML file with 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\family default
+\end_layout
+
+\end_inset
+
  is by using Topologi.com's schematron Java classes.
  The 
 \begin_inset LatexCommand url
@@ -1007,18 +1581,9 @@ Schematron
  producing by unzip the downloaded file above:
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Framed
-status open
-
 \begin_layout Code
 java -cp ./Saxon/saxon.jar:./Java/Schematron.jar:./Jing/jing.jar com.topologi.schematron.
 EmbRNGValidator family.xml gedcom55xml.rng
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -1051,9 +1616,16 @@ RELAX NG validation can be performed by an open source Java program called
 \end_inset
 
 
-\family typewriter
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 jing
-\family default
+\end_layout
+
+\end_inset
+
 ,
 \begin_inset Quotes srd
 \end_inset
@@ -1067,28 +1639,63 @@ target "http://www.thaiopensource.com/relaxng/jing.html"
 \end_inset
 
 .
-\end_layout
+ 
+\begin_inset CharStyle Literal
+show_label false
+status inlined
 
 \begin_layout Standard
-To perform the RELAX NG validation, type the following command in a terminal
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Framed
-status open
-
-\begin_layout Code
-
-\family typewriter
-java -jar <path-to-jing>/jing.jar gedcom55XML.rng family.xml
+jing
 \end_layout
 
 \end_inset
 
+ 
+\begin_inset LatexCommand url
+name "supposedly"
+target "http://www.thaiopensource.com/relaxng/jing-other.html"
 
+\end_inset
+
+ can validate file against the Schematron patterns embedded in the RELAX
+ NG schema.
+ However, I have been unable to get 
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
+jing
+\end_layout
+
+\end_inset
+
+ to use 
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
+gedcom55XML.rng
+\end_layout
+
+\end_inset
+
+'s Schematron patterns.
 \end_layout
 
 \begin_layout Standard
+To perform the RELAX NG validation, type the following command in a terminal:
+ 
+\end_layout
+
+\begin_layout Code
+java -jar <path-to-jing>/jing.jar gedcom55XML.rng family.xml
+\end_layout
+
+\begin_layout Standard
+
+\family roman
 The result will pipe to the terminal's standard output.
  jing will report all the errors it encounters.
  It won't say exactly what is wrong, but it will report what lines have
@@ -1113,20 +1720,41 @@ Step one only tests the validity of the XML file described by RELAX NG.
 
 \begin_layout Standard
 Testing the GEDCOM 5.5 XML file with 
-\family typewriter
-gedcom55XML.rng's
-\family default
- Schematron patterns, normally requires three transformations.
- Since the Schematron patterns are embedded inside 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 gedcom55XML.rng
-\family default
+\end_layout
+
+\end_inset
+
+'s Schematron patterns, normally requires three transformations.
+ Since the Schematron patterns are embedded inside 
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
+gedcom55XML.rng
+\end_layout
+
+\end_inset
+
 , they need to be extracted.
  These extracted Schematron patterns need to be additionally transformed
  using the 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 RNG2Schtrn.xsl
-\family default
+\end_layout
+
+\end_inset
+
  stylesheet available 
 \begin_inset LatexCommand url
 name "here"
@@ -1145,9 +1773,16 @@ target "http://www.ascc.net/xml/schematron/1.5/basic1-5/schematron-basic.xsl"
 
 .
  This transformation would yield a file used to validate the 
-\family typewriter
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
 family.xml
-\family default
+\end_layout
+
+\end_inset
+
  document.
  (The entire process is described 
 \begin_inset LatexCommand url
@@ -1161,56 +1796,93 @@ target "http://www.xml.com/pub/a/2004/02/11/relaxtron.html?page=5"
 
 \begin_layout Standard
 For convenience, included with 
-\family typewriter
-gedcom55XML.rng
-\family default
- are both the extracted Schematron patterns - 
-\family typewriter
-gedcom55XML.sch
-\family default
- - and the validation stylesheet - 
-\family typewriter
-validate-gedcom55XML-with-schematron.xsl
-\emph on
-.
-
-\family default
-\emph default
- To finally validate all the remaining content of your 
-\family typewriter
-family.xml
-\family default
- document, you will have to apply 
-\family typewriter
-validate-gedcom55XML-with-schematron.xsl
-\emph on
- 
-\family default
-\emph default
-using saxon.
- To do so, issue the following command in a terminal:
-\end_layout
+\begin_inset CharStyle Filename
+show_label false
+status inlined
 
 \begin_layout Standard
-
-\family typewriter
-\begin_inset Note Framed
-status open
-
-\begin_layout Code
-
-\family typewriter
-java -jar <path-to-saxon>/saxon.jar family.xml validate-gedcom55XML-with-schematro
-n.xsl
+gedcom55XML.rng
 \end_layout
 
 \end_inset
 
+ are both the extracted Schematron patterns - 
+\begin_inset CharStyle Literal
+show_label false
+status inlined
 
+\begin_layout Standard
+gedcom55XML.sch
+\end_layout
+
+\end_inset
+
+ - and the validation stylesheet - 
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
+validate-gedcom55XML-with-schematron.xsl
+\end_layout
+
+\end_inset
+
+.
+ To finally validate all the remaining content of your 
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
+family.xml
+\end_layout
+
+\end_inset
+
+ document, you will have to apply 
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
+validate-gedcom55XML-with-schematron.xsl
+\end_layout
+
+\end_inset
+
+ using 
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
+saxon
+\end_layout
+
+\end_inset
+
+.
+ To do so, issue the following command in a terminal:
+\end_layout
+
+\begin_layout Code
+java -jar <path-to-saxon>/saxon.jar family.xml validate-gedcom55XML-with-schematro
+n.xsl
 \end_layout
 
 \begin_layout Standard
-Saxon will issue error messages if it finds any problems.
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
+saxon
+\end_layout
+
+\end_inset
+
+will issue error messages if it finds any problems.
  The error messages are more straightforward than those of the first method.
 \end_layout
 
@@ -1232,19 +1904,37 @@ target "http://www.gnu.org/licenses/fdl.html"
 \end_inset
 
 .
- The full text of this license is found in the file called "
-\family typewriter
-fdl.txt
-\family default
-" released with 
-\family typewriter
-gedcom55XML.rng
-\family default
-\emph on
-.
+ The full text of this license is found in the file called 
+\begin_inset Quotes sld
+\end_inset
 
-\emph default
- 
+
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
+fdl.txt
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes srd
+\end_inset
+
+ released with 
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
+gedcom55XML.rng
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection*
@@ -1253,9 +1943,19 @@ Documentation Updates
 
 \begin_layout Standard
 Updated versions of this documentation will be posted at 
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
 \begin_inset LatexCommand url
 name "http://www.neomantic.com/gedcom55XML/README.html"
 target "http://www.neomantic.com/gedcom55XML/README.html"
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -1269,23 +1969,13 @@ Contact
 
 \begin_layout Standard
 Please direct questions or requests for more information to 
-\begin_inset CharStyle Email
-show_label false
-status inlined
-
-\begin_layout Standard
-\begin_inset LatexCommand url
+\begin_inset LatexCommand htmlurl
 name "chad@neomantic.com"
 target "mailto:chad@neomantic.com"
 
 \end_inset
 
-
-\end_layout
-
-\end_inset
-
-
+.
 \end_layout
 
 \end_body
