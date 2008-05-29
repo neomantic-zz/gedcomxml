@@ -221,11 +221,30 @@ Given these similarities, it is easy to envision a one-to-one translation
  characters could convert tags into elements, and these closed elements
  could delimit genealogical data.
  Kay's GedML comes close to proposing such a one-to-one translation.
- Many of GedML's XML elements correspond to GEDCOM 5.5 tags; e.g., INDI tags
- are simply <INDI> elements.
- However, other tags have been translated; e.g., SOUR tags are <Source> elements.
- Another difference between GedML and GEDCOM 5.5 is the absent <TRLR> element
- which is a required by GEDCOM 5.5 to indicate the end of a GEDCOM 5.5 file.
+ Many of GedML's XML elements correspond to GEDCOM 5.5 tags; e.g., 
+\family typewriter
+INDI
+\family default
+ tags are simply 
+\family typewriter
+<INDI>
+\family default
+ elements.
+ However, other tags have been translated; e.g., 
+\family typewriter
+SOUR
+\family default
+ tags are 
+\family typewriter
+<Source>
+\family default
+ elements.
+ Another difference between GedML and GEDCOM 5.5 is the absent 
+\family typewriter
+<TRLR>
+\family default
+ element which is a required by GEDCOM 5.5 to indicate the end of a GEDCOM
+ 5.5 file.
  This element is left out of the GedML proposal because the closed document
  root element makes it superfluous.
  Due to these differences, GedML is not a one-to-one translation of GEDCOM
@@ -240,11 +259,18 @@ The simplest XML alternative to GEDCOM 5.5 is a one-to-one translation of
  
 \emph default
 All GEDCOM 5.5 tags correspond to XML elements with the same name.
- It is called 
+ This XML version of GEDCOM 5.5 is called 
 \emph on
+
+\begin_inset Quotes sld
+\end_inset
+
 GEDCOM 5.5 XML
 \emph default
 .
+\begin_inset Quotes srd
+\end_inset
+
  To define this proposal in XML itself, I have written a 
 \begin_inset LatexCommand url
 name "RELAX NG"
@@ -263,7 +289,11 @@ target "http://www.schematron.com/"
 \begin_inset Quotes sld
 \end_inset
 
+
+\family typewriter
 gedcom55XML.rng
+\family default
+
 \begin_inset Quotes srd
 \end_inset
 
@@ -272,9 +302,9 @@ gedcom55XML.rng
 
 \begin_layout Subsection*
 Limitations of 
-\emph on
+\family typewriter
 gedcom55XML.rng
-\emph default
+\family default
  in relation to the GEDCOM 5.5 standard
 \end_layout
 
@@ -286,115 +316,249 @@ Ideally, this schema would re-represented 100 percent of the GEDCOM 5.5 standard
  be considered, in XML terms, mixed-content elements.
  Schematron handles most of these mix-content elements, but not all of them.
  Below is a small list 
-\emph on
+\family typewriter
 gedcom5XML.rng's
+\emph on
+ 
+\family default
 \emph default
- shortcomings.
+shortcomings.
  
 \end_layout
 
 \begin_layout Itemize
 
-\emph on
+\family typewriter
 gedcom55XML.rng
-\emph default
- is unable to specify if a GEDCOM 5.5 data DATE_VALUE has valid content.
- The possible combinations of DATE_VALUEs are simply too numerous to handle
- using RELAX NG or Schematron alone.
+\family default
+ is unable to specify if a GEDCOM 5.5 data 
+\family typewriter
+DATE_VALUE
+\family default
+ has valid content.
+ The possible combinations of 
+\family typewriter
+DATE_VALUE
+\family default
+s are simply too numerous to handle using RELAX NG or Schematron alone.
  
-\emph on
+\family typewriter
 gedcom55XML.rng
-\emph default
- can only be used to check if the DATE_VALUE data is between 1 and 35 characters.
+\family default
+ can only be used to check if the 
+\family typewriter
+DATE_VALUE
+\family default
+ data is between 1 and 35 characters.
 \end_layout
 
 \begin_layout Itemize
 
-\emph on
+\family typewriter
 gedcom55XML.rng
+\emph on
+ 
+\family default
 \emph default
- can only specify EXACT_DATE GEDCOM 5.5 data within certain limits.
- It cannot check the EXACT_DATE values of TRANSMISSION_DATE and CHANGE_DATE.
- When it's able to specify the EXACT_DATE value, it only check the English
- MONTH abbreviations, (i.e., JAN, FEB, MAR, etc.).
+can only specify 
+\family typewriter
+EXACT_DATE
+\family default
+ GEDCOM 5.5 data within certain limits.
+ It cannot check the 
+\family typewriter
+EXACT_DATE
+\family default
+ values of 
+\family typewriter
+TRANSMISSION_DATE
+\family default
+ and 
+\family typewriter
+CHANGE_DATE
+\family default
+.
+ When it's able to specify the 
+\family typewriter
+EXACT_DATE
+\family default
+ value, it only check the English 
+\family typewriter
+MONTH
+\family default
+ abbreviations, (i.e., 
+\family typewriter
+JAN
+\family default
+, 
+\family typewriter
+FEB
+\family default
+, 
+\family typewriter
+MAR
+\family default
+, etc.).
 \end_layout
 
 \begin_layout Itemize
-Normally, the regions in the PLAC tag are separated by commas (i.e., Kansas
- City, Jackson County, Missouri, USA) or, alternatively, the delimiter specified
- in the HEAD.PLAC.FORM tag.
+Normally, the regions in the 
+\family typewriter
+PLAC
+\family default
+ tag are separated by commas (i.e., Kansas City, Jackson County, Missouri,
+ USA) or, alternatively, the delimiter specified in the 
+\family typewriter
+HEAD.PLAC.FORM
+\family default
+ tag.
  
-\emph on
+\family typewriter
 gedcom55XML.rng
-\emph default
- does not specify if the PLAC data is delimited.
+\family default
+ does not specify if the 
+\family typewriter
+PLAC
+\family default
+ data is delimited.
 \end_layout
 
 \begin_layout Itemize
-The names of individuals in the NAME tag are usually formatted with backslashes
- to indicate first and last names (i.e., Joseph/Smith/).
+The names of individuals in the 
+\family typewriter
+NAME
+\family default
+ tag are usually formatted with backslashes to indicate first and last names
+ (i.e., Joseph/Smith/).
  
-\emph on
+\family typewriter
 gedcom55XML.rng
-\emph default
-, regrettably, cannot describe the syntax of NAME data.
+\family default
+, regrettably, cannot describe the syntax of 
+\family typewriter
+NAME
+\family default
+ data.
 \end_layout
 
 \begin_layout Itemize
 GEDCOM 5.5 allows for user-defined tags, even though it discourages their
  usage.
  
-\emph on
+\family typewriter
 gedcom55XML.rng
-\emph default
+\family default
  cannot anticipate user-defined tags.
 \end_layout
 
 \begin_layout Itemize
 
-\emph on
+\family typewriter
 gedcom55XML.rng
-\emph default
- does not describe the content of SOURCE_CITATIONs EVEN tag's EVENT_TYPE_CITED_F
-ROM, even though the GEDCOM 5.5 standard specifies a restricted set of values.
+\family default
+ does not describe the content of 
+\family typewriter
+SOURCE_CITATION
+\family default
+s 
+\family typewriter
+EVEN
+\family default
+ tag's 
+\family typewriter
+EVENT_TYPE_CITED_FROM
+\family default
+, even though the GEDCOM 5.5 standard specifies a restricted set of values.
  
 \end_layout
 
 \begin_layout Itemize
-It also does not describe the content of SOURCE_RECORD's EVEN tag's EVENTS_RECOR
-DED, even though the GEDCOM 5.5 standard also specifies a restricted set
- of values.
+It also does not describe the content of 
+\family typewriter
+SOURCE_RECORD
+\family default
+'s 
+\family typewriter
+EVEN
+\family default
+ tag's 
+\family typewriter
+EVENTS_RECORDED
+\family default
+, even though the GEDCOM 5.5 standard also specifies a restricted set of
+ values.
 \end_layout
 
 \begin_layout Itemize
-The AGE tag permits values such as CHILD, INFANT, STILLBORN, along with
- 'y','m','d' which respectively signify year, month, and day.
+The 
+\family typewriter
+AGE
+\family default
+ tag permits values such as 
+\family typewriter
+CHILD
+\family default
+, 
+\family typewriter
+INFANT
+\family default
+, 
+\family typewriter
+STILLBORN
+\family default
+, along with '
+\family typewriter
+y
+\family default
+','
+\family typewriter
+m
+\family default
+','
+\family typewriter
+d
+\family default
+' which respectively signify year, month, and day.
  Following the specification strictly, these value should be case-insensitive.
  However, in 
+\family typewriter
+gedcom55XML.rng
+\family default
 \emph on
-gedcom55XML.rng,
+,
 \emph default
  they currently are case-sensitive, defaulting to the lowercase values.
 \end_layout
 
 \begin_layout Itemize
-The MONTH values of DATE_EXACT should also be case-insensitive, but in 
-\emph on
+The 
+\family typewriter
+MONTH
+\family default
+ values of 
+\family typewriter
+DATE_EXACT
+\family default
+ should also be case-insensitive, but in 
+\family typewriter
 gedcom55XML.rng
+\emph on
+'s 
+\family default
 \emph default
-'s current implementation they are not.
+current implementation they are not.
  The defaults are the upper case values.
 \end_layout
 
 \begin_layout Subsection*
-GEDCOM 5.5 XML Schema License
+Schema License
 \end_layout
 
 \begin_layout Standard
 
-\emph on
+\family typewriter
 gedcom55XML.rng
-\emph default
+\family default
  is released under the 
 \begin_inset LatexCommand url
 name "GNU General Public License Version 2"
@@ -403,22 +567,25 @@ target "http://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
 \end_inset
 
  (GPL).
- The full text of this license can be found in file called "gpl-2.0" included
- with 
-\emph on
+ The full text of this license can be found in file called "
+\family typewriter
+gpl-2.0"
+\family default
+ included with 
+\family typewriter
 gedcom55XML.rng
-\emph default
+\emph on
  
 \end_layout
 
 \begin_layout Subsection*
-GEDCOM 5.5 XML Schema Updates
+Schema Updates
 \end_layout
 
 \begin_layout Standard
 Like any XML schema, the GEDCOM 5.5 XML schema will be posted on the web
  with a URL (Universal Resource Locator).
- The most recent version will always be located at 
+ The most up to date version will always be located at 
 \begin_inset LatexCommand url
 name "http://www.neomantic.com/gedcom55xml/gedcom55XML.rng"
 target "http://www.neomantic.com/gedcom55xml/gedcom55XML.rng"
@@ -426,13 +593,70 @@ target "http://www.neomantic.com/gedcom55xml/gedcom55XML.rng"
 \end_inset
 
 .
- 
+ All previous versions of this document will be saved in the same directory.
+\end_layout
+
+\begin_layout Standard
+Using the 
+\begin_inset Quotes sld
+\end_inset
+
+
+\family typewriter
+
+\begin_inset LatexCommand url
+name "trang"
+target "http://www.thaiopensource.com/relaxng/trang.html"
+
+\end_inset
+
+
+\family default
+
+\begin_inset Quotes srd
+\end_inset
+
+ program, the XML version of the GEDCOM 5.5 XML RELAX NG schema will also
+ be released using RELAX NG's 
+\begin_inset LatexCommand url
+name "compact syntax"
+target "http://relaxng.org/compact-20021121.html"
+
+\end_inset
+
+.
+ The file is called 
+\begin_inset Quotes sld
+\end_inset
+
+
+\family typewriter
+gedcom55XML.rnc
+\family default
+.
+\begin_inset Quotes srd
+\end_inset
+
+ The source code is licensed under the GNU General Public License Version
+ 2.
+ The most recent up to date of the schema in compact syntax will be located
+ at this url: 
+\begin_inset LatexCommand url
+name "http://www.neomantic.com/gedcom55xml/gedcom55XML.rnc"
+target "http://www.neomantic.com/gedcom55xml/gedcom55XML.rnc"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section*
 Using 
+\family typewriter
+gedcom55XML.rng
+\family default
 \emph on
-gedcom55XML.rng - 
+ - 
 \emph default
 Validating a GEDCOM 5.5 Document
 \end_layout
@@ -461,16 +685,16 @@ valid.
  us a way to computationally determine if a GEDCOM 5.5 document is structured
  correctly.
  The schema in 
-\emph on
+\family typewriter
 gedcom55xml.rng
-\emph default
+\family default
  was written to fill that gap.
  If a GEDCOM 5.5 document can be converted into a GEDCOM 5.5 XML document,
  we have a way to check if the data is structured and formatted correctly
  by using 
-\emph on
+\family typewriter
 gedcom55XML.rng
-\emph default
+\family default
 ; we have a way to test if the GEDCOM 5.5 tags are appropriately ordered
  and nested, and if the content of tags fits within the parameter described
  in the standard.
@@ -479,9 +703,9 @@ gedcom55XML.rng
 \begin_layout Standard
 The documentation below will demonstrate how to use the RELAX NG/Schematron
  GEDCOM 5.5 XML schema, 
-\emph on
+\family typewriter
 gedcom55XML.rng
-\emph default
+\family default
 , to determine the validity (in the XML sense) of a preexisting GEDCOM 5.5
  files.
  
@@ -489,10 +713,13 @@ gedcom55XML.rng
 
 \begin_layout Standard
 Validating a GEDCOM 5.5 XML document with 
-\emph on
+\family typewriter
 gedcom55XML.rng
+\emph on
+ 
+\family default
 \emph default
- is currently a complicated process.
+is currently a complicated process.
  It requires familiarity with Java, a bit of programming skills, and some
  comfort with a command line user interface.
  
@@ -543,9 +770,9 @@ Convert the GEDCOM 5.5 file to a GEDCOM 5.5 XML document.
 
 \begin_layout Enumerate
 Validate the GEDCOM 5.5 XML document using 
-\emph on
+\family typewriter
 gedcom55XML.rng
-\emph default
+\family default
 .
 \end_layout
 
@@ -573,7 +800,7 @@ target "http://homepage.ntlworld.com/michael.h.kay/gedml/"
 
 \end_inset
 
-and unzip it a location of your choose.
+ and unzip it a location of your choose.
  Remember the path to this location.
  You need to know this path which will be referred to in another step using
  the variable
@@ -584,13 +811,27 @@ and unzip it a location of your choose.
 \end_layout
 
 \begin_layout Enumerate
-Find the files called GedcomParser.java and GedcomToXml.xsl.
+Find the files called 
+\family typewriter
+GedcomParser.java
+\family default
+ and 
+\family typewriter
+GedcomToXml.xsl
+\family default
+.
 \end_layout
 
 \begin_layout Enumerate
 Compile the file GedcomParser.java using your favorite Java distribution's
- compiler - javac.
- This will produces a class file called GedcomParser.class
+ compiler - 
+\family typewriter
+javac
+\family default
+.
+ This will produces a class file called 
+\family typewriter
+GedcomParser.class
 \end_layout
 
 \begin_deeper
@@ -623,12 +864,16 @@ target "http://saxon.sourceforge.net/"
 \family default
  variable.
  (It may already be installed on your computer; on my GNU/Linux Debian system
- it was located at /usr/share/java/saxon.jar.) 
+ it was located at 
+\family typewriter
+/usr/share/java/saxon.jar
+\family default
+.) 
 \end_layout
 
 \begin_deeper
 \begin_layout Standard
-Issue the following command on your command line terminal:
+Issue the following command in your terminal:
 \begin_inset Note Framed
 status open
 
@@ -652,7 +897,7 @@ family.ged
 \family default
  file.
  The output will be piped to the standard output, but you can also redirect
- the output by appending 
+ the output to a file by appending 
 \begin_inset Quotes sld
 \end_inset
 
@@ -667,21 +912,36 @@ family.ged
  to the command above.
  The XML output will be a near perfect reproduction of a GEDCOM 5.5 into
  GEDCOM 5.5 XML.
- The only problem with the output is that it fails to add the <TRLR/> element
- before the </GED> element at the end of the document.
- This is because it is actually an irrelevant tag, and because the GedcomToXml.xs
-l stylesheet was written by Michael Kay, whose GedML proposal, eliminated
- it.
+ The only problem with the output is that it fails to add the 
+\family typewriter
+<TRLR/>
+\family default
+ element before the 
+\family typewriter
+</GED>
+\family default
+ element at the end of the document.
+ Kay's GedcomParser removes this tag, because it is redundant; the 
+\family typewriter
+</GED>
+\family default
+ element performs the same function as the TRLR; it indicates the end of
+ a document.
+ To remain 100% faithful to the GEDCOM 5.5 standard, the 
+\family typewriter
+<TRLR>
+\family default
+ element has been included in the GEDCOM 5.5 XML schema.
 \end_layout
 
 \begin_layout Subsection*
 
 \series bold
 Validate the GEDCOM 5.5 XML Document Using 
+\family typewriter
 \series default
-\emph on
 gedcom55XML.rng
-\emph default
+\emph on
  
 \end_layout
 
@@ -689,7 +949,11 @@ gedcom55XML.rng
 Validating the XML file with RELAX NG and Schematron is another complicated
  affair.
  The complication arises because, to fully validate your GEDCOM 5.5 XML file
- using gedcom55XML.rng, we must use a RELAX NG validator 
+ using 
+\family typewriter
+gedcom55XML.rng
+\family default
+, we must use a RELAX NG validator 
 \emph on
 and
 \emph default
@@ -712,10 +976,10 @@ Method 1 - Validating XML against RELAX NG and Schematron Simultaneously
 
 \begin_layout Standard
 One way of validating a GEDCOM 5.5 XML file with 
-\emph on
+\family typewriter
 gedcom55XML.rng
-\emph default
- is by using Topologi.com's schematron Java.
+\family default
+ is by using Topologi.com's schematron Java classes.
  The 
 \begin_inset LatexCommand url
 name "zip file"
@@ -732,7 +996,15 @@ target "http://www.topologi.com/public/Schematron.zip"
 \begin_layout Standard
 To test both the RELAX NG and Schematron descriptions of a GEDCOM 5.5 XML
  file in a unix command line environment type the following command in the
- Schematron directory:
+ directory called 
+\begin_inset Quotes sld
+\end_inset
+
+Schematron
+\begin_inset Quotes srd
+\end_inset
+
+ producing by unzip the downloaded file above:
 \end_layout
 
 \begin_layout Standard
@@ -778,7 +1050,11 @@ RELAX NG validation can be performed by an open source Java program called
 \begin_inset Quotes sld
 \end_inset
 
-jing,
+
+\family typewriter
+jing
+\family default
+,
 \begin_inset Quotes srd
 \end_inset
 
@@ -837,17 +1113,21 @@ Step one only tests the validity of the XML file described by RELAX NG.
 
 \begin_layout Standard
 Testing the GEDCOM 5.5 XML file with 
-\emph on
+\family typewriter
 gedcom55XML.rng's
-\emph default
+\family default
  Schematron patterns, normally requires three transformations.
  Since the Schematron patterns are embedded inside 
-\emph on
+\family typewriter
 gedcom55XML.rng
-\emph default
+\family default
 , they need to be extracted.
  These extracted Schematron patterns need to be additionally transformed
- using the RNG2Schtrn.xsl stylesheet available 
+ using the 
+\family typewriter
+RNG2Schtrn.xsl
+\family default
+ stylesheet available 
 \begin_inset LatexCommand url
 name "here"
 target "http://www.topologi.com/public/Schtrn_XSD/RNG2Schtrn.zip"
@@ -864,8 +1144,11 @@ target "http://www.ascc.net/xml/schematron/1.5/basic1-5/schematron-basic.xsl"
 \end_inset
 
 .
- This transformation would yield a file used to transform your family.xml
- file and finally validate it.
+ This transformation would yield a file used to validate the 
+\family typewriter
+family.xml
+\family default
+ document.
  (The entire process is described 
 \begin_inset LatexCommand url
 name "here"
@@ -873,29 +1156,38 @@ target "http://www.xml.com/pub/a/2004/02/11/relaxtron.html?page=5"
 
 \end_inset
 
-, if you are curious about the gory details)
+, if you are curious about the details)
 \end_layout
 
 \begin_layout Standard
 For convenience, included with 
-\emph on
+\family typewriter
 gedcom55XML.rng
-\emph default
+\family default
  are both the extracted Schematron patterns - 
-\emph on
+\family typewriter
 gedcom55XML.sch
-\emph default
+\family default
  - and the validation stylesheet - 
-\emph on
+\family typewriter
 validate-gedcom55XML-with-schematron.xsl
-\emph default
+\emph on
 .
- To finally validate all the remaining content of your family-gedml.xml file,
- you will have to apply 
-\emph on
-validate-gedcom55XML-with-schematron.xsl
+
+\family default
 \emph default
- using saxon.
+ To finally validate all the remaining content of your 
+\family typewriter
+family.xml
+\family default
+ document, you will have to apply 
+\family typewriter
+validate-gedcom55XML-with-schematron.xsl
+\emph on
+ 
+\family default
+\emph default
+using saxon.
  To do so, issue the following command in a terminal:
 \end_layout
 
@@ -940,10 +1232,16 @@ target "http://www.gnu.org/licenses/fdl.html"
 \end_inset
 
 .
- The full text of this license is found in the file called "fdl.txt" released
- with 
+ The full text of this license is found in the file called "
+\family typewriter
+fdl.txt
+\family default
+" released with 
+\family typewriter
+gedcom55XML.rng
+\family default
 \emph on
-gedcom55XML.rng.
+.
 
 \emph default
  
