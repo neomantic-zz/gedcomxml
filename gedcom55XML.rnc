@@ -1,0 +1,2546 @@
+namespace sch = "http://www.ascc.net/xml/schematron"
+
+# ******************************************************************************
+# ******************************************************************************
+#    Copyright (c) 2008 Chad Albers <chad@neomantic.com>
+# 
+#    This program is free software; you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation; either version 2 of the License, or
+#    (at your option) any later version.
+# 
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+# 
+#    You should have received a copy of the GNU General Public License
+#    along with this program; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# 
+# ******************************************************************************
+# ******************************************************************************
+start =
+  element GED {
+    (header
+     & # SUBM
+       submission_record*
+     & # Records
+       record+),
+    # TRLR indicates the end of a GEDCOM 5.5 file.  The closed root element of a 
+    # GEDCOM 5.5 XML file sufficiently indicates the end of a document, effectively
+    # rendering the TRLR tag/element redundant.  However, to remain a close to the
+    # GEDCOM 5.5 as possible, the TRLR tag is included.
+    element TRLR { empty }
+  }
+# Record Structures of the Lineage-Linked Form
+
+# HEADER
+header =
+  element HEAD {
+    [
+      # SOUR Schematron rule
+      
+      sch:pattern [
+        name = "Checking length of Header Record SOUR"
+        "\x{a}" ~
+        "            "
+        sch:rule [
+          context = "HEAD/SOUR/node()[1][self::text()]"
+          "\x{a}" ~
+          "              "
+          sch:assert [
+            test = "string-length( normalize-space(.) ) < 21"
+            "Exceeds maximum GED.HEAD.SOUR length of 20"
+          ]
+          "\x{a}" ~
+          "			  "
+          sch:assert [
+            test = "not( contains( normalize-space(.), ' '))"
+            "APPROVED_SYSTEM_ID cannot contain whitespaces.  Replace spaces with underscores."
+          ]
+          "\x{a}" ~
+          "            "
+        ]
+        "\x{a}" ~
+        "          "
+      ]
+    ]
+    element SOUR {
+      text
+      & # VERS
+        element VERS {
+          xsd:string { minLength = "1" maxLength = "15" }
+        }?
+      & # NAME
+        element NAME {
+          xsd:string { minLength = "1" maxLength = "90" }
+        }?
+      & # CORP
+        [
+          # CORP Schematron rule
+          
+          sch:pattern [
+            name = "Checking length of Header Record CORP"
+            "\x{a}" ~
+            "                  "
+            sch:rule [
+              context = "CORP/node()[1][self::text()]"
+              "\x{a}" ~
+              "                    "
+              sch:assert [
+                test = "string-length( normalize-space(.) ) < 91"
+                "Exceeds maximum HEAD.SOUR.CORP length of 90"
+              ]
+              "\x{a}" ~
+              "                  "
+            ]
+            "\x{a}" ~
+            "                "
+          ]
+        ]
+        element CORP {
+          text
+          & # ADDR
+            address_structure?
+          & phone_number?
+        }?
+      & # DATA
+        [
+          # DATA Schematron rule
+          
+          sch:pattern [
+            name = "Checking length of Header Record DATA"
+            "\x{a}" ~
+            "                  "
+            sch:rule [
+              context = "HEAD/SOUR/DATA/node()[1][self::text()]"
+              "\x{a}" ~
+              "                    "
+              sch:assert [
+                test = "string-length( normalize-space(.) ) < 91"
+                "Exceeds maximum HEAD.SOUR.DATA length of 90"
+              ]
+              "\x{a}" ~
+              "                  "
+            ]
+            "\x{a}" ~
+            "                "
+          ]
+        ]
+        element DATA {
+          text
+          & #  DATE as DATE_EXACT
+            
+            # I've implement an English Language Exact Date check which means
+            # it includes English words for the Month.  Gedcom specs also includes
+            # French and Hebrew (why not others?) but even these do not fit within
+            # the prescribe 10-11 date data length.  Additionally, this implementation
+            # does not check to determine if the date number is actually one possible
+            # for the indicated month.  Perhaps schematron can help here, but it
+            # would be really messy and time consuming.
+            element DATE {
+              xsd:string {
+                # Limitation: Since pattern is case sensitive and since the given Schematron standard does
+                # not support regex, this test only checks for the Uppercase English months.
+                pattern =
+                  "[1-3]?\d\s{1}(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1}\d{4}"
+                minLength = "10"
+                maxLength = "11"
+              }
+            }?
+          & # COPR
+            element COPR {
+              xsd:string { minLength = "1" maxLength = "90" }
+            }?
+        }?
+    }
+    & # DEST
+      element DEST {
+        xsd:string { minLength = "1" maxLength = "20" }
+      }?
+    & # DATE (TRANSMISSION_DATE) as DATE_EXACT
+      [
+        # Schematron rule
+        
+        # Limitation:  I can't make schematron check the date format, xlst 1.0 does not
+        # support regex patterns, while xlst 2.0 does
+        
+        sch:pattern [
+          name = "Checking length of Header Record DATE"
+          "\x{a}" ~
+          "              "
+          sch:rule [
+            context = "GED/HEAD/DATE/node()[1][self::text()]"
+            "\x{a}" ~
+            "                "
+            sch:assert [
+              test = "string-length(normalize-space(.)) < 12"
+              "Exceeds maximum of HEAD.DATE length of 11"
+            ]
+            "\x{a}" ~
+            "                "
+            sch:assert [
+              test = "string-length(normalize-space(.)) > 9"
+              "Fails to meet minimum HEAD.DATE length of 10"
+            ]
+            "\x{a}" ~
+            "              "
+          ]
+          "\x{a}" ~
+          "            "
+        ]
+      ]
+      element DATE {
+        mixed {
+          element TIME {
+            xsd:token {
+              pattern = "([1-2]?\d)?:?([0-5]\d)?:?([0-5]\d)?\.?(\d\d)?"
+              minLength = "1"
+              maxLength = "12"
+            }
+          }?
+        }
+      }?
+    & element SUBM {
+        attribute REF {
+          xsd:string { minLength = "1" maxLength = "22" }
+        },
+        empty
+      }
+    & # SUBN
+      element SUBN {
+        attribute REF {
+          xsd:string { minLength = "1" maxLength = "22" }
+        },
+        empty
+      }?
+    & # FILE
+      element FILE {
+        xsd:string { minLength = "1" maxLength = "90" }
+      }?
+    & # COPR
+      element COPR {
+        xsd:string { minLength = "1" maxLength = "90" }
+      }?
+    & element GEDC {
+        element VERS {
+          xsd:string { minLength = "1" maxLength = "15" }
+        },
+        # TODO - Add default value of LINEAGE-LINKED
+        element FORM {
+          xsd:string { minLength = "14" maxLength = "20" }
+        }
+      }
+    & [
+        # CHAR Schematron rule
+        
+        sch:pattern [
+          name = "Checking value of length of Header Record CHAR"
+          "\x{a}" ~
+          "            "
+          sch:rule [
+            context = "CHAR/node()[1][self::text()]"
+            "\x{a}" ~
+            "              "
+            sch:assert [
+              test =
+                "contains( translate( normalize-space(.), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'ANSEL') or                 contains( translate( normalize-space(.), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'UNICODE') or                contains( translate( normalize-space(.), 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'ASCII')"
+              "\x{a}" ~
+              "               CHAR of Gedcom file fails to be ANSEL, UNICODE, or ASCII"
+            ]
+            "\x{a}" ~
+            "            "
+          ]
+          "\x{a}" ~
+          "          "
+        ]
+      ]
+      element CHAR {
+        mixed {
+          element VERS {
+            xsd:string { minLength = "1" maxLength = "15" }
+          }?
+        }
+      }
+    & # LANG
+      element LANG {
+        text
+        # SOUR.LANG Schematron rule
+        
+        >> sch:pattern [
+             name = "Checking value and length of Header Record LANG"
+             "\x{a}" ~
+             "            "
+             sch:rule [
+               context = "HEAD/LANG/node()[1][self::text()]"
+               "\x{a}" ~
+               "              "
+               sch:assert [
+                 test =
+                   "contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'afrikaans') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'albanian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'anglo-saxon') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'catalan') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'catalan_spn') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'czech') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'danish') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'dutch') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'english') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'esperato') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'estonian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'faroese') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'finnish') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'french') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'german') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'hawaiian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'hungarian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'icelandic') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'indonesian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'italian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'latvian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'lithuanian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'navaho') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'norwegian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'polish') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'portuguese') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'romanian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'serbo_croa') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'slovene') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'spanish') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'swedish') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'turkish') or                contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'wendic')"
+                 "\x{a}" ~
+                 "              The only allowable values for HEAD.SOUR.LANG are Afrikaans, Albanian, Anglo-Saxon, Catalan, Catalan_Spn, Czech, Danish, Dutch, English, Esperanto, Estonian, Faroese, Finnish, French, German, Hawaiian, Hungarian, Icelandic, Indonesian, Italian, Latvian, Lithuanian, Navaho, Norwegian, Polish, Portuguese, Romanian, Serbo_Croa, Slovak, Slovene, Spanish, Swedish, Turkish, Wendic\x{a}" ~
+                 "              "
+               ]
+               "\x{a}" ~
+               "              "
+               sch:assert [
+                 test = "string-length(normalize-space(.)) < 16"
+                 "Exceeds maximum of HEAD.SOUR.LANG length of 16"
+               ]
+               "\x{a}" ~
+               "            "
+             ]
+             "\x{a}" ~
+             "          "
+           ]
+      }?
+    & # PLAC
+      element PLAC {
+        element FORM {
+          xsd:string { minLength = "1" maxLength = "120" }
+        }?
+      }?
+    & # NOTE
+      [
+        # NOTE Schematron rule
+        
+        sch:pattern [
+          name = "Checking length of Header Record NOTE"
+          "\x{a}" ~
+          "              "
+          sch:rule [
+            context = "GED/HEAD/NOTE/node()[1][self::text()]"
+            "\x{a}" ~
+            "                "
+            sch:assert [
+              test = "string-length( normalize-space(.) ) < 248"
+              "Exceeds maximum HEAD.NOTE length of 248"
+            ]
+            "\x{a}" ~
+            "              "
+          ]
+          "\x{a}" ~
+          "            "
+        ]
+      ]
+      element NOTE {
+        text
+        & element CONC {
+            xsd:string { minLength = "1" maxLength = "248" }
+          }*
+        & element CONT {
+            xsd:string { minLength = "1" maxLength = "248" }
+          }*
+      }?
+  }
+# RECORD
+record =
+  individual_record
+  | family_record
+  | multimedia_record
+  | note_record
+  | repository_record
+  | source_record
+  | submitter_record
+# FAM_RECORD
+family_record =
+  element FAM {
+    attribute ID { text },
+    (# Family Events
+     family_event*
+     & # HUSB XREFN:INDI
+       element WIFE {
+         attribute REF {
+           xsd:string { minLength = "1" maxLength = "22" }
+         },
+         empty
+       }?
+     & # WIFE XREFN:INDI
+       element HUSB {
+         attribute REF {
+           xsd:string { minLength = "1" maxLength = "22" }
+         },
+         empty
+       }?
+     & # CHIL XREFN:INDI
+       element CHIL {
+         attribute REF {
+           xsd:string { minLength = "1" maxLength = "22" }
+         },
+         empty
+       }*
+     & # COUNT_OF_CHILDREN
+       element NCHI {
+         xsd:string { minLength = "1" maxLength = "3" }
+       }?
+     & # SUMB XREFN:INDI
+       element SUBM {
+         attribute REF {
+           xsd:string { minLength = "1" maxLength = "22" }
+         },
+         empty
+       }*
+     & # SLGS
+       element SLGS {
+         # STAT
+         element STAT {
+           text
+           # FAM.SLGS.STAT Schematron rule
+           
+           >> sch:pattern [
+                name = "Checking value and length of FAM.SLGS.STAT"
+                "\x{a}" ~
+                "                    "
+                sch:rule [
+                  context = "FAM/SLGS/STAT/node()[1][self::text()]"
+                  "\x{a}" ~
+                  "                      "
+                  sch:assert [
+                    test =
+                      "                       contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'CANCELED') or              contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'CLEARED') or              contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'COMPLETED') or              contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'DNS') or              contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'DNS/CAN') or              contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'PRE-1970') or              contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'QUALIFIED') or              contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'SUBMITTED') or              contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'UNCLEARED')"
+                    "\x{a}" ~
+                    "        			  The only allowable values for FAM.SLGS.STAT are CANCELED, CLEARED, COMPLETED, DNS, DNS/CAN, PRE-1970, QUALIFIED, SUBMITTED, UNCLEARED\x{a}" ~
+                    "                      "
+                  ]
+                  "\x{a}" ~
+                  "                      "
+                  sch:assert [
+                    test = "string-length(normalize-space(.)) < 11"
+                    "Exceeds maximum of FAM.SLGS.STAT length of 10"
+                  ]
+                  "\x{a}" ~
+                  "                      "
+                  sch:assert [
+                    test = "string-length(normalize-space(.)) > 2"
+                    "Fails to meet the minimum  length of 3"
+                  ]
+                  "\x{a}" ~
+                  "                    "
+                ]
+                "\x{a}" ~
+                "                  "
+              ]
+         }?
+         & # DATE (DATE_LDS_ORD) as DATE_VALUE
+           element DATE {
+             # TODO? Implement DATE_VALUE
+             xsd:string { minLength = "4" maxLength = "35" }
+           }?
+         & # TEMP
+           element TEMP {
+             xsd:string { minLength = "4" maxLength = "5" }
+           }?
+         & # PLAC
+           element PLAC {
+             # Limitation: This should test if the PLAC connect separated by commas
+             xsd:string { minLength = "1" maxLength = "120" }
+           }?
+         & # SOUR
+           source_citation_obje*
+         & # NOTE
+           note_structure*
+       }*
+     & # SOUR
+       source_citation*
+     & # OBJE
+       multimedia_link*
+     & # NOTE
+       note_structure*
+     & # REFN
+       user_reference_number*
+     & # RIN
+       element RIN {
+         xsd:string { minLength = "1" maxLength = "12" }
+       }?
+     & # CHAN
+       change_date?)
+  }
+# INDIVIDUAL_RECORD
+individual_record =
+  element INDI {
+    attribute ID {
+      xsd:string { minLength = "1" maxLength = "22" }
+    },
+    (# RESN
+     element RESN {
+       xsd:string {
+         pattern = "locked|privacy"
+         minLength = "6"
+         maxLength = "7"
+       }
+     }?
+     & # PERSONAL_NAME_STRUCTURE
+       [
+         # NAME Schematron rule
+         
+         # Limitation:  I have not figure out a schematron way to check if the name is formatted correctly, i.e.,
+         # names separated by /
+         
+         sch:pattern [
+           name = "Checking length of Individual Record NAME"
+           "\x{a}" ~
+           "              "
+           sch:rule [
+             context = "INDI/NAME/node()[1][self::text()]"
+             "\x{a}" ~
+             "                "
+             sch:assert [
+               test = "string-length( normalize-space(.) ) < 121"
+               "Exceeds maximum INDI.NAME length of 120"
+             ]
+             "\x{a}" ~
+             "              "
+           ]
+           "\x{a}" ~
+           "            "
+         ]
+       ]
+       element NAME {
+         text
+         & # NPFX
+           element NPFX {
+             xsd:string { minLength = "1" maxLength = "30" }
+           }?
+         & # GIVN
+           element GIVN {
+             xsd:string { minLength = "1" maxLength = "120" }
+           }?
+         & # NICK
+           element NICK {
+             xsd:string { minLength = "1" maxLength = "30" }
+           }?
+         & # SPFX
+           element SPFX {
+             xsd:string { minLength = "1" maxLength = "30" }
+           }?
+         & # SURN
+           element SURN {
+             xsd:string { minLength = "1" maxLength = "120" }
+           }?
+         & # NSFX
+           element NSFX {
+             xsd:string { minLength = "1" maxLength = "30" }
+           }?
+         & # SOUR
+           source_citation_obje*
+         & # NOTE
+           note_structure*
+       }*
+     & # SEX
+       element SEX {
+         text
+         # INDI.SEX Schematron rule
+         
+         >> sch:pattern [
+              name = "Checking value and length of INDI.SEX"
+              "\x{a}" ~
+              "                "
+              sch:rule [
+                context = "INDI/SEX/node()[1][self::text()]"
+                "\x{a}" ~
+                "                  "
+                sch:assert [
+                  test =
+                    "contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'm') or                   contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'f') or                   contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'male') or                   contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'female')"
+                  "\x{a}" ~
+                  "                  The only allowable values for INDI.SEX are M, F, Male, Female\x{a}" ~
+                  "                  "
+                ]
+                "\x{a}" ~
+                "                  "
+                sch:assert [
+                  test = "string-length(normalize-space(.)) < 8"
+                  "Exceeds maximum of INDI.SEX length of 7"
+                ]
+                "\x{a}" ~
+                "                "
+              ]
+              "\x{a}" ~
+              "              "
+            ]
+       }?
+     & # Events
+       individual_event*
+     & # Attributes
+       individual_attribute*
+     & # LDS Individual Ordinances
+       lds_individual_ordinance*
+     & # FAMC
+       element FAMC {
+         attribute REF {
+           xsd:string { minLength = "1" maxLength = "22" }
+         },
+         (# PEDI
+          element PEDI {
+            text
+            # INDI.FAMC.PEDI Schematron rule
+            
+            >> sch:pattern [
+                 name = "Checking value and length of INDI.FAMC.PEDI"
+                 "\x{a}" ~
+                 "                    "
+                 sch:rule [
+                   context = "INDI/FAMC/PEDI/node()[self::text()]"
+                   "\x{a}" ~
+                   "                      "
+                   sch:assert [
+                     test =
+                       "contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'adopted') or                       contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'birth') or                       contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'foster') or                       contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'sealing')"
+                     "\x{a}" ~
+                     "                      The only allowable values for INDI.FAMC.PEDI are adopted, birth, foster, sealing\x{a}" ~
+                     "                      "
+                   ]
+                   "\x{a}" ~
+                   "                      "
+                   sch:assert [
+                     test = "string-length(normalize-space(.)) < 8"
+                     "Exceeds maximum of INDI.FAMC.PEDI length of 16"
+                   ]
+                   "\x{a}" ~
+                   "                      "
+                   sch:assert [
+                     test = "string-length(normalize-space(.)) > 4"
+                     "Fails to meet minimum INDI.FAMC.PEDI length of 5"
+                   ]
+                   "\x{a}" ~
+                   "                    "
+                 ]
+                 "\x{a}" ~
+                 "                  "
+               ]
+          }?
+          & # NOTE
+            note_structure*)
+       }*
+     & # FAMS
+       element FAMS {
+         attribute REF {
+           xsd:string { minLength = "1" maxLength = "22" }
+         },
+         note_structure*
+       }*
+     & # SUBM
+       element SUBM {
+         attribute REF {
+           xsd:string { minLength = "1" maxLength = "22" }
+         },
+         empty
+       }*
+     & # ASSOCIATION_STRUCTURE
+       element ASSO {
+         attribute REF {
+           xsd:string { minLength = "1" maxLength = "22" }
+         },
+         # RELA
+         (element RELA {
+            xsd:string { minLength = "1" maxLength = "25" }
+          }
+          & # NOTE
+            note_structure*
+          & # SOUR
+            source_citation*)
+       }*
+     & # ALIA
+       element ALIA {
+         attribute REF {
+           xsd:string { minLength = "1" maxLength = "22" }
+         },
+         empty
+       }*
+     & # ANCI
+       element ANCI {
+         attribute REF {
+           xsd:string { minLength = "1" maxLength = "22" }
+         },
+         empty
+       }*
+     & # DESI
+       element DESI {
+         attribute REF {
+           xsd:string { minLength = "1" maxLength = "22" }
+         },
+         empty
+       }*
+     & # SOUR
+       source_citation*
+     & # OBJE
+       multimedia_link*
+     & # NOTE
+       note_structure*
+     & # RFN
+       element RFN {
+         xsd:string { minLength = "1" maxLength = "90" }
+       }*
+     & # AFN
+       element AFN {
+         xsd:string { minLength = "1" maxLength = "12" }
+       }*
+     & # REFN
+       user_reference_number*
+     & # RIN
+       element RIN {
+         xsd:string { minLength = "1" maxLength = "12" }
+       }?
+     & # CHAN
+       change_date?)
+  }
+# MULTIMEDIA_RECORD
+multimedia_record =
+  element OBJE {
+    attribute ID {
+      xsd:string { minLength = "1" maxLength = "22" }
+    },
+    (# FORM
+     element FORM {
+       text
+       # OBJE.FORM Schematron rule
+       
+       >> sch:pattern [
+            name = "Checking value length of OBJE.FORM"
+            "\x{a}" ~
+            "            "
+            sch:rule [
+              context = "OBJE/FORM/node()[1][self::text()]"
+              "\x{a}" ~
+              "              "
+              sch:assert [
+                test =
+                  "contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'bmp') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'gif') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'jpeg') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'ole') or      contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'pcx') or      contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'tiff') or      contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'wav')"
+                "\x{a}" ~
+                "              The only allowable values for OBJE.FORM are bmp, gif, jpeg, ole, pcx, tiff, wav\x{a}" ~
+                "              "
+              ]
+              "\x{a}" ~
+              "              "
+              sch:assert [
+                test = "string-length(normalize-space(.)) < 5"
+                "Exceeds maximum of OBJE.FORM length of 4"
+              ]
+              "\x{a}" ~
+              "              "
+              sch:assert [
+                test = "string-length(normalize-space(.)) > 2"
+                "Fails to meet minimum OBJE.FORM length of 3"
+              ]
+              "\x{a}" ~
+              "            "
+            ]
+            "\x{a}" ~
+            "          "
+          ]
+     }
+     & # TITL
+       element TITL {
+         xsd:string { minLength = "1" maxLength = "248" }
+       }?
+     & # NOTE
+       note_structure*
+     & # SOUR
+       source_citation*
+     & # BLOB
+       element BLOB {
+         # CONT
+         element CONT {
+           xsd:string { minLength = "0" maxLength = "87" }
+         }+
+       }
+     & # OBJE
+       element OBJE {
+         attribute REF {
+           xsd:string { minLength = "1" maxLength = "22" }
+         },
+         empty
+       }
+     & # REFN
+       user_reference_number*
+     & # RIN
+       element RIN {
+         xsd:string { minLength = "1" maxLength = "12" }
+       }?
+     & # CHAN
+       change_date?)
+  }
+# NOTE_RECORD
+note_record =
+  element NOTE {
+    attribute ID {
+      xsd:string { minLength = "1" maxLength = "22" }
+    }
+    # NOTE Schematron rule
+    
+    >> sch:pattern [
+         name = "Checking length of Note Record NOTE"
+         "\x{a}" ~
+         "        "
+         sch:rule [
+           context = "NOTE/node()[1][self::text()]"
+           "\x{a}" ~
+           "          "
+           sch:assert [
+             test = "string-length( normalize-space(.) ) < 249"
+             "Exceeds maximum NOTE length of 248"
+           ]
+           "\x{a}" ~
+           "        "
+         ]
+         "\x{a}" ~
+         "      "
+       ],
+    (text
+     & # CONC
+       element CONC {
+         xsd:string { minLength = "1" maxLength = "248" }
+       }*
+     & # CONT
+       element CONT {
+         xsd:string { minLength = "0" maxLength = "248" }
+       }*
+     & # SOUR
+       source_citation*
+     & # REFN
+       user_reference_number*
+     & # RIN
+       element RIN {
+         xsd:string { minLength = "1" maxLength = "12" }
+       }?
+     & # CHAN
+       change_date?)
+  }
+# REPOSITORY_RECORD
+repository_record =
+  element REPO {
+    attribute ID {
+      xsd:string { minLength = "1" maxLength = "22" }
+    },
+    (# NAME
+     element NAME {
+       xsd:string { minLength = "1" maxLength = "90" }
+     }?
+     & # ADDR
+       address_structure?
+     & phone_number?
+     & # NOTE
+       note_structure*
+     & # REFN
+       user_reference_number*
+     & # RIN
+       element RIN {
+         xsd:string { minLength = "1" maxLength = "12" }
+       }?
+     & # CHAN
+       change_date?)
+  }
+# SOURCE_RECORD
+source_record =
+  element SOUR {
+    attribute ID {
+      xsd:string { minLength = "1" maxLength = "22" }
+    },
+    (# DATA
+     element DATA {
+       # EVEN
+       [
+         #  Limitation: The Possible values of Source Citation EVEN are
+         # ADOP, BIRT, BAPM, BARM, BASM, BLES, BURI, CENS, CHR, CHRA, 
+         # CONF, CREM, DEAT, EMIG, FCOM, GRAD, IMMI, NATU, ORDN, RETI, 
+         # PROB, WILL, EVEN, ANUL, CENS, DIV, DIVF, ENGA, MARR, MARB, 
+         # MARC, MARL, MARS, EVEN  CAST, EDUC, NATI, OCCU, PROP, RELI, RESI, TITL.
+         # Each value would be delimited by a comma.  Currently, Schematron cannot
+         # handle this with out proper regex support.  At this time, then,
+         # this implementation only checks the length of the string.
+         
+         sch:pattern [
+           name = "Checking length of Source Citation EVEN"
+           "\x{a}" ~
+           "                      "
+           sch:rule [
+             context = "SOUR/DATA/EVEN/node()[1][self::text()]"
+             "\x{a}" ~
+             "                          "
+             sch:assert [
+               test = "string-length( normalize-space(.) ) < 91"
+               "Exceeds maximum SOUR.DATA.EVEN length of 90"
+             ]
+             "\x{a}" ~
+             "                      "
+           ]
+           "\x{a}" ~
+           "                    "
+         ]
+       ]
+       element EVEN {
+         text
+         & # DATE as DATE_PERIOD
+           
+           # The regex pattern below is almost perfect. However, it fails to handle the DATE_CALENDAR_ESCAPE
+           # It also fails to handle to throw an exception on FROM 11 1976
+           element DATE {
+             xsd:string {
+               pattern =
+                 "(FROM\s{1}([1-3]?\d\s{1})?((JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1})?\d{4})|(TO\s{1}([1-3]?\d\s{1})?((JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1})?\d{4})|(FROM\s{1}([1-3]?\d\s{1})?((JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1})?\d{4}\s{1}TO\s{1}([1-3]?\d\s{1})?((JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)\s{1})?\d{4})"
+               minLength = "7"
+               maxLength = "35"
+             }
+           }?
+         & # PLAC
+           element PLAC {
+             xsd:string { minLength = "1" maxLength = "120" }
+           }?
+       }*
+       & # AGNC
+         element AGNC {
+           xsd:string { minLength = "1" maxLength = "120" }
+         }?
+       & # NOTE
+         note_structure*
+     }?
+     & # AUTH
+       [
+         # AUTH Schematron rule
+         
+         sch:pattern [
+           name = "Checking length of Header Record AUTH"
+           "\x{a}" ~
+           "              "
+           sch:rule [
+             context = "AUTH/node()[1][self::text()]"
+             "\x{a}" ~
+             "                "
+             sch:assert [
+               test = "string-length( normalize-space(.) ) < 249"
+               "Exceeds maximum SOUR.AUTH length of 248"
+             ]
+             "\x{a}" ~
+             "              "
+           ]
+           "\x{a}" ~
+           "            "
+         ]
+       ]
+       element AUTH {
+         text
+         & # CONC
+           element CONC {
+             xsd:string { minLength = "1" maxLength = "248" }
+           }*
+         & # CONT
+           element CONT {
+             xsd:string { minLength = "0" maxLength = "248" }
+           }*
+       }?
+     & # TITL
+       [
+         # TITL Schematron rule
+         
+         sch:pattern [
+           name = "Checking length of Source Record TITL"
+           "\x{a}" ~
+           "              "
+           sch:rule [
+             context = "SOUR/TITL/node()[1][self::text()]"
+             "\x{a}" ~
+             "                "
+             sch:assert [
+               test = "string-length( normalize-space(.) ) < 249"
+               "Exceeds maximum SOUR.TITL length of 248"
+             ]
+             "\x{a}" ~
+             "              "
+           ]
+           "\x{a}" ~
+           "            "
+         ]
+       ]
+       element TITL {
+         text
+         & # CONC
+           element CONC {
+             xsd:string { minLength = "1" maxLength = "248" }
+           }*
+         & # CONT
+           element CONT {
+             xsd:string { minLength = "0" maxLength = "248" }
+           }*
+       }?
+     & # ABBR
+       element ABBR {
+         xsd:string { minLength = "1" maxLength = "60" }
+       }?
+     & # PUBL
+       [
+         # PUBL Schematron rule
+         
+         sch:pattern [
+           name = "Checking length of Source Record PUBL"
+           "\x{a}" ~
+           "              "
+           sch:rule [
+             context = "PUBL/node()[1][self::text()]"
+             "\x{a}" ~
+             "                "
+             sch:assert [
+               test = "string-length( normalize-space(.) ) < 249"
+               "Exceeds maximum SOUR.PUBL length of 248"
+             ]
+             "\x{a}" ~
+             "              "
+           ]
+           "\x{a}" ~
+           "            "
+         ]
+       ]
+       element PUBL {
+         text
+         & # CONC
+           element CONC {
+             xsd:string { minLength = "1" maxLength = "248" }
+           }*
+         & # CONT
+           element CONT {
+             xsd:string { minLength = "0" maxLength = "248" }
+           }*
+       }?
+     & # TEXT
+       [
+         # TEXT Schematron rule
+         
+         sch:pattern [
+           name = "Checking length of Source Record TEXT"
+           "\x{a}" ~
+           "              "
+           sch:rule [
+             context = "SOUR/TEXT/node()[1][self::text()]"
+             "\x{a}" ~
+             "                "
+             sch:assert [
+               test = "string-length( normalize-space(.) ) < 249"
+               "Exceeds maximum SOUR.TEXT length of 248"
+             ]
+             "\x{a}" ~
+             "              "
+           ]
+           "\x{a}" ~
+           "            "
+         ]
+       ]
+       element TEXT {
+         text
+         & # CONC
+           element CONC {
+             xsd:string { minLength = "1" maxLength = "248" }
+           }*
+         & # CONT
+           element CONT {
+             xsd:string { minLength = "0" maxLength = "248" }
+           }*
+       }?
+     & # REPO
+       element REPO {
+         attribute REF {
+           xsd:string { minLength = "1" maxLength = "22" }
+         },
+         (# NOTE
+          note_structure*
+          & # CALN
+            [
+              # Schematron rule
+              
+              sch:pattern [
+                name =
+                  "Checking length of Source Repository Citation CALN"
+                "\x{a}" ~
+                "                    "
+                sch:rule [
+                  context = "CALN/node()[1][self::text()]"
+                  "\x{a}" ~
+                  "                      "
+                  sch:assert [
+                    test = "string-length( normalize-space(.) ) < 121"
+                    "Exceeds maximum REPO.CALN of 120"
+                  ]
+                  "\x{a}" ~
+                  "                    "
+                ]
+                "\x{a}" ~
+                "                  "
+              ]
+            ]
+            element CALN {
+              mixed {
+                element MEDI {
+                  text
+                  # SOUR.REPO.CALN.MEDI Schematron rule
+                  
+                  >> sch:pattern [
+                       name =
+                         "Checking value and length of SOUR.REPO.CALN.MEDI"
+                       "\x{a}" ~
+                       "                            "
+                       sch:rule [
+                         context =
+                           "SOUR/REPO/CALN/MEDI/node()[1][self::text()]"
+                         "\x{a}" ~
+                         "                              "
+                         sch:assert [
+                           test =
+                             "contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'audio') or                                                         contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'book') or                               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'card') or                               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'electronic') or                      contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'fiche') or                      contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'film') or                      contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'magazine') or                      contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'manuscript') or                      contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'map') or                      contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'newspaper') or                      contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'photo') or                      contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'tombstone') or                      contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'video')"
+                           "\x{a}" ~
+                           "                              The only allowable values for SOUR.REPO.CALN.MEDI are audio, book, card, electronic, fiche, film, magazine, manuscript, map, newspaper, photo, tombstone, video\x{a}" ~
+                           "                              "
+                         ]
+                         "\x{a}" ~
+                         "                              "
+                         sch:assert [
+                           test =
+                             "string-length(normalize-space(.)) < 16"
+                           "Exceeds maximum of SOUR.REPO.CALN.MEDI length of 15"
+                         ]
+                         "\x{a}" ~
+                         "                            "
+                       ]
+                       "\x{a}" ~
+                       "                          "
+                     ]
+                }?
+              }
+            }*)
+       }?
+     & # SOUR
+       source_citation*
+     & # OBJE
+       multimedia_link*
+     & # NOTE
+       note_structure*
+     & # REFN
+       user_reference_number*
+     & # RIN
+       element RIN {
+         xsd:string { minLength = "1" maxLength = "12" }
+       }?
+     & # CHAN
+       change_date?)
+  }
+# SUBMITTER_RECORD
+submitter_record =
+  element SUBM {
+    attribute ID {
+      xsd:string { minLength = "1" maxLength = "22" }
+    },
+    (element NAME {
+       xsd:string { minLength = "1" maxLength = "60" }
+     }
+     & # ADDR
+       address_structure?
+     & phone_number?
+     & # OBJE
+       multimedia_link*
+     & # LANG
+       language_preference?
+     & # RFN
+       element RFN {
+         xsd:string { minLength = "1" maxLength = "30" }
+       }?
+     & # RIN
+       element RIN {
+         xsd:string { minLength = "1" maxLength = "12" }
+       }?
+     & # CHAN
+       change_date?)
+  }
+# SUBMISSION_RECORD
+submission_record =
+  element SUBN {
+    attribute ID {
+      xsd:string { minLength = "1" maxLength = "22" }
+    },
+    (# SUBM
+     element SUBM {
+       attribute REF {
+         xsd:string { minLength = "1" maxLength = "22" }
+       },
+       empty
+     }?
+     & # FAMF
+       element FAMF {
+         xsd:string { minLength = "1" maxLength = "120" }
+       }?
+     & # TEMP
+       element TEMP {
+         xsd:string { minLength = "4" maxLength = "5" }
+       }?
+     & # ANCE
+       element ANCE {
+         xsd:string { minLength = "1" maxLength = "4" }
+       }?
+     & # DESC
+       element DESC {
+         xsd:string { minLength = "1" maxLength = "4" }
+       }?
+     & # ORDI
+       element ORDI {
+         text
+         # SOUR.REPO.CALN.MEDI Schematron rule
+         
+         >> sch:pattern [
+              name = "Checking value and length of SUBN.ORDI"
+              "\x{a}" ~
+              "                "
+              sch:rule [
+                context = "SUBN/ORDI/node()[1][self::text()]"
+                "\x{a}" ~
+                "                  "
+                sch:assert [
+                  test =
+                    "contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'yes') or                                             contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'no')"
+                  "\x{a}" ~
+                  "                  The only allowable values for SUBN.ORDI are yes or no\x{a}" ~
+                  "                  "
+                ]
+                "\x{a}" ~
+                "                  "
+                sch:assert [
+                  test = "string-length(normalize-space(.)) < 4"
+                  "Exceeds maximum of SUBN.ORDI length of 3"
+                ]
+                "\x{a}" ~
+                "                  "
+                sch:assert [
+                  test = "string-length(normalize-space(.)) > 1"
+                  "Fails to meet the minumum SUBN.ORDI length of 2"
+                ]
+                "\x{a}" ~
+                "                "
+              ]
+              "\x{a}" ~
+              "              "
+            ]
+       }?
+     & # RIN
+       element RIN {
+         xsd:string { minLength = "1" maxLength = "12" }
+       }?)
+  }
+# Substructures of the Lineage-Linked Form
+
+# ADDRESS_STRUCTURE
+address_structure =
+  [
+    # ADDR Schematron rule
+    
+    sch:pattern [
+      name = "Checking length of Address Structure ADDR"
+      "\x{a}" ~
+      "        "
+      sch:rule [
+        context = "ADDR/node()[1][self::text()]"
+        "\x{a}" ~
+        "          "
+        sch:assert [
+          test = "string-length( normalize-space(.) ) < 61"
+          "Exceeds maximum ADDR length of 60"
+        ]
+        "\x{a}" ~
+        "        "
+      ]
+      "\x{a}" ~
+      "      "
+    ]
+  ]
+  element ADDR {
+    text
+    & element CONT {
+        xsd:string { minLength = "1" maxLength = "60" }
+      }*
+    & element ADR1 {
+        xsd:string { minLength = "1" maxLength = "60" }
+      }?
+    & element ADR2 {
+        xsd:string { minLength = "1" maxLength = "60" }
+      }?
+    & element CITY {
+        xsd:string { minLength = "1" maxLength = "60" }
+      }?
+    & element STAE {
+        xsd:string { minLength = "1" maxLength = "60" }
+      }?
+    & element POST {
+        xsd:string { minLength = "1" maxLength = "10" }
+      }?
+    & element CTRY {
+        xsd:string { minLength = "1" maxLength = "60" }
+      }?
+  }
+  # end ADDR
+  
+  # separate the PHON tags from the ADDR structure, because it's at the same
+  # level as the ADDR (i.e., not as its child)  and can hence occur anywhere at the same
+  # level
+  
+# CHANGE_DATE
+change_date =
+  element CHAN {
+    [
+      # DATE Schematron rule
+      # Limitation: this cannot check DATE_EXACT because xslt 1.0 does not support regex
+      
+      sch:pattern [
+        name = "Checking length of Change Date"
+        "\x{a}" ~
+        "            "
+        sch:rule [
+          context = "CHAN/DATE/node()[1][self::text()]"
+          "\x{a}" ~
+          "              "
+          sch:assert [
+            test = "string-length( normalize-space(.) ) < 12"
+            "Exceeds maximum CHAN.DATE length of 11"
+          ]
+          "\x{a}" ~
+          "              "
+          sch:assert [
+            test = "string-length( normalize-space(.) ) > 9"
+            "Fails to meet the minimum CHAN.DATE length of 10"
+          ]
+          "\x{a}" ~
+          "            "
+        ]
+        "\x{a}" ~
+        "          "
+      ]
+    ]
+    element DATE {
+      mixed {
+        element TIME {
+          xsd:token {
+            pattern = "([1-2]?\d)?:?([0-5]\d)?:?([0-5]\d)?\.?(\d\d)?"
+            minLength = "1"
+            maxLength = "12"
+          }
+        }?
+      }
+    }
+    & # NOTE
+      note_structure*
+  }
+# EVENT_DETAIL
+event_detail =
+  # TYPE
+  element TYPE {
+    xsd:string { minLength = "1" maxLength = "90" }
+  }?
+  & #  DATE as DATE_VALUE
+    element DATE {
+      xsd:string { minLength = "1" maxLength = "35" }
+    }?
+  & # PLAC
+    [
+      # PLAC Schematron rule
+      
+      sch:pattern [
+        name = "Checking length of Event Detail Structure PLAC"
+        "\x{a}" ~
+        "            "
+        sch:rule [
+          context = "PLAC/node()[1][self::text()]"
+          "\x{a}" ~
+          "              "
+          sch:assert [
+            test = "string-length( normalize-space(.) ) < 121"
+            "PLAC range exceeds maximum of 121"
+          ]
+          "\x{a}" ~
+          "            "
+        ]
+        "\x{a}" ~
+        "          "
+      ]
+    ]
+    element PLAC {
+      text
+      & # FORM
+        element FORM {
+          xsd:string { minLength = "1" maxLength = "120" }
+        }?
+      & # SOUR
+        source_citation_obje*
+      & # NOTE
+        note_structure*
+    }?
+  & # ADDR
+    address_structure?
+  & phone_number?
+  & # AGE
+    age?
+  & # AGNC
+    element AGNC {
+      xsd:string { minLength = "1" maxLength = "120" }
+    }?
+  & # CAUS
+    element CAUS {
+      xsd:string { minLength = "1" maxLength = "90" }
+    }?
+  & # SOUR
+    source_citation*
+  & # OBJE
+    multimedia_link*
+  & # NOTE
+    note_structure*
+# FAMILY_EVENT_STRUCTURE
+family_event =
+  element ANUL {
+    # Used interleave instead of mixed for family events because of the HUSB
+    # and WIFE elements; mixed seems to require them to be in a certain order (against
+    # spec) and interleave "leaves" them be in any order 
+    text
+    & event_detail?
+    & element HUSB { age }?
+    & element WIFE { age }?
+  }
+  | element CENS {
+      text
+      & event_detail?
+      & element HUSB { age }?
+      & element WIFE { age }?
+    }
+  | element DIV {
+      text
+      & event_detail?
+      & element HUSB { age }?
+      & element WIFE { age }?
+    }
+  | element DIVF {
+      text
+      & event_detail?
+      & element HUSB { age }?
+      & element WIFE { age }?
+    }
+  | element ENGA {
+      text
+      & event_detail?
+      & element HUSB { age }?
+      & element WIFE { age }?
+    }
+  | element MARR {
+      text
+      & event_detail?
+      & element HUSB { age }?
+      & element WIFE { age }?
+    }
+  | element MARB {
+      text
+      & event_detail?
+      & element HUSB { age }?
+      & element WIFE { age }?
+    }
+  | element MARC {
+      text
+      & event_detail?
+      & element HUSB { age }?
+      & element WIFE { age }?
+    }
+  | element MARL {
+      text
+      & event_detail?
+      & element HUSB { age }?
+      & element WIFE { age }?
+    }
+  | element MARS {
+      text
+      & event_detail?
+      & element HUSB { age }?
+      & element WIFE { age }?
+    }
+  | element EVEN {
+      text
+      & event_detail?
+      & element HUSB { age }?
+      & element WIFE { age }?
+    }
+# INDIVIDUAL_ATTRIBUTE_STRUCTURE
+individual_attribute =
+  [
+    # CAST Schematron rule
+    
+    sch:pattern [
+      name = "Checking length of Individual Attribute Structure CAST"
+      "\x{a}" ~
+      "          "
+      sch:rule [
+        context = "CAST/node()[1][self::text()]"
+        "\x{a}" ~
+        "            "
+        sch:assert [
+          test = "string-length( normalize-space(.) ) < 91"
+          "Exceeds maximum INDI.CAST length of 90"
+        ]
+        "\x{a}" ~
+        "          "
+      ]
+      "\x{a}" ~
+      "        "
+    ]
+  ]
+  element CAST {
+    mixed { event_detail? }
+  }
+  | [
+      # DSCR Schematron rule
+      
+      sch:pattern [
+        name = "Checking length of Individual Attribute Structure DSCR"
+        "\x{a}" ~
+        "          "
+        sch:rule [
+          context = "DSCR/node()[1][self::text()]"
+          "\x{a}" ~
+          "            "
+          sch:assert [
+            test = "string-length( normalize-space(.) ) < 249"
+            "Exceeds maximum INDI.DSCR length of 248"
+          ]
+          "\x{a}" ~
+          "          "
+        ]
+        "\x{a}" ~
+        "        "
+      ]
+    ]
+    element DSCR {
+      mixed { event_detail? }
+    }
+  | [
+      # EDUC Schematron rule
+      
+      sch:pattern [
+        name = "Checking length of Individual Attribute Structure EDUC"
+        "\x{a}" ~
+        "          "
+        sch:rule [
+          context = "EDUC/node()[1][self::text()]"
+          "\x{a}" ~
+          "            "
+          sch:assert [
+            test = "string-length( normalize-space(.) ) < 249"
+            "Exceeds maximum INDI.EDUC length of 248"
+          ]
+          "\x{a}" ~
+          "          "
+        ]
+        "\x{a}" ~
+        "        "
+      ]
+    ]
+    element EDUC {
+      mixed { event_detail? }
+    }
+  | [
+      # INDO Schematron rule
+      
+      sch:pattern [
+        name = "Checking Individual Attribute Structure INDO"
+        "\x{a}" ~
+        "          "
+        sch:rule [
+          context = "IDNO/node()[1][self::text()]"
+          "\x{a}" ~
+          "          	"
+          # INDO must have a TYPE to modifie it
+          
+          "\x{a}" ~
+          "            "
+          sch:assert [
+            test = "string-length( normalize-space(.) ) < 31"
+            "Exceeds maximum IDNO.INDO length of 30"
+          ]
+          "\x{a}" ~
+          "          "
+        ]
+        "\x{a}" ~
+        "          "
+        sch:rule [
+          context = "IDNO"
+          "\x{a}" ~
+          "          	"
+          sch:assert [
+            test = "not( IDNO/TYPE )"
+            "\x{a}" ~
+            "          		IDNO (Identification numbers) must be described by a TYPE attribute\x{a}" ~
+            "          	"
+          ]
+          "\x{a}" ~
+          "          "
+        ]
+        "\x{a}" ~
+        "        "
+      ]
+    ]
+    element IDNO {
+      mixed { event_detail? }
+    }
+  | [
+      # NATI Schematron rule
+      
+      sch:pattern [
+        name = "Checking length of Individual Attribute Structure NATI"
+        "\x{a}" ~
+        "          "
+        sch:rule [
+          context = "NATI/node()[1][self::text()]"
+          "\x{a}" ~
+          "            "
+          sch:assert [
+            test = "string-length( normalize-space(.) ) < 121"
+            "Exceeds maximum INDI.NATI length of 120"
+          ]
+          "\x{a}" ~
+          "          "
+        ]
+        "\x{a}" ~
+        "        "
+      ]
+    ]
+    element NATI {
+      mixed { event_detail? }
+    }
+  | [
+      # NCHI Schematron rule
+      
+      sch:pattern [
+        name = "Checking length of Individual Attribute Structure NCHI"
+        "\x{a}" ~
+        "          "
+        sch:rule [
+          context = "NCHI/node()[1][self::text()]"
+          "\x{a}" ~
+          "            "
+          sch:assert [
+            test = "string-length( normalize-space(.) ) < 4"
+            "Exceeds maximum INDI.NCHI length of 3"
+          ]
+          "\x{a}" ~
+          "          "
+        ]
+        "\x{a}" ~
+        "        "
+      ]
+    ]
+    element NCHI {
+      mixed { event_detail? }
+    }
+  | [
+      # NMR Schematron rule
+      
+      sch:pattern [
+        name = "Checking length of Individual Attribute Structure NMR"
+        "\x{a}" ~
+        "          "
+        sch:rule [
+          context = "NMR/node()[1][self::text()]"
+          "\x{a}" ~
+          "            "
+          sch:assert [
+            test = "string-length( normalize-space(.) ) < 4"
+            "Exceeds maximum INDI.NMR length of 3"
+          ]
+          "\x{a}" ~
+          "          "
+        ]
+        "\x{a}" ~
+        "        "
+      ]
+    ]
+    element NMR {
+      mixed { event_detail? }
+    }
+  | [
+      # OCCU Schematron rule
+      
+      sch:pattern [
+        name = "Checking length of Individual Attribute Structure OCCU"
+        "\x{a}" ~
+        "          "
+        sch:rule [
+          context = "OCCU/node()[1][self::text()]"
+          "\x{a}" ~
+          "            "
+          sch:assert [
+            test = "string-length( normalize-space(.) ) < 91"
+            "Exceeds maximum INDI.OCCU length of 90"
+          ]
+          "\x{a}" ~
+          "          "
+        ]
+        "\x{a}" ~
+        "        "
+      ]
+    ]
+    element OCCU {
+      mixed { event_detail? }
+    }
+  | [
+      # PROP Schematron rule
+      
+      sch:pattern [
+        name = "Checking length of Individual Attribute Structure PROP"
+        "\x{a}" ~
+        "          "
+        sch:rule [
+          context = "PROP/node()[1][self::text()]"
+          "\x{a}" ~
+          "            "
+          sch:assert [
+            test = "string-length( normalize-space(.) ) < 249"
+            "Exceeds maximum INDI.PROP length of 248"
+          ]
+          "\x{a}" ~
+          "          "
+        ]
+        "\x{a}" ~
+        "        "
+      ]
+    ]
+    element PROP {
+      mixed { event_detail? }
+    }
+  | [
+      # RELI Schematron rule
+      
+      sch:pattern [
+        name = "Checking length of Individual Attribute Structure RELI"
+        "\x{a}" ~
+        "          "
+        sch:rule [
+          context = "RELI/node()[1][self::text()]"
+          "\x{a}" ~
+          "            "
+          sch:assert [
+            test = "string-length( normalize-space(.) ) < 91"
+            "Exceeds maximum INDI.RELI length of 90"
+          ]
+          "\x{a}" ~
+          "          "
+        ]
+        "\x{a}" ~
+        "        "
+      ]
+    ]
+    element RELI {
+      mixed { event_detail? }
+    }
+  | element RESI { event_detail? }
+  | [
+      # SSN Schematron rule
+      
+      sch:pattern [
+        name = "Checking length of Individual Attribute Structure SSN"
+        "\x{a}" ~
+        "          "
+        sch:rule [
+          context = "SSN/node()[1][self::text()]"
+          "\x{a}" ~
+          "            "
+          sch:assert [
+            test = "string-length( normalize-space(.) ) < 12"
+            "Exceeds maximum INDI.SSN length of 11"
+          ]
+          "\x{a}" ~
+          "          "
+        ]
+        "\x{a}" ~
+        "          "
+        sch:rule [
+          context = "SSN/node()[1][self::text()]"
+          "\x{a}" ~
+          "            "
+          sch:assert [
+            test = "string-length( normalize-space(.) ) > 8"
+            "Fails maximum INDI.SSN length of 9"
+          ]
+          "\x{a}" ~
+          "          "
+        ]
+        "\x{a}" ~
+        "        "
+      ]
+    ]
+    element SSN {
+      mixed { event_detail? }
+    }
+  | [
+      # TITL Schematron rule
+      
+      sch:pattern [
+        name = "Checking length of Individual Attribute Structure TITL"
+        "\x{a}" ~
+        "          "
+        sch:rule [
+          context = "INDI/TITL/node()[1][self::text()]"
+          "\x{a}" ~
+          "            "
+          sch:assert [
+            test = "string-length( normalize-space(.) ) < 121"
+            "Exceeds maximum INDI.TITL length of 120"
+          ]
+          "\x{a}" ~
+          "          "
+        ]
+        "\x{a}" ~
+        "        "
+      ]
+    ]
+    element TITL {
+      mixed { event_detail? }
+    }
+# INDIVIDUAL_EVENT_STRUCTURE
+individual_event =
+  element BIRT {
+    text
+    & # Event Detail
+      event_detail?
+    & # FAMC
+      (element FAMC {
+         attribute REF {
+           xsd:string { minLength = "1" maxLength = "22" }
+         }
+       },
+       empty)?
+  }
+  | element CHR {
+      text
+      & # Event Detail
+        event_detail?
+      & # FAMC
+        element FAMC {
+          attribute REF {
+            xsd:string { minLength = "1" maxLength = "22" }
+          },
+          empty
+        }?
+    }
+  | element DEAT {
+      mixed { event_detail? }
+    }
+  | element BURI {
+      mixed { event_detail? }
+    }
+  | element CREM {
+      mixed { event_detail? }
+    }
+  | element ADOP {
+      text
+      & # Event Detail
+        event_detail?
+      & # FAMC
+        element FAMC {
+          attribute REF {
+            xsd:string { minLength = "1" maxLength = "22" }
+          },
+          element ADOP {
+            text
+            # ADOP.FAMC.ADOP Schematron rule
+            
+            >> sch:pattern [
+                 name =
+                   "Checking value and length of INDI.ADOP.FAMC.ADOP"
+                 "\x{a}" ~
+                 "                    "
+                 sch:rule [
+                   context =
+                     "INDI/ADOP/FAMC/ADOP/node()[1][self::text()]"
+                   "\x{a}" ~
+                   "                      "
+                   sch:assert [
+                     test =
+                       "contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'HUSB') or              contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'WIFE') or              contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'BOTH')"
+                     "\x{a}" ~
+                     "        			  The only allowable values for INDI.ADOP.FAMC.ADOP are HUSB, WIFE, or BOTH\x{a}" ~
+                     "                      "
+                   ]
+                   "\x{a}" ~
+                   "                      "
+                   sch:assert [
+                     test = "string-length(normalize-space(.)) < 5"
+                     "Exceeds maximum of INDI.ADOP.FAMC.ADOP length of 5"
+                   ]
+                   "\x{a}" ~
+                   "                    "
+                 ]
+                 "\x{a}" ~
+                 "                  "
+               ]
+          }?
+        }?
+    }
+  | element BAPM {
+      mixed { event_detail? }
+    }
+  | element BARM {
+      mixed { event_detail? }
+    }
+  | element BASM {
+      mixed { event_detail? }
+    }
+  | element BLES {
+      mixed { event_detail? }
+    }
+  | element CHRA {
+      mixed { event_detail? }
+    }
+  | element CONF {
+      mixed { event_detail? }
+    }
+  | element FCOM {
+      mixed { event_detail? }
+    }
+  | element ORDN {
+      mixed { event_detail? }
+    }
+  | element NATU {
+      mixed { event_detail? }
+    }
+  | element EMIG {
+      mixed { event_detail? }
+    }
+  | element IMMI {
+      mixed { event_detail? }
+    }
+  | element CENS {
+      mixed { event_detail? }
+    }
+  | element PROB {
+      mixed { event_detail? }
+    }
+  | element WILL {
+      mixed { event_detail? }
+    }
+  | element GRAD {
+      mixed { event_detail? }
+    }
+  | element RETI {
+      mixed { event_detail? }
+    }
+  | element EVEN {
+      mixed { event_detail? }
+    }
+# LDS_INDIVIDUAL_ORDINANCE
+lds_individual_ordinance =
+  # BAPL
+  element BAPL {
+    # STAT
+    element STAT {
+      text
+      # BAPL.STAT, CONL.STAT, ENDL.STAT Schematron rule
+      
+      >> sch:pattern [
+           name =
+             "Checking value and length of BAPL.STAT, CONL.STAT, and ENDL.STAT"
+           "\x{a}" ~
+           "                "
+           sch:rule [
+             context =
+               "INDI/BAPL/STAT/node()[1][self::text()]|INDI/CONL/STAT/node()[1][self::text()]|INDI/ENDL/STAT/node()[1][self::text()]"
+             "\x{a}" ~
+             "                  "
+             sch:assert [
+               test =
+                 "contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'CHILD') or          contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'CLEARED') or          contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'COMPLETED') or          contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'INFANT') or          contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'PRE-1970') or          contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'QUALIFIED') or          contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'STILLBORN') or          contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'SUBMITTED') or          contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'UNCLEARED')"
+               "\x{a}" ~
+               "    			  The only allowable values for BAPL.STAT, CONL.STAT, and ENDL.STAT are CHILD, CLEARED, COMPLETED, INFANT, PRE-1970, QUALIFIED, STILLBORN, SUBMITTED, UNCLEARED\x{a}" ~
+               "                  "
+             ]
+             "\x{a}" ~
+             "                  "
+             sch:assert [
+               test = "string-length(normalize-space(.)) < 11"
+               "Exceeds maximum of BAPL.STAT, CONL.STAT, and ENDL.STAT length of 10"
+             ]
+             "\x{a}" ~
+             "                  "
+             sch:assert [
+               test = "string-length(normalize-space(.)) > 4"
+               "Fails to meet the minimum BAPL.STAT, CONL.STAT, and ENDL.STAT length of 5"
+             ]
+             "\x{a}" ~
+             "                "
+           ]
+           "\x{a}" ~
+           "              "
+         ]
+    }?
+    & # DATE (DATE_LDS_ORD) DATE_VALUE
+      element DATE {
+        xsd:string { minLength = "4" maxLength = "35" }
+      }?
+    & # TEMP
+      element TEMP {
+        xsd:string { minLength = "4" maxLength = "5" }
+      }?
+    & # PLAC
+      element PLAC {
+        xsd:string { minLength = "1" maxLength = "120" }
+      }?
+    & # SOUR
+      source_citation*
+    & # NOTE
+      note_structure*
+  }
+  | # CONL
+    element CONL {
+      # STAT
+      element STAT { text }?
+      & # DATE (DATE_LDS_ORD) DATE_VALUE
+        element DATE {
+          xsd:string { minLength = "4" maxLength = "35" }
+        }?
+      & # TEMP
+        element TEMP {
+          xsd:string { minLength = "4" maxLength = "5" }
+        }?
+      & # PLAC
+        element PLAC {
+          xsd:string { minLength = "1" maxLength = "120" }
+        }?
+      & # SOUR
+        source_citation*
+      & # NOTE
+        note_structure*
+    }
+  | # ENDL
+    element ENDL {
+      # STAT
+      element STAT { text }?
+      & # DATE (DATE_LDS_ORD) DATE_VALUE
+        element DATE {
+          xsd:string { minLength = "4" maxLength = "35" }
+        }?
+      & # TEMP
+        element TEMP {
+          xsd:string { minLength = "4" maxLength = "5" }
+        }?
+      & # PLAC
+        element PLAC {
+          xsd:string { minLength = "1" maxLength = "120" }
+        }?
+      & # SOUR
+        source_citation*
+      & # NOTE
+        note_structure*
+    }
+  | # SLGC
+    element SLGC {
+      # STAT
+      element STAT {
+        text
+        # SLGC.STAT Schematron rule
+        
+        >> sch:pattern [
+             name = "Checking value and length of SLGC.STAT"
+             "\x{a}" ~
+             "                "
+             sch:rule [
+               context = "INDI/SLGC/STAT/node()[1][self::text()]"
+               "\x{a}" ~
+               "                  "
+               sch:assert [
+                 test =
+                   "contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'BIC') or             contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'CLEARED') or          contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'COMPLETED') or          contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'DNS') or          contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'PRE-1970') or          contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'QUALIFIED') or          contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'STILLBORN') or          contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'SUBMITTED') or          contains( translate( normalize-space(.) , 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'UNCLEARED')"
+                 "\x{a}" ~
+                 "    			  The only allowable values for SLGC.STAT are BIC, CLEARED, COMPLETED, DNS, PRE-1970, QUALIFIED, STILLBORN, SUBMITTED, UNCLEARED\x{a}" ~
+                 "                  "
+               ]
+               "\x{a}" ~
+               "                  "
+               sch:assert [
+                 test = "string-length(normalize-space(.)) < 11"
+                 "Exceeds maximum of SLGC.STAT length of 10"
+               ]
+               "\x{a}" ~
+               "                  "
+               sch:assert [
+                 test = "string-length(normalize-space(.)) > 2"
+                 "Fails to meet the minimum SLGC.STAT length of 3"
+               ]
+               "\x{a}" ~
+               "                "
+             ]
+             "\x{a}" ~
+             "              "
+           ]
+      }?
+      & # DATE (DATE_LDS_ORD) DATE_VALUE
+        element DATE {
+          xsd:string { minLength = "4" maxLength = "35" }
+        }?
+      & # TEMP
+        element TEMP {
+          xsd:string { minLength = "4" maxLength = "5" }
+        }?
+      & # PLAC
+        element PLAC {
+          xsd:string { minLength = "1" maxLength = "120" }
+        }?
+      & # FAMC
+        element FAMC {
+          attribute REF {
+            xsd:string { minLength = "1" maxLength = "22" }
+          },
+          empty
+        }
+      & # SOUR
+        source_citation*
+      & # NOTE
+        note_structure*
+    }
+# MULTIMEDIA_LINK
+multimedia_link = multimedia_link_ref | multimedia_link_simple
+multimedia_link_ref =
+  element OBJE {
+    attribute REF {
+      xsd:string { minLength = "1" maxLength = "22" }
+    },
+    empty
+  }
+multimedia_link_simple =
+  element OBJE {
+    element FORM {
+      xsd:string { minLength = "3" maxLength = "4" }
+    }
+    & # TITL
+      element TITL {
+        xsd:string { minLength = "1" maxLength = "248" }
+      }?
+    & # FILE
+      element FILE {
+        xsd:string { minLength = "1" maxLength = "30" }
+      }?
+    & # NOTE
+      note_structure*
+  }
+# NOTE_STRUCTURE
+note_structure = note_structure_ref | note_structure_simple
+note_structure_ref =
+  element NOTE {
+    attribute REF {
+      xsd:string { minLength = "1" maxLength = "22" }
+    },
+    # SOUR
+    element SOUR {
+      attribute REF {
+        xsd:string { minLength = "1" maxLength = "22" }
+      },
+      empty
+    }*
+  }
+note_structure_simple =
+  [
+    # NOTE Schematron rule
+    
+    sch:pattern [
+      name = "Checking length of Note Structure NOTE"
+      "\x{a}" ~
+      "        "
+      sch:rule [
+        context = "NOTE/node()[1][self::text()]"
+        "\x{a}" ~
+        "          "
+        sch:assert [
+          test = "string-length( normalize-space(.) ) < 249"
+          "NOTE range exceeds maximum of 248"
+        ]
+        "\x{a}" ~
+        "        "
+      ]
+      "\x{a}" ~
+      "      "
+    ]
+  ]
+  element NOTE {
+    text
+    & # CONC
+      element CONC {
+        xsd:string { minLength = "1" maxLength = "248" }
+      }*
+    & # CONT
+      element CONT {
+        xsd:string { minLength = "0" maxLength = "248" }
+      }*
+    & # SOUR
+      element SOUR {
+        attribute REF {
+          xsd:string { minLength = "1" maxLength = "22" }
+        },
+        empty
+      }*
+  }
+# SOURCE_CITATION
+source_citation = source_citation_ref | source_citation_simple
+# to prevent annoying interleave ovelap
+source_citation_obje = source_citation_ref | source_citation_simple_obje
+source_citation_ref =
+  element SOUR {
+    attribute REF {
+      xsd:string { minLength = "1" maxLength = "22" }
+    },
+    (# PAGE
+     element PAGE {
+       xsd:string { minLength = "1" maxLength = "248" }
+     }?
+     & # EVEN
+       [
+         # EVEN Schematron rule
+         
+         # The possible values of *.SOUR.EVEN are 
+         # ADOP, BIRT, BAPM, BARM, BASM, BLES, BURI, CENS, CHR, 
+         # CHRA, CONF, CREM, DEAT, EMIG, FCOM, GRAD, IMMI, NATU, 
+         # ORDN, RETI, PROB, WILL, EVEN, ANUL, CENS, DIV, DIVF, 
+         # ENGA, MARR, MARB, MARC, MARL, MARS, EVEN  CAST, EDUC, 
+         # NATI, OCCU, PROP, RELI, RESI, TITL.  The value would 
+         # be delimited by commas.  At this time, however, Schematron
+         # lack of regex prevents a proper check of this value. 
+         # Currently, the pattern only checks for length
+         
+         sch:pattern [
+           name = "Checking length of Source Citation EVEN"
+           "\x{a}" ~
+           "              "
+           sch:rule [
+             context = "SOUR/EVEN/node()[1][self::text()]"
+             "\x{a}" ~
+             "				"
+             sch:assert [
+               test = "string-length( normalize-space(.) ) < 16"
+               "*.SOUR.EVEN range exceeds maximum of 15"
+             ]
+             "\x{a}" ~
+             "              "
+           ]
+           "\x{a}" ~
+           "            "
+         ]
+       ]
+       element EVEN {
+         mixed {
+           element ROLE {
+             # There is a problem with the standard here.  The max length of a ROLE is 15.  
+             #  However,the max length of a ROLE_DESCRIPTOR, the last "or" in the pattern below
+             # is 25.  I have defaulted to the larger. Additionally, the value for ROLE can be
+             # CHIL, HUSB, WIFE, MOTH, FATH, SPOU, and anything text between 1 and 15 characters.
+             # Since I can't check both the defaults and the arbitrary text, I'm only checking for
+             # length here
+             xsd:string { minLength = "1" maxLength = "25" }
+           }?
+         }
+       }?
+     & # DATA
+       element DATA {
+         # DATE (ENTRY_RECORDING_DATE) as DATE_VALUE
+         element DATE {
+           xsd:string { minLength = "1" maxLength = "90" }
+         }?
+         & [
+             # TEXT Schematron rule
+             
+             sch:pattern [
+               name = "Checking length of Source Citation TEXT"
+               "\x{a}" ~
+               "                    "
+               sch:rule [
+                 context = "TEXT/node()[1][self::text()]"
+                 "\x{a}" ~
+                 "                      "
+                 sch:assert [
+                   test = "string-length( normalize-space(.) ) < 249"
+                   "Exceeds maxim SOUR.DATA.TEXT length of 248"
+                 ]
+                 "\x{a}" ~
+                 "                    "
+               ]
+               "\x{a}" ~
+               "                  "
+             ]
+           ]
+           element TEXT {
+             text
+             & element CONC {
+                 xsd:string { minLength = "1" maxLength = "248" }
+               }*
+             & element CONT {
+                 xsd:string { minLength = "0" maxLength = "248" }
+               }*
+           }*
+       }?
+     & # QUAY
+       element QUAY {
+         xsd:string {
+           minLength = "1"
+           maxLength = "1"
+           pattern = "0|1|2|3"
+         }
+       }?
+     & # OBJE
+       multimedia_link*
+     & # NOTE
+       note_structure*)
+  }
+source_citation_simple =
+  [
+    # SOUR Schematron rule
+    
+    sch:pattern [
+      name = "Checking length of Source Citaton (simple) SOUR"
+      "\x{a}" ~
+      "        "
+      sch:rule [
+        context = "SOUR/node()[1][self::text()]"
+        "\x{a}" ~
+        "          "
+        sch:assert [
+          test = "string-length( normalize-space(.) ) < 249"
+          "Exceeds maximum SOUR length of 248"
+        ]
+        "\x{a}" ~
+        "        "
+      ]
+      "\x{a}" ~
+      "      "
+    ]
+  ]
+  element SOUR {
+    text
+    & # CONC
+      element CONC {
+        xsd:string { minLength = "1" maxLength = "248" }
+      }*
+    & # CONT
+      element CONT {
+        xsd:string { minLength = "1" maxLength = "248" }
+      }*
+    & # TEXT
+      [
+        # TEXT Schematron rule
+        
+        sch:pattern [
+          name = "Checking length of Source Citation (simple) TEXT"
+          "\x{a}" ~
+          "              "
+          sch:rule [
+            context = "TEXT/node()[1][self::text()]"
+            "\x{a}" ~
+            "                "
+            sch:assert [
+              test = "string-length( normalize-space(.) ) < 249"
+              "Exceeds maximum SOUR.TEXT length of 248"
+            ]
+            "\x{a}" ~
+            "              "
+          ]
+          "\x{a}" ~
+          "            "
+        ]
+      ]
+      element TEXT {
+        text
+        & element CONC {
+            xsd:string { minLength = "1" maxLength = "248" }
+          }*
+        & element CONT {
+            xsd:string { minLength = "1" maxLength = "248" }
+          }*
+      }*
+    & # NOTE
+      note_structure*
+  }
+# This is a strange necessity caused by the following GEDCOM structures 
+# n  NAME <NAME_PERSONAL>  {1:1}
+#   +1 NPFX <NAME_PIECE_PREFIX>  {0:1}
+#   +1 GIVN <NAME_PIECE_GIVEN>  {0:1}
+#   +1 NICK <NAME_PIECE_NICKNAME>  {0:1}
+#   +1 SPFX <NAME_PIECE_SURNAME_PREFIX>  {0:1}
+#   +1 SURN <NAME_PIECE_SURNAME>  {0:1}
+#   +1 NSFX <NAME_PIECE_SUFFIX>  {0:1}
+#   +1 <<SOURCE_CITATION>>  {0:M}
+#     +2 <<NOTE_STRUCTURE>>  {0:M}
+#     +2 <<MULTIMEDIA_LINK>>  {0:M}
+#   +1 <<NOTE_STRUCTURE>>  {0:M}
+# 
+#   The problem here is the +2 level MULTIMEDIA_LINK under the SOUR.  A simple
+#   SOUR citation (one without a ref attribute) normally does not have a multimedia
+#   OBJE under it. Unlike a source_citation_ref tag that does.  Hence, the zeroOrMore
+#   OBJE tags needed to be added to places where source_citation are called with the
+#   +2 level OBJE tags.
+# 
+#   This occurs in three structures: the Personal Name Structure (above), the Event Detail
+#   Structure, and the Family record
+source_citation_simple_obje =
+  [
+    # SOUR Schematron rule
+    
+    sch:pattern [
+      name = "Checking length of Source Citation (simple) SOUR"
+      "\x{a}" ~
+      "        "
+      sch:rule [
+        context = "SOUR/node()[1][self::text()]"
+        "\x{a}" ~
+        "          "
+        sch:assert [
+          test = "string-length( normalize-space(.) ) < 249"
+          "Exceeds maximum SOUR length of 248"
+        ]
+        "\x{a}" ~
+        "        "
+      ]
+      "\x{a}" ~
+      "      "
+    ]
+  ]
+  element SOUR {
+    text
+    & # CONC
+      element CONC {
+        xsd:string { minLength = "1" maxLength = "248" }
+      }*
+    & # CONT
+      element CONT {
+        xsd:string { minLength = "1" maxLength = "248" }
+      }*
+    & # TEXT
+      [
+        # TEXT Schematron rule
+        
+        sch:pattern [
+          name = "Checking length of Source Citation (simple) TEXT"
+          "\x{a}" ~
+          "              "
+          sch:rule [
+            context = "TEXT/node()[1][self::text()]"
+            "\x{a}" ~
+            "                "
+            sch:assert [
+              test = "string-length( normalize-space(.) ) < 249"
+              "Exceeds maximum SOUR.TEXT of 248"
+            ]
+            "\x{a}" ~
+            "              "
+          ]
+          "\x{a}" ~
+          "            "
+        ]
+      ]
+      element TEXT {
+        text
+        & element CONC {
+            xsd:string { minLength = "1" maxLength = "248" }
+          }*
+        & element CONT {
+            xsd:string { minLength = "1" maxLength = "248" }
+          }*
+      }*
+    & # NOTE
+      note_structure*
+    & multimedia_link*
+  }
+# Miscellaneous
+
+# AGE_AT_EVENT
+age =
+  element AGE {
+    xsd:string {
+      # Limitation: Since pattern is case sensitive and since the given Schematron standard does
+      # not support regex, this test only checks for the Uppercase CHILD, INFANT, STILLBORN, and the
+      # lowercase y,d, m.
+      pattern =
+        "<?>?( ?\d?\dy)?( ?\d?\dm)?( ?\d?\dd)?|CHILD|INFANT|STILLBORN"
+      minLength = "1"
+      maxLength = "12"
+    }
+  }
+# Both the LANGUAGE_PREFERENCE and PHONE_NUMBER implementation manage to
+# work around relaxng interleave limitation of not permitting more than one
+# occurance of the same element in an interleave.  These limitation also
+# manage to constrain the number of LANG and PHON tags to their GEDCOM 5.5
+# maximum of 3.
+
+# LANGUAGE_PREFERENCE
+language_preference =
+  element LANG {
+    text
+    # SUBM.LANG Schematron rule
+    
+    >> sch:pattern [
+         name = "Checking value and length of Submitter Record LANG"
+         "\x{a}" ~
+         "            "
+         sch:rule [
+           context = "SUBM/LANG/node()[1][self::text()]"
+           "\x{a}" ~
+           "              "
+           sch:assert [
+             test =
+               "contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'afrikaans') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'albanian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'anglo-saxon') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'catalan') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'catalan_spn') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'czech') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'danish') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'dutch') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'english') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'esperato') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'estonian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'faroese') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'finnish') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'french') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'german') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'hawaiian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'hungarian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'icelandic') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'indonesian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'italian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'latvian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'lithuanian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'navaho') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'norwegian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'polish') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'portuguese') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'romanian') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'serbo_croa') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'slovene') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'spanish') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'swedish') or               contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'turkish') or                contains( translate( normalize-space(.) , 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'wendic')"
+             "\x{a}" ~
+             "              The only allowable values for SUBM.LANG are Afrikaans, Albanian, Anglo-Saxon, Catalan, Catalan_Spn, Czech, Danish, Dutch, English, Esperanto, Estonian, Faroese, Finnish, French, German, Hawaiian, Hungarian, Icelandic, Indonesian, Italian, Latvian, Lithuanian, Navaho, Norwegian, Polish, Portuguese, Romanian, Serbo_Croa, Slovak, Slovene, Spanish, Swedish, Turkish, Wendic\x{a}" ~
+             "              "
+           ]
+           "\x{a}" ~
+           "              "
+           sch:assert [
+             test = "string-length(normalize-space(.)) < 16"
+             "Exceeds maximum of SUBM.LANG length of 16"
+           ]
+           "\x{a}" ~
+           "            "
+         ]
+         "\x{a}" ~
+         "          "
+       ]
+  }?,
+  element LANG { text }?,
+  element LANG { text }?
+# PHONE_NUMBER
+phone_number =
+  # PHON
+  element PHON {
+    xsd:string { minLength = "1" maxLength = "25" }
+  }?,
+  # PHON
+  element PHON {
+    xsd:string { minLength = "1" maxLength = "25" }
+  }?,
+  # PHON
+  element PHON {
+    xsd:string { minLength = "1" maxLength = "25" }
+  }?
+# USER_REFERENCE_NUMBER
+user_reference_number =
+  [
+    # REFN Schematron rule
+    
+    sch:pattern [
+      name = "Checking length of User_Reference_Number"
+      "\x{a}" ~
+      "        "
+      sch:rule [
+        context = "REFN/node()[1][self::text()]"
+        "\x{a}" ~
+        "          "
+        sch:assert [
+          test = "string-length( normalize-space(.) ) < 21"
+          "Exceeds maximum REFN length of 20"
+        ]
+        "\x{a}" ~
+        "        "
+      ]
+      "\x{a}" ~
+      "      "
+    ]
+  ]
+  element REFN {
+    mixed {
+      element TYPE {
+        xsd:string { minLength = "1" maxLength = "40" }
+      }?
+    }
+  }
