@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0" 
 		 xmlns:sch="http://www.ascc.net/xml/schematron" 
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
 		 datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
-  <!-- 
- ******************************************************************************
- ******************************************************************************
-    Copyright (c) 2008 Chad Albers <chad@neomantic.com>
-     
+ <dc:creator>Chad Albers</dc:creator>
+ <dc:publisher>Chad Albers<dc:creator>
+ <dc:date>2008-5-1</dc:date>
+ <dc:title>RELAX NG/Schematron Schema for GEDCOM 5.5 XML</dc:title>
+ <dc:description>This RELAX NG/Schematron XML schema aims to replicate in XML markup
+ the Church of the Latter Day Saint's GEDCOM 5.5 standard.</dc:description>
+ <dc:identifier>http://www.neomantic.com/gedcom55XML/1.0/gedcom55XML.rng</dc:identifier>
+ <dc:type>software</dc:type>
+ <dc:format>application/xml</dc:format>
+ <dc:language>en-US</dc:language>
+ <dc:rights>Copyright (c) 2008 Chad Albers mailto:chad@neomantic.com 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-    
- ******************************************************************************
- ******************************************************************************
- -->
+ </dc:rights>
   <start>
     <element name="GED">
       <interleave>
