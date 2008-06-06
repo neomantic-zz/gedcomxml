@@ -59,7 +59,7 @@ Chad
 
 \end_inset
 
-
+ 
 \begin_inset CharStyle Surname
 show_label false
 status inlined
@@ -168,11 +168,12 @@ Two XML markup languages have come close to describing GEDCOM 5.5 XML: GedML
 GedML
 \end_layout
 
-\begin_layout Literal
+\begin_layout Standard
 In 1998, Michael H.
  Kay 
 \begin_inset LatexCommand url
-target "proposed"
+name "proposed"
+target "http://lists.xml.org/archives/xml-dev/199804/msg00282.html"
 
 \end_inset
 
@@ -261,8 +262,8 @@ TRLR
 
 \end_inset
 
- 5.5 tag.
- This tag indicates the end of GEDCOM 5.5 file.
+ tag.
+ This tag indicates the end of a GEDCOM 5.5 file.
  It is absent from GedML because the closed document root element performs
  the same function, rendering a 
 \begin_inset CharStyle Literal
@@ -275,7 +276,7 @@ status inlined
 
 \end_inset
 
- element superflous.
+ element superfluous.
  Considering these differences, as far as the DTD is concerned, GedML is
  not a one-to-one translation of GEDCOM 5.5 into XML.
 \end_layout
@@ -325,8 +326,8 @@ target "http://www.softwarerenovation.com/igenie/GeniMLConverter.zip"
 
  to convert GEDCOM 5.5 to XML.
  No schema for this markup language has been released.
- However, sample output bundled with the converter shows that GeniML appears
- to be a one-to-one translation of GEDCOM 5.5 into XML.
+ However, sample output of the programe included with the converter shows
+ that GeniML appears to be a one-to-one translation of GEDCOM 5.5 into XML.
  GeniML even includes the 
 \begin_inset CharStyle Literal
 show_label false
@@ -410,7 +411,7 @@ status inlined
 \begin_layout Standard
 \begin_inset LatexCommand url
 name "gedcom55XML.rng"
-target "http://www.neomantic.com/gedcom55XML/gedcom55XML.rng"
+target "http://www.neomantic.com/gedcom55XML/1.0/gedcom55XML.rng"
 
 \end_inset
 
@@ -428,8 +429,8 @@ target "http://www.neomantic.com/gedcom55XML/gedcom55XML.rng"
 
 \begin_layout Standard
 Like any schema, it can be used to validate, in the XML sense, a GEDCOM
- 5.5 file that has been converted to GEDCOM 5.5 XML document; i.e., it can be
- used to determine if the document is both 
+ 5.5 file that has been converted to a GEDCOM 5.5 XML document; i.e., it can
+ be used to determine if the document is both 
 \begin_inset Quotes sld
 \end_inset
 
@@ -483,8 +484,8 @@ gedcom55XML.rng
  It, unfortunately, does not.
  Most of its shortcomings are due to difficulties in describing what would
  be considered, in XML terms, mixed-content elements.
- Schematron patterns handle most of these mix-content elements, but not
- all of them.
+ Schematron rules handle most of these mix-content elements, but not all
+ of them.
  Below is a list where the schema has not been able to handle GEDCOM 5.5
  XML mixed-content elements.
 \end_layout
@@ -676,7 +677,7 @@ PLAC
 
 \end_inset
 
- tag are separated by commas (i.e., Kansas City, Jackson County, Missouri,
+ tag are separated by commas (e.g., Kansas City, Jackson County, Missouri,
  USA) or, alternatively, the delimiter specified in the 
 \begin_inset CharStyle Literal
 show_label false
@@ -726,8 +727,8 @@ NAME
 
 \end_inset
 
- tag are usually formatted with backslashes to indicate first and last names
- (e.g., Joseph/Smith/).
+ tag are usually formatted with backslashes to indicate an individuals given
+ name and surname (e.g., Joseph/Smith/).
  The Schematron patterns do not prescribe this format.
 \end_layout
 
@@ -913,7 +914,7 @@ d
 \end_inset
 
 ' which respectively signify year, month, and day.
- Following the specification strictly, these value should be case-insensitive.
+ Following the specification strictly, these values should be case-insensitive.
  In 
 \begin_inset CharStyle Filename
 show_label false
@@ -1016,8 +1017,8 @@ Schema Updates
 \end_layout
 
 \begin_layout Standard
-The 1.0 version of the GEDCOM 5.5 XML schema will be posted on the web with
- a URL (Universal Resource Locator) at 
+Version 1.0 of the GEDCOM 5.5 XML schema will be posted on the web with a
+ URL at 
 \begin_inset CharStyle Literal
 show_label false
 status inlined
@@ -1083,8 +1084,7 @@ gedcom55XML.rnc
 \begin_inset Quotes srd
 \end_inset
 
-.
- The most up to date version will be available at the following URL: 
+ and can be found at the following URL: 
 \begin_inset CharStyle Literal
 show_label false
 status inlined
@@ -1247,8 +1247,8 @@ target "http://homepage.ntlworld.com/michael.h.kay/gedml/"
 
  and unzip it in a location of your choosing.
  Remember the path to this location.
- You need to know this path in a later step, and it will be referred to
- using the variable 
+ You will need to know this path in a later step, and it will be referred
+ to using the variable 
 \begin_inset CharStyle Literal
 show_label false
 status inlined
@@ -1426,7 +1426,7 @@ family.xml
 
 \end_inset
 
-by issuing the following command in your terminal:
+ by issuing the following command in your terminal:
 \end_layout
 
 \begin_deeper
@@ -1563,7 +1563,13 @@ gedcom55XML.rng
 
 \end_inset
 
- is by using Topologi.com's Schematron Java classes.
+ is by using Topologi.com's 
+\begin_inset LatexCommand url
+target "Open Source Schematron Java classes"
+
+\end_inset
+
+.
  Their zip file 
 \begin_inset LatexCommand url
 name "here"
@@ -1572,7 +1578,7 @@ target "http://www.topologi.com/public/Schematron.zip"
 \end_inset
 
  contains all the binaries and scripts needed to validate an XML file with
- Schematron patterns embedded in RELAX NG.
+ Schematron rules embedded in RELAX NG patterns.
  To do so, type the following command in the directory called 
 \begin_inset Quotes sld
 \end_inset
@@ -1581,12 +1587,12 @@ Schematron
 \begin_inset Quotes srd
 \end_inset
 
- produce by unzipping the downloaded file above:
+ that was produced after unzipping the downloaded file above:
 \end_layout
 
 \begin_layout Code
 java -cp ./Saxon/saxon.jar:./Java/Schematron.jar:./Jing/jing.jar com.topologi.schematron.
-EmbRNGValidator family.xml gedcom55xml.rng
+EmbRNGValidator family.xml gedcom55XML.rng
 \end_layout
 
 \begin_layout Standard
@@ -1601,51 +1607,21 @@ family.xml
 
 \end_inset
 
-, it will only indicate which line an error is found on.
- It will not tell you what is wrong with the line.
+ using the RELAX NG patterns, it stops at the first error and indicates
+ the line it is on.
+ It then proceeds to check the Schematron rules.
+ When this commands finds errors using the Schematron rules, it will not
+ tell you which line has a problem, but only the text of the problematic
+ line.
+ In either case, the command does not tell you what exactly is wrong with
+ the line.
  It is up to you to figure out why the line is incorrect by referring to
  the LDS's GEDCOM 5.5 standard.
  
 \end_layout
 
-\begin_layout Standard
-Additionally, when this command finds an error using either the RELAX NG
- or Schematron patterns, the program stops running; i.e., it will not show
- you all errors.
- To find the next error, you will have to correct the markup of the 
-\begin_inset CharStyle Filename
-show_label false
-status inlined
-
-\begin_layout Standard
-family.xml
-\end_layout
-
-\end_inset
-
- file (or the 
-\begin_inset CharStyle Filename
-show_label false
-status inlined
-
-\begin_layout Standard
-family.ged
-\end_layout
-
-\end_inset
-
- file and convert it again to GEDCOM 5.5 XML), and run the command above
- again.
-\end_layout
-
 \begin_layout Subsubsection*
 Method 2 - Sequentially Validating the XML against RELAX NG and Schematron
-\end_layout
-
-\begin_layout Standard
-The last method is the most difficult.
- Performing both the RELAX NG and the Schematron validations separately.
- 
 \end_layout
 
 \begin_layout Enumerate
@@ -1731,7 +1707,7 @@ java -jar [path-to-jing]/jing.jar gedcom55XML.rng family.xml
 
 \family roman
 The result will pipe to the terminal's standard output.
- 
+ Unlike method 1, 
 \begin_inset CharStyle Literal
 show_label false
 status inlined
@@ -1744,7 +1720,13 @@ jing
 
 \end_inset
 
- will report all the errors it encounters.
+ will report 
+\family default
+\emph on
+all
+\family roman
+\emph default
+ the errors that it encounters.
  It won't say exactly what is wrong, but it will report what lines have
  errors.
  If 
@@ -1773,12 +1755,13 @@ Perform the Schematron validation
 \begin_layout Standard
 Step one does not test the mixed-content inherent in the GEDCOM 5.5 (and
  GEDCOM 5.5 XML) object model.
- To test the mixed content nodes, Schematron patterns must be run against
- them.
+ To test the mixed content nodes, the XML file must be tested against the
+ Schematron rules.
+ There a two ways to do this.
 \end_layout
 
-\begin_layout Standard
-Testing the GEDCOM 5.5 XML file with 
+\begin_layout Enumerate
+The first way to validate a GEDCOM 5.5 XML file with 
 \begin_inset CharStyle Filename
 show_label false
 status inlined
@@ -1789,8 +1772,9 @@ gedcom55XML.rng
 
 \end_inset
 
-'s Schematron patterns, normally requires three transformations.
- Since the Schematron patterns are embedded inside 
+'s Schematron rules is by running the file through three XSL stylesheet
+ transformations.
+ Since the Schematron rules are embedded inside 
 \begin_inset CharStyle Filename
 show_label false
 status inlined
@@ -1855,8 +1839,9 @@ family.xml
  
 \end_layout
 
+\begin_deeper
 \begin_layout Standard
-For convenience, included with 
+For sake of convenience, I have included with 
 \begin_inset CharStyle Filename
 show_label false
 status inlined
@@ -1867,18 +1852,7 @@ gedcom55XML.rng
 
 \end_inset
 
- are both the extracted Schematron patterns - 
-\begin_inset CharStyle Literal
-show_label false
-status inlined
-
-\begin_layout Standard
-gedcom55XML.sch
-\end_layout
-
-\end_inset
-
- - and the validation stylesheet - 
+ the validation stylesheet - 
 \begin_inset CharStyle Filename
 show_label false
 status inlined
@@ -1890,46 +1864,9 @@ validate-gedcom55XML-with-schematron.xsl
 \end_inset
 
 .
- Like 
+ I am distributing it under the GNU General Public License Version 2.
+ To test the 
 \begin_inset CharStyle Filename
-show_label false
-status inlined
-
-\begin_layout Standard
-gedcom55XML.rng
-\end_layout
-
-\end_inset
-
-, the files 
-\begin_inset CharStyle Filename
-show_label false
-status inlined
-
-\begin_layout Standard
-gedcom55XML.sch
-\end_layout
-
-\end_inset
-
- and 
-\begin_inset CharStyle Literal
-show_label false
-status inlined
-
-\begin_layout Standard
-validate-gedcom55XML-with-schematron.xsl
-\end_layout
-
-\end_inset
-
- are released under the GNU General Public License Version 2.
- 
-\end_layout
-
-\begin_layout Standard
-To finally validate all the remaining content of your 
-\begin_inset CharStyle Literal
 show_label false
 status inlined
 
@@ -1939,7 +1876,7 @@ family.xml
 
 \end_inset
 
- document, you will have to apply 
+against the Schematron rules, you will have to apply 
 \begin_inset CharStyle Filename
 show_label false
 status inlined
@@ -1981,12 +1918,80 @@ saxon
 
 \end_inset
 
-will issue error messages if it finds any problems.
+ will issue error messages if it finds any problems.
+ The error messages are not very informative, but they can provide you some
+ clues.
 \end_layout
 
 \end_deeper
+\begin_layout Enumerate
+The second way to validate a GEDCOM 5.5 XML file against 
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
+gedcom55XML.rng
+\end_layout
+
+\end_inset
+
+'s Schematron rules involves using the Topologoi's Schematron Java classes
+ used in Method 1 above.
+ To use them, the Schematron rules need to be extracted from the RELAX NG
+ patterns, as described above.
+ For the sake of convenience, I have included the extracted Schematron rules
+ with 
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
+gedcom55XML.rng
+\end_layout
+
+\end_inset
+
+.
+ They are in the file called 
+\begin_inset Quotes sld
+\end_inset
+
+
+\begin_inset CharStyle Filename
+show_label false
+status inlined
+
+\begin_layout Standard
+gedcom55XML.sch
+\end_layout
+
+\end_inset
+
+
+\begin_inset Quotes srd
+\end_inset
+
+ and I'm distributing this source code under the GNU General Public License
+ Version 2.
+\end_layout
+
+\begin_deeper
+\begin_layout Code
+java -cp ./Saxon/saxon.jar:./Java/Schematron.jar:./Jing/jing.jar com.topologi.schematron.
+SchtrnValidator family.xml gedcom55XML.sch
+\end_layout
+
+\begin_layout Standard
+The error messages produced by this command are more informative.
+ Although this command does not indicate the line number of the error, it
+ does show you the text which fails topass the Schematron rule.
+\end_layout
+
+\end_deeper
+\end_deeper
 \begin_layout Section*
-Documentation 
+Documentation
 \end_layout
 
 \begin_layout Subsection*
@@ -2084,6 +2089,7 @@ target "mailto:chad@neomantic.com"
 \end_inset
 
 .
+ Corrections, suggestions, bug reports, and patches are welcome as well.
 \end_layout
 
 \begin_layout Date
