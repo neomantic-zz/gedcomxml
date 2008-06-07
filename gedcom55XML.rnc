@@ -1,25 +1,35 @@
-namespace sch = "http://www.ascc.net/xml/schematron"
+namespace dc = "http://purl.org/dc/elements/1.1/"
+namespace sch = "http://purl.oclc.org/dsdl/schematron"
 
-# ******************************************************************************
-# ******************************************************************************
-#    Copyright (c) 2008 Chad Albers <chad@neomantic.com>
-# 
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
-# 
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-# 
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-# 
-# ******************************************************************************
-# ******************************************************************************
+dc:creator [ "Chad Albers" ]
+dc:publisher [ "Chad Albers" ]
+dc:date [ "2008-5-1" ]
+dc:title [ "RELAX NG/Schematron Schema for GEDCOM 5.5 XML" ]
+dc:description [
+  "This RELAX NG/Schematron XML schema in compact syntax aims to replicate in XML markup\x{a}" ~
+  " the Church of the Latter Day Saint's GEDCOM 5.5 standard."
+]
+dc:identifier [
+  "http://www.neomantic.com/gedcom55XML/1.0/gedcom55XML.rnc"
+]
+dc:type [ "software" ]
+dc:format [ "application/xml" ]
+dc:language [ "en-US" ]
+dc:rights [
+  "Copyright (c) 2008 Chad Albers mailto:chad@neomantic.com \x{a}" ~
+  "    This program is free software; you can redistribute it and/or modify\x{a}" ~
+  "    it under the terms of the GNU General Public License as published by\x{a}" ~
+  "    the Free Software Foundation; either version 2 of the License, or\x{a}" ~
+  "    (at your option) any later version.\x{a}" ~
+  "    This program is distributed in the hope that it will be useful,\x{a}" ~
+  "    but WITHOUT ANY WARRANTY; without even the implied warranty of\x{a}" ~
+  "    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\x{a}" ~
+  "    GNU General Public License for more details.\x{a}" ~
+  "    You should have received a copy of the GNU General Public License\x{a}" ~
+  "    along with this program; if not, write to the Free Software\x{a}" ~
+  "    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA\x{a}" ~
+  " "
+]
 start =
   element GED {
     (header
@@ -51,7 +61,7 @@ header =
           "              "
           sch:assert [
             test = "string-length( normalize-space(.) ) < 21"
-            "Exceeds maximum GED.HEAD.SOUR length of 20"
+            "Exceeds maximum HEAD.SOUR length of 20"
           ]
           "\x{a}" ~
           "			  "

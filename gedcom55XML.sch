@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
- <!-- 
- ******************************************************************************
- ******************************************************************************
-    Copyright (c) 2008 Chad Albers <chad@neomantic.com>
-     
+ <dc:creator>Chad Albers</dc:creator>
+ <dc:publisher>Chad Albers</dc:publisher>
+ <dc:date>2008-5-1</dc:date>
+ <dc:title>Schematron patterns extracted from gedcom55XML.rng version 1.0</dc:title>
+ <dc:description>These Schematron rules were written to capture the mixed-content elements
+ in GEDCOM 5.5 XML.</dc:description>
+ <dc:identifier>http://www.neomantic.com/gedcom55XML/1.0/gedcom55XML.sch</dc:identifier>
+ <dc:type>software</dc:type>
+ <dc:format>application/xml</dc:format>
+ <dc:language>en-US</dc:language>
+ <dc:rights>Copyright (c) 2008 Chad Albers mailto:chad@neomantic.com 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-    
- ******************************************************************************
- ******************************************************************************
--->
-<sch:schema xmlns:sch="http://www.ascc.net/xml/schematron" xmlns:rng="http://relaxng.org/ns/structure/1.0">
+ </dc:rights>
+<sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron" 
+            xmlns:rng="http://relaxng.org/ns/structure/1.0"
+            xmlns:dc="http://purl.org/dc/elements/1.1/">
    <sch:pattern xmlns="http://relaxng.org/ns/structure/1.0" name="Checking length of Header Record SOUR">
             
       <sch:rule context="HEAD/SOUR/node()[1][self::text()]">

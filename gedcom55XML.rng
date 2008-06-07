@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0" 
-		 xmlns:sch="http://www.ascc.net/xml/schematron" 
+		 xmlns:sch="http://purl.oclc.org/dsdl/schematron" 
          xmlns:dc="http://purl.org/dc/elements/1.1/"
 		 datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
  <dc:creator>Chad Albers</dc:creator>
- <dc:publisher>Chad Albers<dc:creator>
+ <dc:publisher>Chad Albers</dc:publisher>
  <dc:date>2008-5-1</dc:date>
  <dc:title>RELAX NG/Schematron Schema for GEDCOM 5.5 XML</dc:title>
  <dc:description>This RELAX NG/Schematron XML schema aims to replicate in XML markup
