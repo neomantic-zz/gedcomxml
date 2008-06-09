@@ -41,7 +41,7 @@
 \begin_body
 
 \begin_layout Title
-RELAX NG/Schematron Schema for GEDCOM 5.5 XML (version 1.0)
+RELAX NG/Schematron Schema for GEDCOM 5.5 XML (version 0.1)
 \end_layout
 
 \begin_layout Author
@@ -113,18 +113,18 @@ GEDCOM 5.5 XML
 
 \begin_layout Standard
 XML proponents can console themselves with the fact that the GEDCOM 5.5 standard
- bares some resemblance to an XML markup language.
+ bares some resemblance to a XML markup language.
  Despite its non-standard character set (Ansel), it is human readable text.
- Like XML elements, it also uses tags to delimit genealogical data; they
- precede the data.
+ Instead of XML elements, it delimits genealogical data between a text tag
+ and character return and line feed or both; the tag precedes the data.
  Finally, GEDCOM 5.5 tags can be nested under other tags, resembling the
  parent and child node trees of XML elements.
  
 \end_layout
 
 \begin_layout Standard
-Given these similarities, it is easy to envision a one-to-one translation
- of GEDCOM 5.5 into an XML language.
+Given these similarities, it is easy to envision an one-to-one translation
+ of GEDCOM 5.5 into a XML language.
  GEDCOM 5.5 tags could be XML elements; XML's greater than 
 \begin_inset Quotes ers
 \end_inset
@@ -142,8 +142,8 @@ Given these similarities, it is easy to envision a one-to-one translation
 \end_inset
 
  characters could surround the tags, converting them into elements.
- Closed elements could delimit genealogical data.
- To differentiate it from other proposals, such an XML markup language could
+ Open and closed elements could delimit genealogical data.
+ To differentiate it from other proposals, such a XML markup language could
  be called 
 \begin_inset Quotes sld
 \end_inset
@@ -165,15 +165,15 @@ GedML
 \end_layout
 
 \begin_layout Standard
-In 1998, Michael H.
- Kay 
+In 
 \begin_inset LatexCommand url
-name "proposed"
+name "1998"
 target "http://lists.xml.org/archives/xml-dev/199804/msg00282.html"
 
 \end_inset
 
- a standard called 
+, Michael H.
+ Kay proposed 
 \begin_inset LatexCommand url
 name "GedML"
 target "http://homepage.ntlworld.com/michael.h.kay/gedml/"
@@ -181,7 +181,7 @@ target "http://homepage.ntlworld.com/michael.h.kay/gedml/"
 \end_inset
 
 .
- A XML Schema, a DTD, for this proposal has been 
+ A XML Schema, a DTD, for this proposal was 
 \begin_inset LatexCommand url
 name "released"
 target "http://users.breathe.com/mhkay/gedml/dtd.html"
@@ -260,8 +260,18 @@ TRLR
 
  tag.
  This tag indicates the end of a GEDCOM 5.5 file.
- It is absent from GedML because the closed document root element performs
- the same function, rendering a 
+ It is absent from GedML because the closed document root element, 
+\begin_inset CharStyle Literal
+show_label false
+status inlined
+
+\begin_layout Standard
+</GED>
+\end_layout
+
+\end_inset
+
+, performs the same function, rendering a 
 \begin_inset CharStyle Literal
 show_label false
 status inlined
@@ -274,16 +284,17 @@ status inlined
 
  element superfluous.
  Considering these differences, as far as the DTD is concerned, GedML is
- not a one-to-one translation of GEDCOM 5.5 into XML.
+ not an one-to-one translation of GEDCOM 5.5 into XML.
 \end_layout
 
 \begin_layout Standard
 Kay, however, also released a Java language program that translates GEDCOM
  5.5 files into XML documents.
  The markup language of these documents does not have a XML schema (DTD,
- W3C XML Schema, etc.) However, a review of the output of his program reveals
- that all GEDCOM 5.5 tags have been translated to XML elements with the same
- name, just like GEDCOM 5.5 XML.
+ W3C XML Schema, RELAX NG).
+ However, a review of the output of his program reveals that all GEDCOM
+ 5.5 tags have been translated to XML elements with the same name, just like
+ GEDCOM 5.5 XML.
  There is, though, one missing element: the one corresponding to the 
 \begin_inset CharStyle Literal
 show_label false
@@ -296,8 +307,8 @@ TRLR
 \end_inset
 
  tag.
- Given this flaw, this version of GedML also fails to be a one-to-one translatio
-n of GEDCOM 5.5 into XML.
+ Given this flaw, this version of GedML also fails to be an one-to-one translati
+on of GEDCOM 5.5 into XML.
 \end_layout
 
 \begin_layout Subsection
@@ -313,7 +324,7 @@ target "http://www.softwarerenovation.com/igenie/GeniML.aspx"
 \end_inset
 
 .
- Like Kay, he released a 
+ Like Kay, he released a Windows 
 \begin_inset LatexCommand url
 name "program"
 target "http://www.softwarerenovation.com/igenie/GeniMLConverter.zip"
@@ -322,8 +333,8 @@ target "http://www.softwarerenovation.com/igenie/GeniMLConverter.zip"
 
  to convert GEDCOM 5.5 to XML.
  No schema for this markup language has been released.
- However, sample output of the programe included with the converter shows
- that GeniML appears to be a one-to-one translation of GEDCOM 5.5 into XML.
+ However, sample output included with the converter shows that GeniML appears
+ to be an one-to-one translation of GEDCOM 5.5 into XML.
  GeniML even includes the 
 \begin_inset CharStyle Literal
 show_label false
@@ -361,7 +372,7 @@ SURN
 
  tag for the same purpose.
  Considering this difference and many others, GeniML, like GedML, is not
- a one-to-one translation of GEDCOM 5.5 into XML markup.
+ an one-to-one translation of GEDCOM 5.5 into XML markup.
  
 \end_layout
 
@@ -374,14 +385,14 @@ GEDCOM 5.5 XML differentiates itself from GedML and GeniML because it attempts
  to replicate the LDS's GEDCOM 5.5 standard using XML markup.
  Without exception, all GEDCOM 5.5 tags should correspond to XML elements
  with the same name; all tags should be preserved; the parent-child relationship
-s between the tags and elements should parallel each other; and all data
+s between the tags and elements should parallel one another; and all data
  delimited by the elements should fall within the strict guidelines of the
  standard.
 \end_layout
 
 \begin_layout Standard
 To define GEDCOM 5.5 XML, a schema is needed.
- To fulfill that need, I have written one in 
+ I am releasing one written in 
 \begin_inset LatexCommand url
 name "RELAX NG"
 target "http://www.oasis-open.org/committees/relax-ng/spec-20011203.html"
@@ -396,7 +407,8 @@ target "http://www.schematron.com/"
 \end_inset
 
 .
- The XML version of the schema is contained in the file called 
+ The RELAX NG XML version of the schema is contained in the file called
+ 
 \begin_inset Quotes sld
 \end_inset
 
@@ -416,7 +428,14 @@ gedcom55XML.rng
 \end_inset
 
 .
- The compact syntax version is in the file called 
+ The RELAX NG 
+\begin_inset LatexCommand url
+name "compact syntax"
+target "http://relaxng.org/compact-20021121.html"
+
+\end_inset
+
+ version is in the file called 
 \begin_inset Quotes sld
 \end_inset
 
@@ -439,13 +458,13 @@ gedcom55XML.rnc
 \end_layout
 
 \begin_layout Standard
-Like any schema, it can be used to validate, in the XML sense, a GEDCOM
+Like any XML schema, it can be used to validate, in the XML sense, a GEDCOM
  5.5 file that has been converted to a GEDCOM 5.5 XML document; i.e., it can
  be used to determine if the document is both 
 \begin_inset Quotes sld
 \end_inset
 
-wellformed
+well-formed
 \begin_inset Quotes srd
 \end_inset
 
@@ -460,7 +479,7 @@ valid.
  This means that it can be used to test if the GEDCOM 5.5 tags (when converted
  to XML elements) are correctly nested within each other as prescribed by
  the LDS's GEDCOM 5.5 standard.
- It can also be used to test if the data delimited by the elements follows
+ It can also be used to test if the data, delimited by the elements, follows
  the strict guidelines prescribed by the standard.
 \end_layout
 
@@ -479,25 +498,29 @@ http://www.neomantic.com/gedcom55XML
 
 \end_inset
 
-is the namespace for the root element of a GEDCOM 5.5 XML document.
+ is the namespace for the root element of a GEDCOM 5.5 XML document.
 \end_layout
 
 \begin_layout Subsection
-Schema Versions and Location
+Schema Versions and Download Locations
 \end_layout
 
 \begin_layout Standard
-The schema described in this document is version 1.0.
+The schema described in this document is version 0.1.
  It was originally written in RELAX NG's XML markup.
- The 1.0 XML version is located at 
+ 
+\end_layout
+
+\begin_layout Itemize
+The XML version is located at 
 \begin_inset CharStyle Literal
 show_label false
 status inlined
 
 \begin_layout Standard
 \begin_inset LatexCommand url
-name "http://www.neomantic.com/gedcom55XML/1.0/gedcom55XML.rng"
-target "http://www.neomantic.com/gedcom55XML/1.0/gedcom55XML.rng"
+name "http://www.neomantic.com/gedcom55XML/0.1/gedcom55XML.rng"
+target "http://www.neomantic.com/gedcom55XML/0.1/gedcom55XML.rng"
 
 \end_inset
 
@@ -507,14 +530,11 @@ target "http://www.neomantic.com/gedcom55XML/1.0/gedcom55XML.rng"
 \end_inset
 
 .
- A RELAX NG 
-\begin_inset LatexCommand url
-name "compact syntax"
-target "http://relaxng.org/compact-20021121.html"
+ 
+\end_layout
 
-\end_inset
-
- version, produced using the XML translator called 
+\begin_layout Itemize
+A RELAX NG compact syntax version, produced using the 
 \begin_inset CharStyle Literal
 show_label false
 status inlined
@@ -531,7 +551,7 @@ target "http://www.thaiopensource.com/relaxng/trang.html"
 
 \end_inset
 
-, is also being released.
+ translator, is also being released.
  It is located at 
 \begin_inset CharStyle Literal
 show_label false
@@ -539,8 +559,8 @@ status inlined
 
 \begin_layout Standard
 \begin_inset LatexCommand url
-name "http://www.neomantic.com/gedcom55XML/1.0/gedcom55XML.rnc"
-target "http://www.neomantic.com/gedcom55XML/1.0/gedcom55XML.rnc"
+name "http://www.neomantic.com/gedcom55XML/0.1/gedcom55XML.rnc"
+target "http://www.neomantic.com/gedcom55XML/0.1/gedcom55XML.rnc"
 
 \end_inset
 
@@ -550,17 +570,24 @@ target "http://www.neomantic.com/gedcom55XML/1.0/gedcom55XML.rnc"
 \end_inset
 
 .
- (The compact syntax version has not been tested.) Both the XML and compact
- syntax versions of the 1.0 schema can also be found bundled with this documentat
-ion at 
+ (The compact syntax version has not been tested.) 
+\end_layout
+
+\begin_layout Itemize
+Both the XML and compact syntax 0.1 schema files can also be found bundled
+ with this documentation at 
 \begin_inset LatexCommand url
-name "http://www.neomantic.com/gedcom5.5XML/1.0/gedcom55XML-1.0.tar.gz"
-target "http://www.neomantic.com/gedcom5.5XML/1.0/gedcom55XML-1.0.tar.gz"
+name "http://www.neomantic.com/gedcom5.5XML/0.1/gedcom55XML-0.1.tar.gz"
+target "http://www.neomantic.com/gedcom5.5XML/0.1/gedcom55XML-0.1.tar.gz"
 
 \end_inset
 
 .
- For verification purposes, I have signed this tar, gzipped archive with
+ 
+\end_layout
+
+\begin_layout Itemize
+For verification purposes, I have signed this tar, gzipped archive with
  my 
 \begin_inset LatexCommand url
 target "gnupg"
@@ -581,15 +608,15 @@ show_label false
 status inlined
 
 \begin_layout Standard
-gedcom55XML-1.0.tar.gz
+gedcom55XML-0.1.tar.gz
 \end_layout
 
 \end_inset
 
-is located at 
+ is located at 
 \begin_inset LatexCommand url
-name "http://www.neomantic.com/gedcom55XML/1.0/gedcom55XML-1.0.tar.gz.sign"
-target "http://www.neomantic.com/gedcom55XML/1.0/gedcom55XML-1.0.tar.gz.sign"
+name "http://www.neomantic.com/gedcom55XML/0.1/gedcom55XML-0.1.tar.gz.sign"
+target "http://www.neomantic.com/gedcom55XML/0.1/gedcom55XML-0.1.tar.gz.sign"
 
 \end_inset
 
@@ -650,13 +677,13 @@ gpl-2.0
 \begin_inset Quotes srd
 \end_inset
 
- included with 
+ in 
 \begin_inset CharStyle Filename
 show_label false
 status inlined
 
 \begin_layout Standard
-gedcom55XML.rng
+gedcom55XML-0.1.tar.gz
 \end_layout
 
 \end_inset
@@ -669,7 +696,7 @@ Schema Updates
 \end_layout
 
 \begin_layout Standard
-Links to the most up to date version of the schema will be located at 
+Hyperlinks to the most up-to-date version of the schema are located at 
 \begin_inset LatexCommand url
 name "http://www.neomantic.com/gedcom55XML"
 target "http://www.neomantic.com/gedcom55XML"
@@ -680,18 +707,7 @@ target "http://www.neomantic.com/gedcom55XML"
 \end_layout
 
 \begin_layout Subsection
-Limitations of 
-\begin_inset CharStyle Filename
-show_label false
-status inlined
-
-\begin_layout Standard
-gedcom55XML.rng
-\end_layout
-
-\end_inset
-
-
+Schema Limitations
 \end_layout
 
 \begin_layout Standard
@@ -707,24 +723,41 @@ gedcom55XML.rng
 \end_inset
 
  would completely mirror the GEDCOM 5.5 standard.
- There are, however, nine places where it does not fully replicate the standard
- - most of which are due to difficulties in describing what would be considered,
- in XML terms, mixed-content elements.
- 
-\end_layout
-
-\begin_layout Enumerate
+ There are, however, nine places where it does not fully replicate the standard.
+ This is why the version number of 
 \begin_inset CharStyle Filename
 show_label false
 status inlined
 
 \begin_layout Standard
-gedcom55XML.rng
+gedcom55XML.rng/c
 \end_layout
 
 \end_inset
 
- does not describe valid content of a GEDCOM 5.5 
+ is 
+\begin_inset Quotes sld
+\end_inset
+
+0.1
+\begin_inset Quotes srd
+\end_inset
+
+.
+ When the schema captures 100 percent of the standard, the version number
+ will be incremented to 
+\begin_inset Quotes sld
+\end_inset
+
+1.0
+\begin_inset Quotes srd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+The schema does not describe valid content of a GEDCOM 5.5 
 \begin_inset CharStyle Literal
 show_label false
 status inlined
@@ -748,18 +781,7 @@ DATE_VALUE
 \end_inset
 
 s are simply too numerous to handle using Schematron alone.
- 
-\begin_inset CharStyle Filename
-show_label false
-status inlined
-
-\begin_layout Standard
-gedcom55XML.rng
-\end_layout
-
-\end_inset
-
- only prescribes that the length of character data of a 
+ The schema only prescribes that the length of character data of a 
 \begin_inset CharStyle Literal
 show_label false
 status inlined
@@ -774,17 +796,7 @@ DATE_VALUE
 \end_layout
 
 \begin_layout Enumerate
-\begin_inset CharStyle Filename
-show_label false
-status inlined
-
-\begin_layout Standard
-gedcom55XML.rng
-\end_layout
-
-\end_inset
-
- does not describe all instances of 
+The schema does not describe all instances of 
 \begin_inset CharStyle Literal
 show_label false
 status inlined
@@ -939,7 +951,8 @@ PLAC
 \end_layout
 
 \begin_layout Enumerate
-The given name and surname of an individual in the 
+The given name and surname of an individual are usually delimited in the
+ 
 \begin_inset CharStyle Literal
 show_label false
 status inlined
@@ -950,39 +963,18 @@ NAME
 
 \end_inset
 
- tag are usually delimited by forwardslash (e.g., Joseph/Smith/).
+ tag by forward slashes (e.g., Joseph/Smith/).
  The Schematron rules do not prescribe this format.
 \end_layout
 
 \begin_layout Enumerate
 GEDCOM 5.5 allows for user-defined tags, even though it discourages their
  usage.
- 
-\begin_inset CharStyle Filename
-show_label false
-status inlined
-
-\begin_layout Standard
-gedcom55XML.rng
-\end_layout
-
-\end_inset
-
- does not allow user-defined tags.
+ The schema does not allow user-defined tags.
 \end_layout
 
 \begin_layout Enumerate
-\begin_inset CharStyle Filename
-show_label false
-status inlined
-
-\begin_layout Standard
-gedcom55XML.rng
-\end_layout
-
-\end_inset
-
- does not describe the content of 
+The schema does not describe the content of 
 \begin_inset CharStyle Literal
 show_label false
 status inlined
@@ -1178,6 +1170,11 @@ DATE_EXACT
  The defaults are the upper-case values.
 \end_layout
 
+\begin_layout Standard
+Most of these shortcoming are due to difficulties in describing what would
+ be considered, in XML terms, mixed-content elements.
+\end_layout
+
 \begin_layout Section
 Using 
 \begin_inset CharStyle Filename
@@ -1210,8 +1207,8 @@ gedcom55XML.rng
 \end_layout
 
 \begin_layout Standard
-The instructions below describe how to do so using several several external
- programs available on the internet.
+The instructions below describe how to do so using several external programs
+ available on the internet.
  The instructions follow several conventions: 
 \end_layout
 
@@ -1255,8 +1252,8 @@ family.ged
 \end_layout
 
 \begin_layout Itemize
-Text sandwiched between brackets [ ] indicates variables that will depend
- upon your computer's environment.
+Text sandwiched between brackets [ ] indicates variables that depend upon
+ your computer's environment.
 \end_layout
 
 \begin_layout Standard
@@ -1290,7 +1287,7 @@ Convert the GEDCOM 5.5 File to a GEDCOM 5.5 XML Document
 
 \begin_layout Standard
 Currently there is no quick and easy way to convert a GEDCOM 5.5 (or a .ged)
- file into an GEDCOM 5.5 XML (or .xml) file.
+ file into a GEDCOM 5.5 XML (or .xml) file.
  I know of only one way to accomplish it now, and it requires some programming
  skills.
  To perform the conversion, you will need to use a Java program released
@@ -1619,7 +1616,7 @@ target "http://www.xml.com/pub/a/2004/02/11/relaxtron.html?page=5"
 \end_layout
 
 \begin_layout Subsubsection
-Method 1 - Simultaneously Validate the XML against RELAX NG and Schematron
+Method 1 - Simultaneously Validation
 \end_layout
 
 \begin_layout Standard
@@ -1731,7 +1728,7 @@ In either the case of RELAX NG errors or Schematron errors, the command
 \end_layout
 
 \begin_layout Subsubsection
-Method 2 - Sequentially Validating the XML against RELAX NG and Schematron
+Method 2 - Sequentially Validation
 \end_layout
 
 \begin_layout Enumerate
@@ -1741,7 +1738,7 @@ Validate the GEDCOM 5.5 XML file using the RELAX NG portion of the schema.
 
 \begin_deeper
 \begin_layout Standard
-RELAX NG validation can be performed by an Open Source Java program called
+RELAX NG validation can be performed by a Open Source Java program called
  
 \begin_inset Quotes sld
 \end_inset
@@ -1847,8 +1844,8 @@ all
 \family roman
 \emph default
  the errors that it encounters.
- It won't say exactly what is wrong, but it will report what lines have
- errors.
+ It will not report exactly what is wrong, but it will report what lines
+ have errors in them.
  If 
 \begin_inset CharStyle Literal
 show_label false
@@ -1946,7 +1943,7 @@ gedcom55XML.sch
 \end_inset
 
 .
- I'm distributing this source code under the GNU General Public License
+ I am distributing this source code under the GNU General Public License
  Version 2.
  
 \end_layout
@@ -2039,7 +2036,7 @@ show_label false
 status inlined
 
 \begin_layout Standard
-gedcom55XML.rng
+gedcom55XML-0.1.tar.gz
 \end_layout
 
 \end_inset
@@ -2052,8 +2049,8 @@ status inlined
 
 \begin_layout Standard
 \begin_inset LatexCommand url
-name "http://www.neomantic.com/gedcom55XML/1.0/README.html"
-target "http://www.neomantic.com/gedcom55XML/1.0/README.html"
+name "http://www.neomantic.com/gedcom55XML/0.1/README.html"
+target "http://www.neomantic.com/gedcom55XML/0.1/README.html"
 
 \end_inset
 
