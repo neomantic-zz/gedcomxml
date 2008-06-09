@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<sch:schema xmlns:sch="http://www.ascc.net/xml/schematron" 
+            xmlns:rng="http://relaxng.org/ns/structure/1.0"
+            xmlns:dc="http://purl.org/dc/elements/1.1/">
  <dc:creator>Chad Albers</dc:creator>
  <dc:publisher>Chad Albers</dc:publisher>
  <dc:date>2008-5-1</dc:date>
- <dc:title>Schematron patterns extracted from gedcom55XML.rng version 1.0</dc:title>
+ <dc:title>Schematron patterns extracted from gedcom55XML.rng version 0.1</dc:title>
  <dc:description>These Schematron rules were written to capture the mixed-content elements
  in GEDCOM 5.5 XML.</dc:description>
- <dc:identifier>http://www.neomantic.com/gedcom55XML/1.0/gedcom55XML.sch</dc:identifier>
+ <dc:identifier>http://www.neomantic.com/gedcom55XML</dc:identifier>
  <dc:type>software</dc:type>
  <dc:format>application/xml</dc:format>
  <dc:language>en-US</dc:language>
@@ -22,10 +25,7 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  </dc:rights>
-<sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron" 
-            xmlns:rng="http://relaxng.org/ns/structure/1.0"
-            xmlns:dc="http://purl.org/dc/elements/1.1/">
-   <sch:pattern xmlns="http://relaxng.org/ns/structure/1.0" name="Checking length of Header Record SOUR">
+  <sch:pattern xmlns="http://relaxng.org/ns/structure/1.0" name="Checking length of Header Record SOUR">
             
       <sch:rule context="HEAD/SOUR/node()[1][self::text()]">
               

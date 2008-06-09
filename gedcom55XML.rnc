@@ -1,16 +1,16 @@
 namespace dc = "http://purl.org/dc/elements/1.1/"
-namespace sch = "http://purl.oclc.org/dsdl/schematron"
+namespace sch = "http://www.ascc.net/xml/schematron"
 
 dc:creator [ "Chad Albers" ]
 dc:publisher [ "Chad Albers" ]
 dc:date [ "2008-5-1" ]
-dc:title [ "RELAX NG/Schematron Schema for GEDCOM 5.5 XML" ]
+dc:title [ "RELAX NG/Schematron Schema for GEDCOM 5.5 XML version 0.1" ]
 dc:description [
   "This RELAX NG/Schematron XML schema in compact syntax aims to replicate in XML markup\x{a}" ~
   " the Church of the Latter Day Saint's GEDCOM 5.5 standard."
 ]
 dc:identifier [
-  "http://www.neomantic.com/gedcom55XML/1.0/gedcom55XML.rnc"
+  "http://www.neomantic.com/gedcom55XML"
 ]
 dc:type [ "software" ]
 dc:format [ "application/xml" ]

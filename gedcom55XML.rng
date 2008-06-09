@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <grammar xmlns="http://relaxng.org/ns/structure/1.0" 
-		 xmlns:sch="http://purl.oclc.org/dsdl/schematron" 
+		 xmlns:sch="http://www.ascc.net/xml/schematron" 
          xmlns:dc="http://purl.org/dc/elements/1.1/"
 		 datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
  <dc:creator>Chad Albers</dc:creator>
  <dc:publisher>Chad Albers</dc:publisher>
  <dc:date>2008-5-1</dc:date>
- <dc:title>RELAX NG/Schematron Schema for GEDCOM 5.5 XML</dc:title>
+ <dc:title>RELAX NG/Schematron Schema for GEDCOM 5.5 XML version 0.1</dc:title>
  <dc:description>This RELAX NG/Schematron XML schema aims to replicate in XML markup
  the Church of the Latter Day Saint's GEDCOM 5.5 standard.</dc:description>
- <dc:identifier>http://www.neomantic.com/gedcom55XML/1.0/gedcom55XML.rng</dc:identifier>
+ <dc:identifier>http://www.neomantic.com/gedcom55XML</dc:identifier>
  <dc:type>software</dc:type>
  <dc:format>application/xml</dc:format>
  <dc:language>en-US</dc:language>
